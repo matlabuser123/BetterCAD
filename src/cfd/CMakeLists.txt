@@ -65,6 +65,7 @@ bettercad_add_library(bettercad_cfd
         CfdFields.cpp
         CfdFluid.cpp
         CfdGeometry.cpp
+        CfdGradient.cpp
         CfdInitialField.cpp
         CfdMesh.cpp
         CfdSparse.cpp

@@ -1,0 +1,29 @@
+Q1  the identity  sum_f C_f (x) S_f = V I  on 20000 random tetrahedra
+    (if true, Green-Gauss with the TRUE face value is linear-exact
+     on any mesh, so any error is the interpolation's)
+    worst relative deviation: 2.900e-16   (eps = 2.220e-16)
+    VERDICT: IDENTITY HOLDS to rounding
+
+Q2/Q3/Q4  a cell and four neighbours, an EXACT linear field, three methods
+
+  built so skewness varies: each neighbour centroid is placed off the
+  line through the face centroid by a controlled amount.
+
+   skewness    Gauss(true phi_f)   Gauss(interpolated)   least-squares   LSQ cond
+   --------    -----------------   -------------------   -------------   --------
+       0.00             1.37e-12              2.52e-12        5.81e-11   282180.4
+       0.25             7.09e-13              1.89e+01        1.08e-11   131563.1
+       0.50             7.95e-13              4.77e+01        5.57e-11   170024.2
+       1.00             1.02e-12              1.12e+02        7.94e-11   671145.3
+       2.00             1.65e-12              1.27e+02        1.40e-10   1467940.7
+       4.00             9.56e-13              4.34e+02        3.93e-11   277292.5
+       6.50             8.32e-13              4.53e+02        1.04e-10   673707.9
+
+READ THE COLUMNS, not the headline:
+  Gauss(true phi_f)     stays at rounding at EVERY skewness -> Gauss itself
+                        is linear-exact; Q1's identity is why
+  Gauss(interpolated)   grows with skewness -> the INTERPOLATION is what
+                        breaks linear exactness, and a skewness
+                        correction needs the gradient it is computing
+  least-squares         stays at rounding at every skewness, with no
+                        interpolation at all

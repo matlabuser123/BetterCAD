@@ -105,7 +105,7 @@ P19 — CFD Integration, authorized 2026-10-27 by the owner's "start
 P19-ARCH-001": P19-ARCH-001 and P19-DATA-001 (2026-10-27), P19-FLUID-001
 (2026-10-28), P19-MESH-001, P19-TOPO-001 and P19-GEOM-001 (all 2026-10-31) and
 P19-DOF-001 and P19-BC-001 (both 2026-11-05) and P19-IC-001 and P19-DIFF-001
-(both 2026-11-06) have PASSED.
+(both 2026-11-06) and P19-GRAD-001 (2026-11-07) have PASSED.
 P19-MESH-001 was qualified by a second attempt on a replacement machine: its
 first attempt, on 2026-10-28, failed 5 of 17 stages when the previous machine's
 temp volume filled and no test suite ran, and that machine was then permanently
@@ -133,10 +133,15 @@ and its repeat stages, pointed at a build tree that no longer existed, selected
 tests were found!!!". The third ran detached and qualified every stage.
 P19-DIFF-001 qualified from clean on the FIRST attempt, launched detached from
 the start because of what had happened to P19-IC-001's second, and it is the
-first P19 milestone since P19-BC-001 to need only one. The harness has now run
-fifty-nine milestones unchanged, and is self-checked before each run, because an
-unchanged harness is not the same as a working one. No milestone is open, and
-nothing after P19-DIFF-001 is authorized; see TODO.md.
+first P19 milestone since P19-BC-001 to need only one. P19-GRAD-001 did the same,
+on one attempt, and its freeze went further than its predecessor's in one
+respect worth recording: all FIVE harness hashes that run-qualification.cmd
+records for itself were verified rather than only the two preflight ones, after
+it turned out that the first two 40-hex strings in that file are not the pair a
+reader would assume. The harness has now run SIXTY milestones unchanged, and is
+self-checked before each run, because an unchanged harness is not the same as a
+working one. No milestone is open, and nothing after P19-GRAD-001 is authorized;
+see TODO.md.
 
 The phases before it, and how each was qualified:
 
@@ -1084,6 +1089,77 @@ operator of an equation that does not exist yet, and the matrix has never been
 handed to a solver — no skewness correction exists, and no performance result is
 measured, because nothing in `cfd` assembled a matrix before this milestone and
 so there is no baseline to compare against.
+
+`P19-GRAD-001` (PASS 2026-11-07) RECONSTRUCTS THE CELL-CENTRED GRADIENT, of a
+pressure and of each velocity component, and it is the milestone whose method
+choice was settled by measurement before any C++ existed. `ADR-070` keeps BOTH
+methods — weighted least squares as the default, Green-Gauss retained and
+measured against it — and the reason is a numerical fact about the mesh rather
+than a preference: the divergence identity `sum_f C_f (x) S_f = V I` holds to
+2.900e-16 over twenty thousand random tetrahedra, so Green-Gauss evaluated with
+the TRUE face value is linear-exact on ANY mesh, and every bit of its
+inexactness is therefore the INTERPOLATION's, not the method's. Measured against
+an exactly linear field on a controlled fixture, Green-Gauss with the true face
+value stays at rounding at every skewness from 0.00 to 6.50 while the same loop
+with an interpolated face value grows to 4.53e+02, and least squares — which
+interpolates nothing — stays at rounding throughout. The two scripts behind
+those tables are committed with their output, because an adversarial review
+found the founding number had no artifact behind it, and a quantitative
+justification with no log is a failed gate.
+
+**Five code defects were found by review, and the fifth is the one worth
+remembering.** The suite's conditioning oracle had been written as a
+line-for-line copy of the function it was meant to check — which is not
+validation at all — and replacing it with an independent cyclic Jacobi
+diagonalisation showed that the textbook trigonometric form for the SMALLEST
+eigenvalue is wrong by a factor of 3.2 at a conditioning of `1e12`, and reports
+a positive-definite matrix as having a non-positive eigenvalue. That is a FALSE
+REFUSAL: a cell the operator could have solved, declined. The smallest
+eigenvalue is recovered from the matrix invariants now, and the flat-cell
+sweep's split moved from 4-refused/1-solved to 3-refused/2-solved as a direct
+result, both figures recorded. The other four were a non-finite gradient
+returned as a SUCCESS — a cell value of `1e308` overflows the surface sum to
+infinity, cancels to NaN, and passed every gate because none of the three
+finiteness checks looked at the output — a diagnostic that refuted itself by
+printing an eigenvalue ratio of 3 against a limit of `1e12`, an out-of-bounds
+read held off only by a frozen table in another module, and a constant-mode
+flag hard-coded true whose stated justification was simply false.
+
+Qualified at 6381/6381 in each of three presets, 3170 x 5 in two repeats with
+15850 executions each, 0 warnings under `-Werror`, 17 of 17 stages exit 0, and
+82,762 assertions in 46 cases identically in Debug and Release, with the eight
+qualified subtrees identical across FOUR readings — the freeze, the harness
+before the first build, the harness after the last test run, and a re-read from
+the working tree by the harness's own method;
+see [P19-GRAD-001](docs/verification/P19-GRAD-001/README.md). Eighteen of twenty
+mutations were killed and two RETIRED WITH REASONS, and this sweep was the most
+useful thing in the milestone precisely because it went badly at first: the first
+pass killed only 10, and four of its seven survivors were real defects in the
+test suite rather than mutations to be explained away. The sharpest took three
+passes to close — a constant-field test cannot see an unstable interpolation at
+`0.0`, and cannot see it at `17.25` either, because 69/4 is dyadic and both
+products are exact whatever the weight; a search over 200,000 constants found
+that 16% of them discriminate at the fixture's weight of 2/3, and the suite uses
+`12345.6789`, which the unstable form returns as `12345.678900000003`. One
+prediction in `ADR-070` was CONTRADICTED twice — the inverse-distance weights
+cannot affect linear exactness in exact arithmetic, but changing them changes the
+normal matrix's scaling, so rounding error rises past a bound tight enough to
+see — and the decision now separates the two claims instead of being quietly
+reworded. One test was deleted outright and half of another cut, because a test
+that reads as evidence and is not is worth less than no test: one of them never
+called the operator, and one of its assertions reduced to
+`value + weight * 0.0 == value`.
+
+Recorded as less than a reader might assume: **nothing consumes this output
+yet.** It produces a CELL gradient, and `assembleCfdDiffusion` wants a FACE
+gradient, so the interpolation that would close `P19-DIFF-001`'s own limitation
+is a coupling step this checklist does not contain and that wiring it in was not
+authorized to do. The predictors cannot disagree with the reconstructions because
+they share one decision path, so their tests pin that a valid input predicts no
+problem, not that two implementations agree. Skewness is MEASURED and reported,
+never corrected. And there is still no solve and no momentum equation, so
+nothing here is shown to produce a flow field; no performance result is measured,
+because nothing in `cfd` has a baseline and this milestone does not create one.
 
 ```text
 incompressible laminar

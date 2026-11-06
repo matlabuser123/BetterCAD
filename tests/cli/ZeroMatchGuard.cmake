@@ -623,6 +623,61 @@ set(_filters
     "unit\\.CfdDiffusion_TheSparsePatternIsTheTopologysAdjacency$" 1
     "unit\\.CfdDiffusion_TwoAssembliesOfOneInputAreIdentical$" 1
     "unit\\.CfdDiffusion_WithoutASlipWallTheThreeComponentsShareOneMatrix$" 1
+    # P19-GRAD-001. The group, the compile-fail group that proves a gradient
+    # field cannot be conjured and that a pressure gradient and a velocity
+    # gradient cannot be swapped -- the claim a value test provably cannot
+    # reach, since ADR-070 Decision 3 rejected the runtime-tagged alternative
+    # exactly so the compiler would carry it. And each case a rename or a drop
+    # would otherwise hide. The escaping matches the rest of this file:
+    # \\. is a literal dot, where \. would be a wildcard.
+    "unit\\.CfdGradient_" 46
+    "compile_fail\\.cfdgrad\\." 24
+    "unit\\.CfdGradient_ABoundaryCoveringAnotherFaceCountIsRefused$" 1
+    "unit\\.CfdGradient_ADirichletFacetMakesGreenGaussExactAtThatFace$" 1
+    "unit\\.CfdGradient_AFlatTetrahedronIsRefusedByTheGradientGateThoughTheMetricsAcceptIt$" 1
+    "unit\\.CfdGradient_AGeometryBuiltForAnotherMeshIsRefusedFirst$" 1
+    "unit\\.CfdGradient_ALargeConstantOffsetDoesNotDisturbLinearExactness$" 1
+    "unit\\.CfdGradient_ALinearFieldIsReconstructedExactlyByLeastSquaresOnEveryReferenceBody$" 1
+    "unit\\.CfdGradient_ALinearPressureIsReconstructedExactlyByLeastSquaresOnTheAnalyticPair$" 1
+    "unit\\.CfdGradient_AMixedBoundaryIsCountedPolicyByPolicyAndTheCensusIsComplete$" 1
+    "unit\\.CfdGradient_ANonFiniteCellValueIsRefusedAndTheLengthIsCheckedFirst$" 1
+    "unit\\.CfdGradient_ANonFiniteGradientIsRefusedRatherThanReturned$" 1
+    "unit\\.CfdGradient_AReconstructedFieldIsTypedByItsQuantity$" 1
+    "unit\\.CfdGradient_ASlipWallGradientMatchesAFitBuiltFromTheProjectionOracle$" 1
+    "unit\\.CfdGradient_ASlipWallLeavesTheConstantModeInexactAndTheFlagSaysSo$" 1
+    "unit\\.CfdGradient_ASlipWallProjectsOutTheNormalComponentAndCouplesTheComponents$" 1
+    "unit\\.CfdGradient_ATranslationAloneLeavesTheGradientUnchanged$" 1
+    "unit\\.CfdGradient_AUniformFieldWithADisagreeingWallIsNotAConstantField$" 1
+    "unit\\.CfdGradient_AUniformPressureReconstructsToExactlyZeroByLeastSquares$" 1
+    "unit\\.CfdGradient_AUniformVelocityComponentReconstructsToExactlyZeroByLeastSquares$" 1
+    "unit\\.CfdGradient_AWrongCellValueLengthIsRefusedDownBothColumns$" 1
+    "unit\\.CfdGradient_AZeroGradientRowUsesTheNormalAndNotTheCellToFaceVector$" 1
+    "unit\\.CfdGradient_BothColumnsAreExactOnAnInteriorCellWhateverTheBoundarySays$" 1
+    "unit\\.CfdGradient_EveryProblemHasItsOwnName$" 1
+    "unit\\.CfdGradient_EveryReferenceBodyReconstructsBitIdenticallyTwice$" 1
+    "unit\\.CfdGradient_GreenGaussIsExactWhereTheFaceIsUnskewedAndIsNotWhereItIsSkewed$" 1
+    "unit\\.CfdGradient_GreenGaussMatchesASurfaceSumBuiltWithTheNormalProjectionWeight$" 1
+    "unit\\.CfdGradient_GreenGaussReconstructsAFlatCellThatLeastSquaresRefuses$" 1
+    "unit\\.CfdGradient_GreenGaussReportsZeroConditioningBecauseItSolvesNothing$" 1
+    "unit\\.CfdGradient_GreenGaussTakesTheOwnersValueAcrossAZeroGradientFacet$" 1
+    "unit\\.CfdGradient_LargestMagnitudeIsTheLargestMagnitudeOverTheWholeField$" 1
+    "unit\\.CfdGradient_LeastSquaresBeatsGreenGaussOnEveryReferenceBody$" 1
+    "unit\\.CfdGradient_TheConditioningLimitIsBracketedFromBothSidesByJacobi$" 1
+    "unit\\.CfdGradient_TheDeclaredPhaseOrderIsTheCheckOrder$" 1
+    "unit\\.CfdGradient_TheFieldEqualityIsValueEqualityAndNotIdentity$" 1
+    "unit\\.CfdGradient_TheGradientQuantitiesCarryTheDimensionsTheirNamesClaim$" 1
+    "unit\\.CfdGradient_TheGreenGaussConstantModeFlagIsMeasuredFromTheClosureAndNotAssumed$" 1
+    "unit\\.CfdGradient_ThePredictorAgreesWithTheReconstructionOnEveryReachableRefusal$" 1
+    "unit\\.CfdGradient_ThePressureGradientIsCovariantUnderARigidTransform$" 1
+    "unit\\.CfdGradient_TheReportedConditioningIsTheWorstOverTheMeshAndNotTheLast$" 1
+    "unit\\.CfdGradient_TheReportedConditioningMatchesAJacobiDiagonalisation$" 1
+    "unit\\.CfdGradient_TheReportedSkewnessIsTheWorstOverSeveralInterpolatedFaces$" 1
+    "unit\\.CfdGradient_TheSurfaceCentroidOuterProductIsTheVolumeIdentityOnEveryFixture$" 1
+    "unit\\.CfdGradient_TheThreeVelocityComponentsGiveThreeDifferentGradients$" 1
+    "unit\\.CfdGradient_TheTwoMethodsAgreeWhereBothAreExact$" 1
+    "unit\\.CfdGradient_TheVelocityGradientTensorIsCovariantUnderARigidTransform$" 1
+    "unit\\.CfdGradient_TheWorstConditioningIsReportedAndEveryReferenceBodyIsWithinTheLimit$" 1
+    "unit\\.CfdGradient_TwoReconstructionsOfTheSameInputAreBitIdentical$" 1
     "unit\\.CfdBoundary_ABoundaryFaceWithNoConditionIsRefusedByName$" 1
     "unit\\.CfdBoundary_AConditionFaultIsReportedBeforeAnUnresolvableTarget$" 1
     "unit\\.CfdBoundary_ADrilledWallWithNoNameRefusesTheAnalysis$" 1

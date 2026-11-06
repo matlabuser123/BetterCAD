@@ -135,6 +135,36 @@ using Velocity3 = CartesianVector<Velocity>;
 /// An acceleration, in m/s^2. Gravity is one.
 using Acceleration3 = CartesianVector<Acceleration>;
 
+// ---------------------------------------------------------------------------
+// Gradient quantities
+// ---------------------------------------------------------------------------
+//
+// HERE, AND NOT IN core/units. `Quantity` is templated on a `Dimension` with
+// compile-time multiplication and division, so dividing a `Velocity` by a
+// `Length` already yields the right type: naming it costs nothing, and adding
+// an alias to layer 0 to serve one module is the shape of change ADR-063
+// Decision 7 refused. These are real types, not bare doubles, so
+// ARCHITECTURE.md's rule against a unitless engineering API is kept.
+//
+// AND HERE RATHER THAN IN AN OPERATOR'S OWN HEADER. The velocity pair was
+// declared in CfdDiffusion.hpp by P19-DIFF-001, which was then their only
+// consumer. P19-GRAD-001 is a second one, and two identical typedefs in one
+// namespace would be a second source of truth for a type the two operators
+// must agree on exactly -- the "second parameter system" ARCHITECTURE.md
+// rejects, in miniature. This is the lowest cfd header and it already owns
+// CartesianVector, so it is where a type both operators need belongs
+// (ADR-070 Decision 3).
+
+/// The gradient of one velocity component, in `1/s`.
+using VelocityGradient = decltype(Velocity{} / Length{});
+/// The gradient of ONE velocity component, resolved onto X, Y and Z.
+using VelocityGradient3 = CartesianVector<VelocityGradient>;
+
+/// The gradient of a pressure, in `Pa/m`.
+using PressureGradient = decltype(Pressure{} / Length{});
+/// A pressure gradient, resolved onto X, Y and Z.
+using PressureGradient3 = CartesianVector<PressureGradient>;
+
 /// Every component finite.
 template <typename Q>
 [[nodiscard]] bool isFinite(const CartesianVector<Q>& vector) noexcept {

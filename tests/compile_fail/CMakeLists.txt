@@ -1139,6 +1139,62 @@ foreach(_case
         "is private within this context|private|no matching function|use of deleted" BetterCAD::cfd)
 endforeach()
 
+# Gradient reconstruction (P19-GRAD-001, ADR-070). The claims a value test
+# cannot reach: a CfdGradientField cannot be conjured, because a reconstruction
+# is the only door and it runs the whole input gate; a pressure gradient and a
+# velocity gradient cannot be SWAPPED, which is why Decision 3 chose one
+# template with two instantiations over one class carrying a runtime variable
+# tag; and the bulk cell values are SI doubles deliberately, with the units on
+# the accessor, so a typed span is refused there.
+set(_cfdgrad "${CMAKE_CURRENT_SOURCE_DIR}/CfdGradientMisuse.cpp")
+bettercad_compile_fail_group(cfdgrad "${_cfdgrad}" BetterCAD::cfd)
+foreach(_case
+        A_SUMMARY_HOLDS_THE_GRADIENTS
+        AN_INPUT_HOLDS_A_FIELD)
+    bettercad_compile_fail_case(cfdgrad "${_cfdgrad}" ${_case} "no member named|has no member"
+        BetterCAD::cfd)
+endforeach()
+foreach(_case
+        A_PRESSURE_GRADIENT_FIELD_IS_A_VELOCITY_GRADIENT_FIELD
+        A_VELOCITY_GRADIENT_FIELD_IS_A_PRESSURE_GRADIENT_FIELD
+        A_PRESSURE_GRADIENT_IS_A_VELOCITY_GRADIENT
+        A_VELOCITY_GRADIENT_IS_A_PRESSURE_GRADIENT
+        A_PRESSURE_GRADIENT_IS_A_PRESSURE
+        A_VELOCITY_GRADIENT_IS_A_VELOCITY
+        A_PRESSURE_GRADIENT_IS_A_BARE_DOUBLE
+        A_GRADIENT_SUM_MIXES_DIMENSIONS
+        A_PRESSURE_GRADIENT_VECTOR_IS_A_VELOCITY_GRADIENT_VECTOR
+        A_GRADIENT_INPUT_IS_A_VELOCITY_GRADIENT_INPUT
+        A_VELOCITY_GRADIENT_INPUT_IS_A_GRADIENT_INPUT
+        THE_PRESSURE_ENTRY_POINT_TAKES_A_VELOCITY_INPUT
+        THE_CELL_VALUE_TAKES_TYPED_PRESSURES
+        THE_CURRENT_VELOCITY_TAKES_TYPED_VECTORS
+        A_GRADIENT_PROBLEM_IS_A_GRADIENT_METHOD
+        A_GRADIENT_METHOD_IS_A_GRADIENT_PROBLEM
+        A_GRADIENT_METHOD_IS_AN_INTEGER
+        A_COMPONENT_IS_AN_INTEGER)
+    # `invalid initialization` is in this list because GCC emits THAT for a
+    # reference bound to the wrong type, not `invalid conversion`. Three of these
+    # cases failed until it was added -- the gates were right and the expected
+    # diagnostic was incomplete, which is the same family of error as the
+    # hyphen-stopping regex P19-DIFF-001 recorded.
+    bettercad_compile_fail_case(cfdgrad "${_cfdgrad}" ${_case}
+        "could not convert|cannot convert|no matching function|no match for|invalid conversion|conversion from|invalid initialization"
+        BetterCAD::cfd)
+endforeach()
+foreach(_case
+        DEFAULT_CONSTRUCT_A_PRESSURE_GRADIENT_FIELD
+        DEFAULT_CONSTRUCT_A_VELOCITY_GRADIENT_FIELD
+        A_FIELD_EXPOSES_ITS_SI_ARRAY)
+    bettercad_compile_fail_case(cfdgrad "${_cfdgrad}" ${_case}
+        "is private within this context|private|no matching function|use of deleted" BetterCAD::cfd)
+endforeach()
+foreach(_case
+        A_FIELD_SUMMARY_IS_WRITABLE)
+    bettercad_compile_fail_case(cfdgrad "${_cfdgrad}" ${_case}
+        "read-only|assignment of member|discards qualifiers|no match for" BetterCAD::cfd)
+endforeach()
+
 # Temperature DOF index space (P18-DOF-001). The thermal sibling of structdof:
 # a node ordinal is not a node handle, a row of the reduced system is not an
 # unknown of the full one, neither is an integer, a prescribed temperature is a

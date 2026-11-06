@@ -59,18 +59,13 @@
 
 namespace bettercad::cfd {
 
-/// The gradient of one velocity component, in `1/s`.
-///
-/// NO NEW QUANTITY IS ADDED TO `core/units` FOR THIS. `Quantity` is templated on
-/// a `Dimension` with compile-time multiplication and division, so dividing a
-/// `Velocity` by a `Length` already yields the right type; naming it here costs
-/// nothing and adding an alias to layer 0 to serve one consumer is the shape of
-/// change ADR-063 Decision 7 refused. It is a real type, not a bare double, so
-/// ARCHITECTURE.md's rule against a unitless engineering API is kept.
-using VelocityGradient = decltype(Velocity{} / Length{});
-
-/// The gradient of ONE velocity component at a face, resolved onto X, Y and Z.
-using VelocityGradient3 = CartesianVector<VelocityGradient>;
+// `VelocityGradient` and `VelocityGradient3` WERE DECLARED HERE, and moved to
+// CfdData.hpp by P19-GRAD-001 (ADR-070 Decision 3) when the gradient operator
+// became their second consumer. The spelling is unchanged -- same names, same
+// `bettercad::cfd` namespace, and this header already includes CfdData.hpp --
+// so every existing use still compiles. The reason for the move is that two
+// identical typedefs would be two sources of truth for a type the diffusion
+// operator and the gradient operator must agree on exactly.
 
 /// Why a diffusion operator cannot be assembled.
 ///

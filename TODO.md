@@ -23,12 +23,110 @@ Prerequisite:
            may set). P17's F1-F3 stand unchanged beneath them.
 
 Current milestone:
-           NONE. P19-DIFF-001 PASSED 2026-11-06, and finishing a milestone is
+           NONE. P19-GRAD-001 PASSED 2026-11-07, and finishing a milestone is
            itself a stop condition. The next milestone is a scope decision for
-           the owner, not Claude's to make: P19-GRAD-001 is next in the phase
+           the owner, not Claude's to make: P19-DIV-001 is next in the phase
            plan below and is NOT authorized.
 
 Previous milestone:
+           P19-GRAD-001 — Gradient Reconstruction. AUTHORIZED 2026-11-07 by the
+           owner ("implement and fully verify", with the fourteen item
+           checklist quoted in full). PASS 2026-11-07. All fourteen items are
+           recorded: 17 of 17 stages exit 0, qualified from clean on the FIRST
+           attempt, 6381/6381 in each of the three presets, 3170 x 5 in two
+           with 15850 counted executions each, 0 warnings under -Werror,
+           5h34m00s, and the eight qualified subtrees identical across FOUR
+           readings — at the freeze, by the harness before the first build, by
+           the harness after the last test run, and recomputed from the working
+           tree afterwards by the harness's own method — so the qualified tree
+           is the committed tree. 46 unit cases / 82,762 assertions and 24
+           compile-fail cases, and the assertion count is IDENTICAL in Debug
+           and Release, so no assertion here is configuration-dependent. The
+           cfd subsystem reads 630576 assertions in 359 cases, which is
+           547814 + 82762 and 313 + 46 EXACTLY, so no pre-existing cfd
+           assertion moved. This authorization was written here BEFORE any
+           implementation, as P19-DIFF-001's and P19-IC-001's were.
+           THE METHOD CHOICE WAS SETTLED BY MEASUREMENT BEFORE ANY C++ EXISTED.
+           ADR-070 keeps BOTH methods, with weighted least squares as the
+           default and Green-Gauss measured against it rather than dropped,
+           because the divergence identity sum_f C_f (x) S_f = V I holds to
+           2.900e-16 over 20,000 random tetrahedra — so Green-Gauss with the
+           TRUE face value is linear-exact on any mesh and ALL of its
+           inexactness is the interpolation's. The two scripts behind that
+           number are committed under docs/verification/P19-GRAD-001/
+           experiments/ with their output, because an adversarial review found
+           the founding measurement had no artifact behind it, and a
+           quantitative justification with no log is a failed gate.
+           FIVE CODE DEFECTS WERE FOUND BY REVIEW, more than either P19-IC-001
+           or P19-DIFF-001, and every one was verified in the source before it
+           was fixed: a NON-FINITE GRADIENT RETURNED AS A SUCCESS (a 1e308 cell
+           value overflows the surface sum to inf, cancels to NaN, and passed
+           every gate because none of the three isfinite calls looked at the
+           OUTPUT); a self-refuting diagnostic that printed "an extreme
+           eigenvalue ratio of 3, against the 1e+12 a solve can carry" because
+           two causes were collapsed into one enumerator; an OUT-OF-BOUNDS
+           READ reachable only through a table in another module; a
+           constant-mode flag hard-coded true whose stated reason was FALSE;
+           and a FALSE REFUSAL of a solvable cell. Nine problem enumerators,
+           up from seven, and each new one has a test.
+           THE FIFTH CAME FROM REPLACING A TRANSCRIBED ORACLE WITH AN
+           INDEPENDENT ONE, and it is the clearest evidence in the milestone
+           for why that matters. The suite's conditioning oracle had been a
+           line-for-line copy of the function it checked; a cyclic Jacobi
+           diagonalisation disagreed with it, and the textbook trigonometric
+           form for the SMALLEST eigenvalue proved wrong by a factor of 3.2 at
+           a conditioning of 1e12 and reported a positive-definite matrix as
+           having a non-positive eigenvalue — refusing a cell it could solve.
+           The smallest eigenvalue comes from the invariants now, and the
+           flat-cell sweep's split moved from 4-refused/1-solved to
+           3-refused/2-solved as a result. Both figures are recorded.
+           EIGHTEEN OF TWENTY MUTATIONS KILLED, 2 RETIRED WITH REASONS, AND IT
+           TOOK FIVE PASSES. The first killed only 10 — P19-DIFF-001's killed
+           15 — and the seven survivors were not a formality: FOUR were real
+           defects in the suite. A constant-field test at 0.0 cannot see an
+           unstable interpolation, and neither can one at 17.25, because 69/4
+           is dyadic and both products are exact; a search over 200,000
+           constants found 16% that discriminate at the fixture's weight of
+           2/3, and the suite uses 12345.6789. Closing all four grew the suite
+           from 33 cases to 39, and the reviews took it to 46. The five-pass
+           count is recorded because a one-pass 20-of-20 would have been a
+           weaker result honestly reported.
+           ONE PREDICTION WAS CONTRADICTED, TWICE. ADR-070 Decision 6 claimed
+           the inverse-distance weights cannot affect linear exactness, and the
+           sweep was given that as a prediction; replacing the weight with 1.0
+           was KILLED both times. The mathematics holds in EXACT ARITHMETIC,
+           but the mutation changes the normal matrix's scaling, so
+           conditioning and rounding error rise past a bound tight enough to
+           see it. The Decision now separates the two claims rather than being
+           quietly reworded, and ADR-070 was corrected twice in all — the same
+           class of defect that caught ADR-069.
+           ONE TEST WAS DELETED AND HALF OF ANOTHER CUT, because a test that
+           reads as evidence and is not is worth less than no test:
+           TheInterpolationWeightMatchesAnIndependentNormalProjection never
+           called the operator at all, and one of its assertions reduced to
+           value + weight * 0.0 == value.
+           Ten limitations are recorded, and three belong in any honest reading
+           of the result: NOTHING CONSUMES THIS OUTPUT YET (L1) — it produces a
+           CELL gradient and assembleCfdDiffusion wants a FACE gradient, so the
+           interpolation that would close P19-DIFF-001's L1 is a coupling step
+           this checklist does not contain, and wiring it in was not
+           authorized; the predictors cannot disagree with the reconstructions
+           because they share one decision path, so their tests pin that a
+           successful input predicts no problem, not that two implementations
+           agree (L9, identical to P19-DIFF-001's L8); and there is NO
+           PERFORMANCE RESULT (L10), because nothing in cfd has a baseline and
+           this milestone does not create one.
+           TWO COUNTING TRAPS beyond the nine in the freeze: the sixth from
+           P19-DIFF-001 RECURRED in a new place — grep -c Passed returns 6382
+           and 15855, one and five more than the executions, because a test
+           NAME carries the word — and a TENTH is new: counting by test name
+           undercounts the suite by 2, because two display names are each
+           registered under two ctest ids. Every count recorded here is taken
+           by id. Counting trap (i) recurred verbatim as well, inside the
+           milestone's own tooling, and is recorded as r9.
+           (docs/verification/P19-GRAD-001/README.md.)
+
+Milestone before that:
            P19-DIFF-001 — Diffusion Operator. AUTHORIZED 2026-11-06 by the
            owner ("implement and fully verify", with the fourteen item
            checklist quoted in full). PASS 2026-11-06. All fourteen items are
@@ -116,7 +214,7 @@ Previous milestone:
            question is the Passed-marker total.
            (docs/verification/P19-DIFF-001/README.md.)
 
-Milestone before that:
+Before those:
            P19-IC-001 — CFD Initial Conditions. AUTHORIZED 2026-11-05 by the
            owner ("implement and fully verify", with the twelve item checklist
            quoted in full). PASS 2026-11-06. All twelve items are recorded:
@@ -196,7 +294,7 @@ Milestone before that:
            holding under a condition nobody arranged.
            (docs/verification/P19-IC-001/README.md.)
 
-Before those:
+Earlier still:
            P19-BC-001 — CFD Boundary Conditions. AUTHORIZED 2026-11-05 by the
            owner ("implement and fully verify", with the twenty item checklist
            and the canonical / derived split quoted). PASS 2026-11-05. All
@@ -244,7 +342,7 @@ Before those:
            REVISION r1 rather than tidying it away.
            (docs/verification/P19-BC-001/README.md.)
 
-Earlier still:
+Earlier than those:
            P19-DOF-001 — CFD Field / DOF Model. AUTHORIZED 2026-11-04 by the
            owner ("implement and fully verify", with the seventeen item
            checklist and the recommended p / U / phi layout quoted). PASS
@@ -274,29 +372,13 @@ Earlier still:
            fixes are verified by mutation.
            (docs/verification/P19-DOF-001/README.md.)
 
-Earlier than those:
-           P19-GEOM-001 — Finite-Volume Geometric Metrics. AUTHORIZED
-           2026-10-31 by the owner ("start", with the twenty-one item checklist
-           quoted). PASS 2026-10-31. All twenty-one items are recorded: 17 of
-           17 stages exit 0, 6058/6058 in each of the three presets, 2964 x 5
-           in two with 14820 counted Passed markers each, 0 warnings and 0
-           errors under -Werror, 3h27m58s, and the eight qualified subtrees
-           identical before the first build, after the last test run and when
-           recomputed independently afterwards. 31 unit cases / 337,203
-           assertions and 29 compile-fail cases; the 36 CfdTopology, 20
-           CfdMesh, 23 cfdtopo, 28 cfdids and 205 architecture tests unchanged
-           and passing, which is the blast-radius evidence for a change to a
-           layer-0 header. Two reviews ran before the freeze and each found a
-           real defect: a compile-fail control target that did not build under
-           -Werror while ctest reported its group 29 of 29 green, and a claim
-           in ADR-065 and the public header written without the work behind it
-           — four builder guards called unreachable are reachable, and each now
-           has a test. The key identity is measured, not asserted away: the
-           per-cell surface-vector sum closes to 2.03e-16 of the cell's own
-           area scale on all eight reference meshes.
-           (docs/verification/P19-GEOM-001/README.md.)
-
            Earlier P19 milestones, each at its own recorded verdict:
+           P19-GEOM-001 PASSED 2026-10-31 (6058/6058 x 3 presets,
+           2964 x 5 in two, 21 items, ADR-065; the per-cell surface-vector
+           sum closes to 2.03e-16 of the cell's own area scale on all eight
+           reference meshes, measured rather than asserted away, and four
+           builder guards called unreachable were found reachable and each
+           now has a test);
            P19-TOPO-001 PASSED 2026-10-31 (5998/5998 x 3 presets,
            2h11m16s, 36 unit cases / 108,373 assertions; two independent
            reviews each found a real defect, one of them an unconditional
@@ -325,8 +407,8 @@ Qualified:
            P18 — Thermal Analysis
 
 Next:
-           NOTHING IS AUTHORIZED. P19-DIFF-001 passed on 2026-11-06 and no
-           milestone is open. P19-GRAD-001 is next in the phase plan, and
+           NOTHING IS AUTHORIZED. P19-GRAD-001 passed on 2026-11-07 and no
+           milestone is open. P19-DIV-001 is next in the phase plan, and
            being next is not permission: each milestone is started by the
            owner, as every P17, P18 and P19 milestone was, and a
            predecessor's PASS is not permission to start the one after it.
@@ -3348,20 +3430,33 @@ does not.
 
 Implement qualified scalar / vector gradient reconstruction.
 
-* [ ] Pressure gradient
-* [ ] Velocity gradient
-* [ ] Gauss gradient
-* [ ] Least-squares gradient if needed
-* [ ] Boundary contribution
-* [ ] Constant-field test
-* [ ] Linear-field exactness / convergence
-* [ ] Skew mesh behaviour
-* [ ] Rigid-transform covariance
-* [ ] SI units
-* [ ] Deterministic ordering
-* [ ] Independent analytical validation
-* [ ] Regression PASS
-* [ ] Evidence recorded
+**AUTHORIZED 2026-11-07** by the owner's "implement and fully verify", with the
+fourteen item checklist below quoted in full. **PASS 2026-11-07.** All fourteen
+items are implemented, tested, independently validated, adversarially reviewed,
+regression clean and recorded: 6381/6381 in each of the three presets, 3170 x 5
+in two repeats with 15850 executions each, 17 of 17 stages exit 0, qualified
+from clean on the first attempt, and the eight qualified subtrees identical
+before the first build and after the last test run, so the qualified tree is
+the committed tree. Least squares is the default and Green-Gauss is kept and
+measured against it (ADR-070), the choice settled by a measurement taken before
+any code existed and committed with its scripts. Nothing after this milestone
+is authorized.
+(docs/verification/P19-GRAD-001/README.md.)
+
+* [x] Pressure gradient
+* [x] Velocity gradient
+* [x] Gauss gradient
+* [x] Least-squares gradient if needed
+* [x] Boundary contribution
+* [x] Constant-field test
+* [x] Linear-field exactness / convergence
+* [x] Skew mesh behaviour
+* [x] Rigid-transform covariance
+* [x] SI units
+* [x] Deterministic ordering
+* [x] Independent analytical validation
+* [x] Regression PASS
+* [x] Evidence recorded
 
 ---
 # P19-DIV-001
@@ -4866,6 +4961,35 @@ P19-DIFF-001     AUTHORIZED 2026-11-06 by the owner's "implement and fully
                  claim too strong -- and both are corrected rather than
                  reworded. Evidence recorded. Everything after it is still the
                  owner's decision alone.
+
+P19-GRAD-001     AUTHORIZED 2026-11-07 by the owner's "implement and fully
+                 verify", with the fourteen item checklist quoted in full. PASS
+                 2026-11-07, all fourteen items recorded. This authorization was
+                 written here BEFORE any implementation, as P19-DIFF-001's was.
+                 6381/6381 x 3 presets, 3170 x 5 in two repeats with 15850
+                 executions each, 17 of 17 stages exit 0, qualified from clean
+                 on the first attempt, and the eight qualified subtrees
+                 identical across four readings at this commit.
+                 46 unit cases / 82,762 assertions, the count IDENTICAL in
+                 Debug and Release; 24 compile-fail gates. The cfd subsystem
+                 reads 630576 assertions in 359 cases, exactly 547814 + 82762
+                 and 313 + 46. ADR-070: BOTH methods kept, weighted least
+                 squares the default and Green-Gauss measured against it, the
+                 choice settled by the divergence identity measured to 2.900e-16
+                 over 20,000 tetrahedra BEFORE any code existed -- and the
+                 scripts behind that number are committed, because a review
+                 found the measurement had no artifact. Five code defects found
+                 by review, among them a non-finite gradient returned as a
+                 success and a FALSE REFUSAL of a solvable cell that only an
+                 independent eigenvalue oracle could see. 18 of 20 mutations
+                 killed over five passes and 2 retired with reasons; the first
+                 pass killed 10, and four of its seven survivors were real
+                 defects in the suite. One ADR prediction was contradicted
+                 twice and the Decision was corrected rather than reworded.
+                 Nothing consumes this output yet (L1): the face interpolation
+                 that would close P19-DIFF-001's L1 is not in this checklist.
+                 Evidence recorded. Everything after it is still the owner's
+                 decision alone.
 ```
 
 The text below is the standing record as of P18-QUAL-001 (2026-10-27) and is kept as history.
