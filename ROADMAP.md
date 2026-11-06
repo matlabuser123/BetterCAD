@@ -1062,7 +1062,7 @@ the row sum and the analytic fixture are for.
 Qualified at 6311/6311 in each of three presets, 3124 x 5 in two, 0 warnings
 under `-Werror`, 17 of 17 stages exit 0, and 31,688 assertions in 49 cases
 identically in Debug and Release, with the eight qualified subtrees identical
-across four readings; see
+across six readings, the committed tree (`dc5e5a1`) among them; see
 [P19-DIFF-001](docs/verification/P19-DIFF-001/README.md). Twenty mutations were
 applied one at a time and all twenty killed, and the sweep earned its place:
 the adversarial review had PREDICTED that eight specific source-vector

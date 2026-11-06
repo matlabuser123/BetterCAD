@@ -741,11 +741,12 @@ stderr                   run-qualification.err is NOT empty, and what is in it
                          (135 paths x 2). No compiler diagnostic is in it
 ```
 
-**The qualified tree is the committed tree**, across FOUR readings so far: the
-freeze record, the harness's reading before the first build, its reading after
-the last test run, and a re-read from the live working tree by the harness's own
-method (scratch `GIT_INDEX_FILE`, `read-tree HEAD`, `add -A`,
-`write-tree --prefix`). All four are identical:
+**The qualified tree is the committed tree**, across SIX readings: the freeze
+record, the harness's reading before the first build, its reading after the last
+test run, a re-read from the live working tree by the harness's own method
+(scratch `GIT_INDEX_FILE`, `read-tree HEAD`, `add -A`, `write-tree --prefix`),
+the staged tree before the commit, and the commit object of `dc5e5a1` itself.
+All six are identical:
 
 ```text
 apps               fc398a3d2e524178cf38e8b667236379d8381086   unchanged
@@ -759,9 +760,9 @@ CMakePresets.json  3229f0f89b236744d7d5c082bed47c28b718288e   unchanged
 ```
 
 Exactly three moved, and they are exactly the three this milestone edited. The
-remaining two readings -- out of the staged tree before the commit, and back out
-of the commit object itself -- are taken at commit time and recorded in the
-record commit, as P19-IC-001's were.
+last two readings were taken at commit time, which is why `dc5e5a1` could not
+appear in its own commit's copy of this file: that copy recorded four readings,
+and this record pass raises it to six, as P19-IC-001's did.
 
 The run was launched detached, as P19-IC-001's third attempt was, because that
 milestone's second attempt had been killed by a client teardown at test 5589 of

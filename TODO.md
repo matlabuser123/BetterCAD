@@ -35,10 +35,12 @@ Previous milestone:
            recorded: 17 of 17 stages exit 0, qualified from clean on the FIRST
            attempt, 6311/6311 in each of the three presets, 3124 x 5 in two
            with 15620 counted Passed markers each, 0 warnings under -Werror,
-           3h13m48s, and the eight qualified subtrees identical across FOUR
+           3h13m48s, and the eight qualified subtrees identical across SIX
            readings — at the freeze, by the harness before the first build, by
-           the harness after the last test run, and recomputed from the working
-           tree afterwards by the harness's own method. 49 unit cases / 31,688
+           the harness after the last test run, recomputed from the working
+           tree afterwards by the harness's own method, out of the staged tree
+           before the commit, and back out of the commit object of dc5e5a1 —
+           so the qualified tree is the committed tree. 49 unit cases / 31,688
            assertions and 22 compile-fail cases, and the assertion count is
            IDENTICAL in Debug and Release, so no assertion here is
            configuration-dependent — a count that agreed only in Debug would
@@ -3218,10 +3220,12 @@ git rather than from memory:
 6311/6311 x 3 presets, 3124 x 5 in two repeat stages with 15620 counted Passed
 markers each, 0 warnings and 0 errors under -Werror, 17 of 17 stages exit 0,
 3h13m48s, QUALIFIED FROM CLEAN ON THE FIRST ATTEMPT, and the eight qualified
-subtrees identical across FOUR readings -- at the freeze, by the harness before
-the first build, by the harness after the last test run, and recomputed from the
+subtrees identical across SIX readings -- at the freeze, by the harness before
+the first build, by the harness after the last test run, recomputed from the
 working tree afterwards by the harness's own method (scratch GIT_INDEX_FILE,
-read-tree HEAD, add -A, write-tree --prefix).
+read-tree HEAD, add -A, write-tree --prefix), out of the staged tree before the
+commit, and back out of the commit object of dc5e5a1. The qualified tree is
+the committed tree.
 49 unit cases / 31,688 assertions and 22 compile-fail cases. Exactly three of
 the eight subtrees moved -- include, src and tests -- and they are exactly the
 three this milestone edited; the other five are byte-identical to P19-IC-001's
@@ -4849,7 +4853,8 @@ P19-DIFF-001     AUTHORIZED 2026-11-06 by the owner's "implement and fully
                  written here BEFORE any implementation, as P19-IC-001's was.
                  6311/6311 x 3 presets, 3124 x 5 in two repeats, 17 of 17
                  stages exit 0, qualified from clean on the first attempt, and
-                 the eight qualified subtrees identical across four readings.
+                 the eight qualified subtrees identical across six readings
+                 (code and evidence dc5e5a1).
                  49 unit cases / 31,688 assertions, the count IDENTICAL in
                  Debug and Release; 22 compile-fail gates. ADR-069: a
                  per-component scalar matrix, an over-relaxed decomposition,
