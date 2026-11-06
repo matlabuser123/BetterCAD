@@ -1089,6 +1089,56 @@ foreach(_case
         "is private within this context|private|no matching function|use of deleted" BetterCAD::cfd)
 endforeach()
 
+# CFD diffusion operator (P19-DIFF-001, ADR-069). THREE CLAIMS, and the third is
+# the one a value test provably cannot reach: mu, the face area and the
+# orthogonal distance appear only as the product `mu A / (d . n)`, so no
+# assertion on a coefficient can tell them apart -- P18 recorded the same hazard
+# for `rho * cp`, where swapping the two gave bit-identical matrices. The other
+# two are that a CfdSparseMatrix cannot be conjured (possession is the evidence,
+# so an unvalidated matrix does not exist, and a CfdDiffusionSystem holding one
+# by value inherits that) and that the assembled arrays are read-only.
+set(_cfddiff "${CMAKE_CURRENT_SOURCE_DIR}/CfdDiffusionMisuse.cpp")
+bettercad_compile_fail_group(cfddiff "${_cfddiff}" BetterCAD::cfd)
+foreach(_case
+        A_SUMMARY_HOLDS_A_CELL_ARRAY
+        A_SUMMARY_HOLDS_THE_SOURCE
+        AN_INPUT_HOLDS_A_MATRIX)
+    bettercad_compile_fail_case(cfddiff "${_cfddiff}" ${_case} "no member named|has no member"
+        BetterCAD::cfd)
+endforeach()
+foreach(_case
+        ASSEMBLE_A_SPARSE_MATRIX_FROM_PARTS
+        A_VISCOSITY_IS_AN_AREA
+        A_VISCOSITY_IS_A_LENGTH
+        A_VISCOSITY_IS_A_BARE_DOUBLE
+        AN_AREA_IS_A_LENGTH
+        A_COMPONENT_IS_AN_INTEGER
+        A_FACE_INDEX_IS_A_CELL_INDEX
+        A_DIFFUSION_PROBLEM_IS_A_SPARSE_PROBLEM
+        A_SPARSE_PROBLEM_IS_A_DIFFUSION_PROBLEM
+        A_VELOCITY_GRADIENT_IS_A_VELOCITY
+        A_VELOCITY_IS_A_VELOCITY_GRADIENT
+        THE_CORRECTION_TAKES_BARE_DOUBLES
+        THE_CURRENT_VELOCITY_TAKES_TYPED_VECTORS
+        A_DECOMPOSITION_ARM_IS_A_TRANSLATION)
+    bettercad_compile_fail_case(cfddiff "${_cfddiff}" ${_case}
+        "could not convert|cannot convert|no matching function|no match for|invalid conversion|conversion from"
+        BetterCAD::cfd)
+endforeach()
+foreach(_case
+        THE_SPARSE_VALUES_ARE_WRITABLE
+        THE_SPARSE_ROW_START_IS_WRITABLE
+        THE_SPARSE_COLUMNS_ARE_WRITABLE)
+    bettercad_compile_fail_case(cfddiff "${_cfddiff}" ${_case}
+        "read-only|assignment of member|discards qualifiers|no match for" BetterCAD::cfd)
+endforeach()
+foreach(_case
+        DEFAULT_CONSTRUCT_A_SPARSE_MATRIX
+        DEFAULT_CONSTRUCT_A_DIFFUSION_SYSTEM)
+    bettercad_compile_fail_case(cfddiff "${_cfddiff}" ${_case}
+        "is private within this context|private|no matching function|use of deleted" BetterCAD::cfd)
+endforeach()
+
 # Temperature DOF index space (P18-DOF-001). The thermal sibling of structdof:
 # a node ordinal is not a node handle, a row of the reduced system is not an
 # unknown of the full one, neither is an integer, a prescribed temperature is a

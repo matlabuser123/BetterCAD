@@ -566,6 +566,63 @@ set(_filters
     "unit\\.CfdInitialField_TwoAdjacentSubnormalsHaveDifferentCanonicalTexts$" 1
     "unit\\.CfdInitialField_TwoDefinitionsThatCompareEqualShareAFingerprint$" 1
     "unit\\.CfdInitialField_TwoExpansionsOfOneFieldAreIdentical$" 1
+    # P19-DIFF-001. The group, the compile-fail group that proves a sparse matrix
+    # cannot be conjured, that the assembled arrays are read-only, and that the
+    # three factors of mu A / (d . n) are not interchangeable -- the one claim a
+    # value test provably cannot reach, since they appear only as a product. And
+    # each case a rename or a drop would otherwise hide. The escaping matches the
+    # rest of this file: \\. is a literal dot, where \. would be a wildcard.
+    "unit\\.CfdDiffusion_" 49
+    "compile_fail\\.cfddiff\\." 22
+    "unit\\.CfdDiffusion_ABoundaryOfAnotherTopologyIsRefusedByName$" 1
+    "unit\\.CfdDiffusion_ACellWithNoInternalFaceStillHasItsDiagonal$" 1
+    "unit\\.CfdDiffusion_AConstantFieldIsInTheNullSpaceWithoutAPrescribedFace$" 1
+    "unit\\.CfdDiffusion_AFaceVaryingGradientIsReadAtItsOwnFace$" 1
+    "unit\\.CfdDiffusion_AGeometryOfAnotherMeshIsRefusedFirst$" 1
+    "unit\\.CfdDiffusion_ALengthFaultIsReportedBeforeAValueFault$" 1
+    "unit\\.CfdDiffusion_ALinearFieldSplitsExactlyIntoTheTwoArms$" 1
+    "unit\\.CfdDiffusion_AMixedBoundaryPartitionsTheCountsAndTheDiagonal$" 1
+    "unit\\.CfdDiffusion_AMovingWallPrescribesItsOwnComponentIntoTheSource$" 1
+    "unit\\.CfdDiffusion_ANonFiniteCurrentVelocityIsRefusedByName$" 1
+    "unit\\.CfdDiffusion_ANonFiniteFaceGradientIsRefusedByName$" 1
+    "unit\\.CfdDiffusion_APrescribedFaceLiftsTheConstantMode$" 1
+    "unit\\.CfdDiffusion_APureNeumannRowSumsToZeroBitExactly$" 1
+    "unit\\.CfdDiffusion_ASlipWallIsRefusedWithoutTheCurrentVelocity$" 1
+    "unit\\.CfdDiffusion_ASlipWallPerpendicularToTheComponentLeavesTheConstantMode$" 1
+    "unit\\.CfdDiffusion_ASlipWallsCrossTermsReadTheComponentBlockedVelocity$" 1
+    "unit\\.CfdDiffusion_ASlipWallsDiagonalIsTheNormalProjectionPerComponent$" 1
+    "unit\\.CfdDiffusion_AWallAtRestPrescribesZeroIntoTheSource$" 1
+    "unit\\.CfdDiffusion_AWronglySizedCorrectionIsRefusedByName$" 1
+    "unit\\.CfdDiffusion_AWronglySizedCurrentVelocityIsRefusedByName$" 1
+    "unit\\.CfdDiffusion_AZeroGradientFaceDoesNotRaiseTheDeferredFraction$" 1
+    "unit\\.CfdDiffusion_AnIndependentOneDimensionalOracleFixesTheCoefficient$" 1
+    "unit\\.CfdDiffusion_AnInternalFaceContributesEqualAndOpposite$" 1
+    "unit\\.CfdDiffusion_AnOrthogonalFaceDefersNothing$" 1
+    "unit\\.CfdDiffusion_AnUnusableViscosityIsRefusedBeforeAMissingVelocity$" 1
+    "unit\\.CfdDiffusion_AnUnusableViscosityIsRefusedByName$" 1
+    "unit\\.CfdDiffusion_EveryProblemHasADistinctName$" 1
+    "unit\\.CfdDiffusion_EveryReferenceBodyAssemblesWithThePatternOfItsTopology$" 1
+    "unit\\.CfdDiffusion_EveryReferenceBodyHasAPositiveDiagonalAndNonPositiveOffDiagonals$" 1
+    "unit\\.CfdDiffusion_EverySparseProblemHasADistinctName$" 1
+    "unit\\.CfdDiffusion_OnASkewFaceTheCoefficientExceedsTheOneDimensionalOneByOneOverCosine$" 1
+    "unit\\.CfdDiffusion_TheAnalyticFacePairFixesTheDeferredArmInClosedForm$" 1
+    "unit\\.CfdDiffusion_TheCorrectionLandsOnBothSidesWithOppositeSigns$" 1
+    "unit\\.CfdDiffusion_TheDecompositionIsAvailableOnABoundaryFace$" 1
+    "unit\\.CfdDiffusion_TheDeferredArmIsLargeOnASkewFaceSoDroppingItWouldMatter$" 1
+    "unit\\.CfdDiffusion_TheDeferredFractionIsTheSineOfTheWorstNonOrthogonality$" 1
+    "unit\\.CfdDiffusion_TheDiagonalIsPositiveAndEveryOffDiagonalIsNegative$" 1
+    "unit\\.CfdDiffusion_TheGeometricScaleLawSeparatesAreaFromDistance$" 1
+    "unit\\.CfdDiffusion_TheInterpolationWeightIsBoundedAndTheViscosityIsTheIdentity$" 1
+    "unit\\.CfdDiffusion_TheInterpolationWeightMatchesAnIndependentCentroidReading$" 1
+    "unit\\.CfdDiffusion_TheMatrixIsSymmetricBitForBit$" 1
+    "unit\\.CfdDiffusion_TheOmittedCorrectionIsReportedAndTheSuppliedOneIsApplied$" 1
+    "unit\\.CfdDiffusion_ThePredictorTheFailureAndThePathNeverDisagree$" 1
+    "unit\\.CfdDiffusion_TheScaleLawsSeparateViscosityFromAreaAndDistance$" 1
+    "unit\\.CfdDiffusion_TheSparseGateRefusesEachMalformedLayoutByName$" 1
+    "unit\\.CfdDiffusion_TheSparseMatrixReadsRowSumsAndProductsReproducibly$" 1
+    "unit\\.CfdDiffusion_TheSparsePatternIsTheTopologysAdjacency$" 1
+    "unit\\.CfdDiffusion_TwoAssembliesOfOneInputAreIdentical$" 1
+    "unit\\.CfdDiffusion_WithoutASlipWallTheThreeComponentsShareOneMatrix$" 1
     "unit\\.CfdBoundary_ABoundaryFaceWithNoConditionIsRefusedByName$" 1
     "unit\\.CfdBoundary_AConditionFaultIsReportedBeforeAnUnresolvableTarget$" 1
     "unit\\.CfdBoundary_ADrilledWallWithNoNameRefusesTheAnalysis$" 1

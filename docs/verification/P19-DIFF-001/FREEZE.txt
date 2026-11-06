@@ -1,0 +1,238 @@
+P19-DIFF-001 — QUALIFICATION FREEZE
+===================================
+
+Written BEFORE the qualification run, so that every number the evidence later
+cites can be reconciled against something that existed first. P19-DOF-001's
+attempt 1 is why this file exists: it ran 352 tests instead of 2991 and passed
+every one, and only a count written down beforehand caught it.
+
+BASELINE
+--------
+
+  HEAD at the freeze     d46a2d1  BetterCAD: record the P19-IC-001 commit
+  previous milestone     P19-IC-001 PASS 2026-11-06 (code+evidence c7ce82a,
+                         record d46a2d1)
+  authorization          2026-11-06, the owner's "implement and fully verify",
+                         with the fourteen item checklist quoted in full.
+                         RECORDED IN TODO.md BEFORE ANY CODE WAS WRITTEN, as
+                         P19-IC-001's was.
+                         Two stale entries in TODO.md's own per-milestone status
+                         table were corrected in the same edit, and both were
+                         defects this author left in the IC-001 commit: the
+                         table still said IC-001 was "IN PROGRESS; no item is
+                         ticked and no verdict is recorded" after it had passed
+                         and been pushed, and still said DIFF-001 was NOT
+                         AUTHORIZED. That table is LIVE -- the "kept as history"
+                         marker sits BELOW it.
+
+THE FROZEN SURFACE
+------------------
+
+The eight paths qualify.cmd records, and nothing else:
+
+    apps  include  src  tests  examples  cmake  CMakeLists.txt  CMakePresets.json
+
+TODO.md, ROADMAP.md and docs/ are OUTSIDE it, deliberately: documentation
+written after the run cannot affect the executable or the tests, so it cannot
+void the qualification. Anything under the eight paths changing after this
+point DOES void it, and the run starts again from clean.
+
+THE METHOD IS QUALIFY.CMD'S OWN, not `git rev-parse HEAD:<path>`: a scratch
+GIT_INDEX_FILE, `git read-tree HEAD`, `git add -A` over the eight paths,
+`git write-tree --prefix=<dir>/` for each directory, and `git ls-files -s` for
+the two files. The same commands the harness runs, so the identities it records
+during the run are comparable with these without translation.
+
+THE EIGHT IDENTITIES AT THE FREEZE
+----------------------------------
+
+  apps               fc398a3d2e524178cf38e8b667236379d8381086
+  include            d57e2b32d22b00509aa70ffb548f45614f93a54e
+  src                5c11820c79c8b09ded4cd9201216b96e42f2b74d
+  tests              10fa15776a5e1d3828ccaeb3dc6fd811f204b3fc
+  examples           4da234ebf4779f7c16d5df0075f106f7e3d4c958
+  cmake              5a382115d7ed7775189d40b55e40f318eaae6cc7
+  CMakeLists.txt     3ec3c10f2a4c522f36c60b1ce1a58e99c4db1ecd
+  CMakePresets.json  3229f0f89b236744d7d5c082bed47c28b718288e
+
+EXACTLY THREE MOVED, compared line by line against P19-IC-001's own freeze, and
+they are exactly the three this milestone edited:
+
+  include   f19541e8 -> d57e2b32   CfdSparse.hpp and CfdDiffusion.hpp, new
+  src       a467077a -> 5c11820c   CfdSparse.cpp and CfdDiffusion.cpp, new;
+                                   src/cfd/CMakeLists.txt amended in ONE clause
+                                   of its standing comment (ADR-069 Decision 3)
+  tests     7dcc4b8a -> 10fa1577   CfdDiffusionTests.cpp and
+                                   CfdDiffusionMisuse.cpp, new;
+                                   tests/CMakeLists.txt,
+                                   tests/compile_fail/CMakeLists.txt and
+                                   tests/cli/ZeroMatchGuard.cmake amended
+
+FIVE ARE BYTE-IDENTICAL to P19-IC-001's freeze -- apps, examples, cmake and both
+root files. That is the check: this milestone touched no app, no example, no
+cmake module and neither root file, and the hashes say so rather than the
+author.
+
+THE HARNESS
+-----------
+
+All SIX files copied from P19-IC-001's qualification directory and verified
+byte-identical by `diff`, with sha256 (first 8):
+
+  launch.cmd            a3bd87be
+  preflight-space.cmd   455c7cc7
+  preflight-space.ps1   e4841827
+  qualify.cmd           0dcba54b
+  run-qualification.cmd 4435262a
+  verify-harness.cmd    145195cd
+
+SIX, AND THE COUNT WAS CHECKED AGAINST AN UNFILTERED LISTING. P19-IC-001's
+attempt 1 was refused by the preflight because the harness had been copied by
+listing the previous milestone's directory through a `grep -iE 'cmd|txt|out|err'`
+filter, which silently dropped preflight-space.ps1 -- and the report that "all
+five harness files are byte-identical" was true and still incomplete. Here the
+whole directory was listed, the six non-log entries taken, and the source and
+destination counts compared.
+
+AND THE TWO PREFLIGHT HASHES VERIFY AGAINST THE ONES run-qualification.cmd
+RECORDS FOR ITSELF. The comment names the algorithm, which is `git hash-object`
+and not plain sha1 -- checked rather than assumed, because plain sha1 gives
+different values:
+
+  preflight-space.cmd  a65d6578000b6e8a2811d5154bcec24be09c2b54   matches
+  preflight-space.ps1  2f0d4228488f6a574ca57ec89f0fad0107b16b59   matches
+
+So this is the FIFTY-NINTH milestone run on an unchanged harness.
+
+AND THE HARNESS WAS SELF-CHECKED FIRST, because an unchanged harness is not the
+same as a working one. verify-harness.cmd points it at a preset that does not
+exist and requires a non-zero exit; it also checks that a zero-match repeat
+filter is counted as a failed stage. Result, this freeze:
+
+    QUALIFICATION FAILED: 2 stage(s) failed.
+    PASS: a failed stage gave qualify.cmd exit 2, and a zero-match
+          repeat filter was counted as a failed stage.
+
+A harness that cannot fail would make every number below worthless.
+
+EXPECTED COUNTS — THE NUMBERS THE EVIDENCE MUST RECONCILE AGAINST
+-----------------------------------------------------------------
+
+Predicted from P19-IC-001's figures, then MEASURED with `ctest -N` before the
+run. Both agree, and both are recorded so a disagreement is visible:
+
+  full set, per preset      6311  = 6240 (P19-IC-001) + 49 unit + 22 compile-fail
+  repeat set, per preset    3124  = 3075 (P19-IC-001) + 49 unit
+  repeat markers per log   15620  = 3124 x 5
+
+  measured with ctest -N:   6311 full, 3124 repeat.  Both exact.
+
+COMPILE-FAIL IS EXCLUDED FROM THE REPEAT, as in every milestone, which is why
+the repeat grows by 49 and not 71. The repeat filter is byte-identical to
+P19-IC-001's and matches the new tests through its existing `unit\.Cfd` term --
+measured, not assumed: 49 of the new tests are inside the repeat selection and
+0 compile-fail cases are. No filter was widened for this milestone.
+
+THE NEW TESTS' OWN FIGURES, measured on the pre-freeze tree:
+
+  unit.CfdDiffusion_*       49 cases
+  the [diff] tag         31688 assertions in 49 cases, in Debug
+                         31688 assertions in 49 cases, in Release
+                         -- IDENTICAL, so no assertion is
+                            configuration-dependent. A count that agreed only in
+                            Debug would mean a branch compiled out, which is a
+                            stronger statement than "both presets passed"
+  compile_fail.cfddiff.*    22 cases, every one PASSING, and the CONTROL target
+                         compiles clean under -Werror -- P19-GEOM-001's recorded
+                         lesson, where a failing control broke `cmake --build`
+                         for the whole project and would have killed all
+                         seventeen stages
+  the [cfd] subsystem   547814 assertions in 313 cases
+                         = 516126 + 31688 and 264 + 49, both EXACT, so no
+                           pre-existing cfd assertion moved
+
+PRE-FREEZE STATE
+----------------
+
+  49 of 49 unit tests PASS
+  22 of 22 compile-fail gates PASS, and the control compiles
+  205 of 205 architecture tests PASS, layering included
+  cli.mesh.zero-match-guard PASS with the 49 anchored names and both group
+    counts; the guard names and the TEST_CASE names were diffed and are the
+    same set
+  20 of 20 MUTATIONS KILLED, across three sweeps, tree restored to 0 markers
+  0 warnings in either build, and BETTERCAD_WARNINGS_AS_ERRORS:BOOL=ON read
+    from each BUILT tree's own CMakeCache.txt rather than from a preset walk
+  the two new headers and two new sources include only cfd (42) and core (0),
+    and no non-comment line names linalg, thermal, structural, OCCT or Qt
+
+WHAT THE MUTATION SWEEP IS WORTH, STATED PRECISELY
+--------------------------------------------------
+
+The adversarial review PREDICTED that eight specific source-vector mutations
+would survive the suite as it then stood, and the fix pass claimed to close
+them. All eight are killed. That is a prediction and a measurement rather than
+an assertion, which is the only reason the number means anything.
+
+Three of the twenty probes were VOID on the first sweep because they did not
+compile -- `unused variable ... [-Werror=unused-variable]`, reproduced by hand.
+That is P18-ELEM-001's recorded finding F3, and its remedy was applied:
+reformulate so the mutated code still uses every name. Counting them as
+survivors would have claimed three gaps that do not exist; counting them as
+kills would have claimed three verifications that never ran.
+
+One probe was MIS-PAIRED by the author: a wrong neighbour DIAGONAL was tested
+against the bit-exact symmetry assertion, and a diagonal cannot be asymmetric.
+Re-paired with the row sum, which is what a wrong diagonal breaks.
+
+And ONE REAL GAP was found, which is the sweep's own finding and not a review's:
+`AFaceVaryingGradientIsReadAtItsOwnFace` could not detect a hard-coded face
+index, because `isInternal(face)` is `face.value() < internalFaces` and the
+fixture's only contributing face was therefore index 0. The test was repaired to
+make six more faces contribute, and the mutation then died -- attributed to
+exactly the one case whose name claims it.
+
+COUNTING TRAPS THIS MILESTONE ALREADY FELL INTO
+-----------------------------------------------
+
+Recorded here because the same traps are available during the run. Every one was
+the author's measurement and not the code's.
+
+  (i)   a verification regex requiring exactly eight leading spaces missed the
+        LAST case of each compile-fail foreach block, because that one ends with
+        a closing paren on the same line. It reported 18 of 22 registered. The
+        registration was correct; the check was not
+  (ii)  backslash levels were silently halved passing a script through a shell
+        heredoc -- four in the source arrived as one -- so a guard block built
+        with `\\.` would have been written with `\.`, a CMake wildcard where a
+        literal dot was meant. The generator was rebuilt to construct both
+        backslashes from chr(92), immune to any escaping layer
+  (iii) `timeout 110` on a build killed the LINKER and reported
+        `ld returned 143`, which reads like a link error and is a signal
+  (iv)  an UNQUOTED shell heredoc let bash execute the backticks inside a C++
+        comment, mangling it into the test file. Quoted heredocs only
+  (v)    a batch script invoked an executable by a forward-slash path, which
+        cmd.exe cannot resolve, and produced an empty measurement that looked
+        like a successful run. The measurement was redone directly
+
+Same family as the four this project already carries -- `ctest -R` matching
+nothing and exiting 0, a hyphen-stopping regex that counted 4 of 16, an
+`inherits[0]` walk that read -Werror as off, and P19-IC-001's shutil.copy2 mtime
+artefact that made a stale binary report a defect that was not there. The rule
+that follows: a number is not evidence until the thing that produced it is known
+to be the thing under test.
+
+WHAT THE RUN MUST PRODUCE
+-------------------------
+
+  17 stages, every one exit 0
+  6311/6311 in each of debug-ext, release-ext, debug-shared-ext
+  3124/3124 x 5 in release-ext and debug-ext repeats, 15620 Passed markers each
+  0 warnings under -Werror
+  no-op rebuilds recompiling nothing
+  the eight identities above, unchanged, read by the harness before the first
+    build and again after the last test run
+
+THE LAUNCHER'S EXIT CODE IS NOT THE VERDICT. The verdict is
+run-qualification.out's own sentence and qualification-times.txt's failed-stage
+count, and the evidence quotes those rather than a shell's exit status.

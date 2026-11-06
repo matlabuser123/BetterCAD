@@ -30,10 +30,27 @@
 # availability rule (to name the category of a failure) -- never for a second
 # opinion of its own.
 #
-# NO LINEAR ALGEBRA LINKED. There is no matrix in this milestone. Admitting one is
-# P19-LINSOLVE-001's decision, and the generic kernel it would reuse is
-# BetterCAD::linalg (layer 5, ADR-052), linked PRIVATE, never an include of
-# structural or thermal and never a hand copy.
+# NO LINEAR ALGEBRA LINKED, AND STILL NONE (amended by P19-DIFF-001, ADR-069).
+# This comment read "There is no matrix in this milestone" until P19-DIFF-001 was
+# authorized to assemble one, and that one clause is now false while the rest
+# stands. The distinction the amendment draws:
+#
+#   the CONTAINER   CfdSparseMatrix is P19-DIFF-001's. It is a compressed sparse
+#                   row value with a validating gate and a matrix-vector product,
+#                   and NOTHING MORE -- no factorisation, no solve, no iteration
+#   the SOLVE       still P19-LINSOLVE-001's decision, unchanged. The generic
+#                   kernel it would reuse is BetterCAD::linalg (layer 5,
+#                   ADR-052), linked PRIVATE, never an include of structural or
+#                   thermal and never a hand copy
+#
+# So BetterCAD::linalg is NOT linked here and no linalg header is included. The
+# consequence is deliberate: CfdSparseIndex is cfd's own uint64_t alias rather
+# than linalg::SparseIndex, same width and signedness by construction so a later
+# solve consumes these spans without translation, and the static_assert that
+# turns "same by construction" into "same, enforced" belongs to the milestone
+# that may legitimately include that header. ADR-069 Decision 3 records why
+# buying the assert today would cost a decision that is not this milestone's to
+# spend.
 
 bettercad_add_library(bettercad_cfd
     ALIAS cfd
@@ -44,11 +61,13 @@ bettercad_add_library(bettercad_cfd
         CfdAnalysisObject.cpp
         CfdBoundary.cpp
         CfdData.cpp
+        CfdDiffusion.cpp
         CfdFields.cpp
         CfdFluid.cpp
         CfdGeometry.cpp
         CfdInitialField.cpp
         CfdMesh.cpp
+        CfdSparse.cpp
         CfdTarget.cpp
         CfdTopology.cpp
         CfdResult.cpp

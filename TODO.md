@@ -23,12 +23,98 @@ Prerequisite:
            may set). P17's F1-F3 stand unchanged beneath them.
 
 Current milestone:
-           NONE. P19-IC-001 PASSED 2026-11-06, and finishing a milestone is
-           itself a stop condition. The next milestone is a scope decision
-           for the owner, not Claude's to make: P19-DIFF-001 is next in the
-           phase plan below and is NOT authorized.
+           NONE. P19-DIFF-001 PASSED 2026-11-06, and finishing a milestone is
+           itself a stop condition. The next milestone is a scope decision for
+           the owner, not Claude's to make: P19-GRAD-001 is next in the phase
+           plan below and is NOT authorized.
 
 Previous milestone:
+           P19-DIFF-001 — Diffusion Operator. AUTHORIZED 2026-11-06 by the
+           owner ("implement and fully verify", with the fourteen item
+           checklist quoted in full). PASS 2026-11-06. All fourteen items are
+           recorded: 17 of 17 stages exit 0, qualified from clean on the FIRST
+           attempt, 6311/6311 in each of the three presets, 3124 x 5 in two
+           with 15620 counted Passed markers each, 0 warnings under -Werror,
+           3h13m48s, and the eight qualified subtrees identical across FOUR
+           readings — at the freeze, by the harness before the first build, by
+           the harness after the last test run, and recomputed from the working
+           tree afterwards by the harness's own method. 49 unit cases / 31,688
+           assertions and 22 compile-fail cases, and the assertion count is
+           IDENTICAL in Debug and Release, so no assertion here is
+           configuration-dependent — a count that agreed only in Debug would
+           mean a branch compiled out. The cfd subsystem reads 547814
+           assertions in 313 cases, which is 516126 + 31688 and 264 + 49
+           EXACTLY, so no pre-existing cfd assertion moved.
+           ADR-069 records the operator as a PER-COMPONENT SCALAR matrix, which
+           follows from ADR-066: the segregated momentum predictor assembles no
+           row coupling u to v, so component X's block IS the cell-centred
+           scalar array. The surface decomposition is OVER-RELAXED, chosen
+           because |T_f|/|E_f| is what governs a deferred-correction iteration
+           and over-relaxed is the only one of the three that keeps it at or
+           below 1 at every angle; minimum correction reaches 81.8 at the
+           89.3 degrees ADR-063 measured. Both wrong turns taken on the way to
+           that are recorded in Decision 2 rather than tidied away.
+           THE NON-ORTHOGONAL CORRECTION IS CALLER-SUPPLIED, NOT COMPUTED. The
+           operator needs a gradient it has no right to build here, so it takes
+           one, measures the omission per face, and reports the worst fraction
+           in its summary. ADR-063 F1 calls the correction "mandatory in the
+           discretisation, not an option" and also reserves any accept-or-refuse
+           threshold to P19-VALID-001 and the owner, so this operator REPORTS
+           rather than refuses, and L1 says so as a limitation rather than as a
+           completion. Without a supplied gradient it is a correct Laplacian
+           only on an orthogonal mesh, and no P16 reference mesh is one.
+           TWO REVIEW FINDINGS WERE SUBSTANTIVE AND BOTH WERE DEFECTS IN WHAT
+           THIS AUTHOR HAD WRITTEN DOWN, not in the code's behaviour. ADR-069
+           Decision 7 described an interpolation weight that did not exist —
+           no weight, no call site, no test — in the Decision that is itself
+           the evidence for it; it was implemented rather than reworded. And
+           the symmetry claim was too strong: gamma is computed once and
+           scattered four times, so largestSymmetryError() == 0.0 is a property
+           of the scatter and not an independent confirmation of the
+           coefficient. It is recorded as STRUCTURAL, and the author's stronger
+           claim to the owner was corrected explicitly rather than left
+           standing. A third finding was a test defect of the same family: the
+           skew case took its expected value from a test-side oracle on both
+           sides, so an operator dividing by |d| would have passed the very
+           test whose comment ruled that out. It now reads the assembled
+           matrix.
+           TWENTY MUTATIONS, ALL KILLED, across three sweeps — and the sweep
+           earned its place rather than decorating the evidence. The
+           adversarial review PREDICTED that eight specific source-vector
+           mutations would survive; all eight are killed, the eighth only after
+           the test written to catch it was itself repaired. THAT REPAIR IS THE
+           SWEEP'S OWN FINDING: AFaceVaryingGradientIsReadAtItsOwnFace could
+           not detect a hard-coded face index, because isInternal(face) is
+           face.value() < internalFaces and the fixture's only contributing
+           face was therefore index 0. Three probes were VOID because they did
+           not compile — P18-ELEM-001's finding F3, reported as void rather
+           than as survivors, and reformulated so the mutated code still uses
+           every name — one was MIS-PAIRED by the author against a test that
+           cannot see a diagonal, and one was a NO-OP inside an idempotent
+           lambda. Each is recorded for what it was.
+           THE AUTHOR'S OWN NEW TESTS CAUGHT TWO OF THE AUTHOR'S OWN DEFECTS
+           BEFORE ANY REVIEW: the first interpolation weight was not a convex
+           weight on a skewed mesh and measured 3.6095 on the Cylinder, which
+           is ADR-065's recorded skewness showing up as a number; and the
+           viscosity lerp was not exact for a constant field, because
+           w*mu + (1-w)*mu is not mu. Both were replaced.
+           Nine limitations are recorded, L3 among them: there is NO SOLVE and
+           no momentum equation, so nothing here is shown to produce a flow
+           field — this is one operator of an equation that does not exist yet,
+           and the matrix has never been handed to a solver. L4 records the
+           input gate's boundary-currency arm as UNTESTED rather than claimed,
+           because bindCfdBoundary deliberately returns a default source and no
+           test can reach that arm. No performance result is measured, and L9
+           says why: nothing in cfd assembled a matrix before this milestone,
+           so there is no baseline.
+           A SIXTH COUNTING TRAP was met while reading the run and is recorded
+           beside the five from the freeze: a grep for Skipped / Not Run /
+           Disabled returns 8 lines per full log and 40 per repeat, and every
+           one is a TEST NAME containing the word. The figure that answers the
+           question is the Passed-marker total.
+           (docs/verification/P19-DIFF-001/README.md.)
+
+Milestone before that:
            P19-IC-001 — CFD Initial Conditions. AUTHORIZED 2026-11-05 by the
            owner ("implement and fully verify", with the twelve item checklist
            quoted in full). PASS 2026-11-06. All twelve items are recorded:
@@ -108,7 +194,7 @@ Previous milestone:
            holding under a condition nobody arranged.
            (docs/verification/P19-IC-001/README.md.)
 
-Milestone before that:
+Before those:
            P19-BC-001 — CFD Boundary Conditions. AUTHORIZED 2026-11-05 by the
            owner ("implement and fully verify", with the twenty item checklist
            and the canonical / derived split quoted). PASS 2026-11-05. All
@@ -156,7 +242,7 @@ Milestone before that:
            REVISION r1 rather than tidying it away.
            (docs/verification/P19-BC-001/README.md.)
 
-Before those:
+Earlier still:
            P19-DOF-001 — CFD Field / DOF Model. AUTHORIZED 2026-11-04 by the
            owner ("implement and fully verify", with the seventeen item
            checklist and the recommended p / U / phi layout quoted). PASS
@@ -186,7 +272,7 @@ Before those:
            fixes are verified by mutation.
            (docs/verification/P19-DOF-001/README.md.)
 
-Earlier still:
+Earlier than those:
            P19-GEOM-001 — Finite-Volume Geometric Metrics. AUTHORIZED
            2026-10-31 by the owner ("start", with the twenty-one item checklist
            quoted). PASS 2026-10-31. All twenty-one items are recorded: 17 of
@@ -208,27 +294,12 @@ Earlier still:
            area scale on all eight reference meshes.
            (docs/verification/P19-GEOM-001/README.md.)
 
-Earlier than those:
-           P19-TOPO-001 — Finite-Volume Topology. AUTHORIZED 2026-10-31 by
-           the owner ("implement this and fully verify", with the twenty-two
-           item checklist quoted). PASS 2026-10-31. All twenty-two items are
-           recorded: 17 of 17 stages exit 0, 5998/5998 in each of the three
-           presets, 2839 x 5 in two with 14195 counted per-test Passed markers
-           each, 0 warnings and 0 errors under -Werror, 2h11m16s, and the eight
-           qualified subtrees identical before the first build, after the last
-           test run and in the committed tree. 36 unit cases / 108,373
-           assertions and 23 compile-fail cases. Two independent reviews each
-           found a real defect: faceNodes promised outward winding
-           unconditionally while the builder checked neither cell volume nor
-           shared-face orientation, so the guarantee is now ENFORCED by two
-           added refusals (NonPositiveCellVolume, InconsistentFaceOrientation)
-           rather than documented; and eight claims in ADR-064 had no evidence
-           behind them, each corrected. Two checklist items are recorded
-           narrower than their wording and one collapses onto another; all
-           three are stated in the evidence rather than glossed.
-           (docs/verification/P19-TOPO-001/README.md.)
-
            Earlier P19 milestones, each at its own recorded verdict:
+           P19-TOPO-001 PASSED 2026-10-31 (5998/5998 x 3 presets,
+           2h11m16s, 36 unit cases / 108,373 assertions; two independent
+           reviews each found a real defect, one of them an unconditional
+           outward-winding promise the builder did not enforce, now
+           ENFORCED by two added refusals, ADR-064);
            P19-MESH-001 PASSED 2026-10-31 on attempt 2 (5939/5939 x 3
            presets, 2h46m08s; attempt 1 failed 5 of 17 stages because the
            previous machine's %TEMP% volume was full, and that machine was
@@ -252,8 +323,8 @@ Qualified:
            P18 — Thermal Analysis
 
 Next:
-           NOTHING IS AUTHORIZED. P19-IC-001 passed on 2026-11-06 and no
-           milestone is open. P19-DIFF-001 is next in the phase plan, and
+           NOTHING IS AUTHORIZED. P19-DIFF-001 passed on 2026-11-06 and no
+           milestone is open. P19-GRAD-001 is next in the phase plan, and
            being next is not permission: each milestone is started by the
            owner, as every P17, P18 and P19 milestone was, and a
            predecessor's PASS is not permission to start the one after it.
@@ -3108,26 +3179,163 @@ decision and what it rejected.
 
 Implement finite-volume diffusion operator independently and verify it.
 
+**AUTHORIZED 2026-11-06** by the owner's "implement and fully verify", with the
+fourteen item checklist below quoted in full. PASS 2026-11-06; the record is
+below the checklist. Nothing after this milestone is authorized.
+
 For constant viscosity:
 
 ```text
 ∇·(mu ∇U)
 ```
 
-* [ ] Define orthogonal diffusion
-* [ ] Define face interpolation
-* [ ] Define non-orthogonal correction policy
-* [ ] Boundary diffusion treatment
-* [ ] Matrix coefficient sign convention
-* [ ] Conservation across internal faces
-* [ ] Equal/opposite internal contribution
-* [ ] Constant-field null behaviour
-* [ ] Linear-field patch test
-* [ ] Independent 1D diffusion oracle
-* [ ] Symmetry where mathematically expected
-* [ ] Sparse assembly
-* [ ] Regression PASS
-* [ ] Evidence recorded
+* [x] Define orthogonal diffusion
+* [x] Define face interpolation
+* [x] Define non-orthogonal correction policy
+* [x] Boundary diffusion treatment
+* [x] Matrix coefficient sign convention
+* [x] Conservation across internal faces
+* [x] Equal/opposite internal contribution
+* [x] Constant-field null behaviour
+* [x] Linear-field patch test
+* [x] Independent 1D diffusion oracle
+* [x] Symmetry where mathematically expected
+* [x] Sparse assembly
+* [x] Regression PASS
+* [x] Evidence recorded
+
+```text
+PASS 2026-11-06. Authorized 2026-11-06 by the owner's "implement and fully
+verify", with the fourteen item checklist quoted in full, and that authorization
+was RECORDED HERE BEFORE ANY CODE WAS WRITTEN, as P19-IC-001's was. Two stale
+rows this author left in the status table below -- IC-001 still "IN PROGRESS"
+after it had passed and been pushed, and DIFF-001 still "NOT AUTHORIZED" -- were
+corrected in the same edit; that table is live, since the "kept as history"
+marker sits below it.
+Qualified against d46a2d1 plus this milestone's ten candidate files inside the
+frozen surface, SIX NEW and four registration points amended -- counted from
+git rather than from memory:
+6311/6311 x 3 presets, 3124 x 5 in two repeat stages with 15620 counted Passed
+markers each, 0 warnings and 0 errors under -Werror, 17 of 17 stages exit 0,
+3h13m48s, QUALIFIED FROM CLEAN ON THE FIRST ATTEMPT, and the eight qualified
+subtrees identical across FOUR readings -- at the freeze, by the harness before
+the first build, by the harness after the last test run, and recomputed from the
+working tree afterwards by the harness's own method (scratch GIT_INDEX_FILE,
+read-tree HEAD, add -A, write-tree --prefix).
+49 unit cases / 31,688 assertions and 22 compile-fail cases. Exactly three of
+the eight subtrees moved -- include, src and tests -- and they are exactly the
+three this milestone edited; the other five are byte-identical to P19-IC-001's
+freeze. The harness is byte-identical to P19-IC-001's, its 59th milestone, and
+it was SELF-CHECKED FIRST: verify-harness.cmd confirmed that a failed stage
+gives exit 2 and that a zero-match repeat filter is counted as a failed stage,
+because an unchanged harness is not the same as a working one.
+
+The assertion count is IDENTICAL in Debug and Release -- 31688 in 49 cases on
+both -- which is a stronger statement than two passes: a count that agreed only
+in Debug would mean a branch compiled out. The whole CFD subsystem reads 547814
+assertions in 313 cases, which is 516126 + 31688 and 264 + 49 EXACTLY, so no
+pre-existing cfd assertion moved. The full-set arithmetic reconciles the same
+way: 6311 = 6240 + 49 + 22, and 6240 is P19-IC-001's own figure, so no
+pre-existing test moved either. Compile-fail is excluded from the repeat, as in
+every milestone, which is why the repeat grows by 49 and not 71 -- measured
+rather than assumed, and no filter was widened for this milestone.
+
+ADR-069 records ten decisions. The operator is a PER-COMPONENT SCALAR matrix,
+which follows from ADR-066 rather than being chosen here: a segregated momentum
+predictor assembles no row coupling u to v, so component X's block IS the
+cell-centred scalar array, laid out comp * cells + cell. The surface vector is
+split S_f = E_f + T_f by the OVER-RELAXED decomposition, E_f = (A/(d.n)) d, with
+T_f . S_f zero identically. The reason is the ratio that governs a
+deferred-correction iteration, |T_f|/|E_f|: sin(theta) for over-relaxed, so at
+or below 1 at every angle, against tan(theta) for minimum correction, which
+reaches 81.8 at the 89.3 degrees ADR-063 F1 measured on a reference mesh. The
+algebra was verified numerically over twenty thousand random configurations
+before any C++ existed, and both wrong turns on the way to it are recorded in
+Decision 2 rather than tidied away.
+
+THE NON-ORTHOGONAL CORRECTION IS CALLER-SUPPLIED, NOT COMPUTED. The deferred arm
+needs a gradient that belongs to P19-GRAD-001, so assembleCfdDiffusion accepts
+one per face, measures each face's omitted fraction, and reports the worst in its
+summary. With no gradient supplied the operator is a correct Laplacian only on an
+ORTHOGONAL mesh, and no P16 reference mesh is one -- the best maximum is the
+Block's 64.09 degrees. ADR-063 F1 calls the correction "mandatory in the
+discretisation, not an option" and in the same milestone reserves any
+accept-or-refuse threshold to P19-VALID-001 and the owner, so this operator
+REPORTS rather than refuses, and L1 of the evidence says so as a limitation.
+
+Nine refusals, declared in phase order and each asserted BY TAG rather than by
+message, the lesson P19-BC-001's review recorded. Two of them exist because a
+review found that neither caller-supplied array was checked for finiteness.
+Atomic: the whole input gate runs before any geometry is read, the assembly
+writes only locals, and every failure returns before CfdDiffusionSystem is
+constructed, so there is no out-parameter a refused assembly could leave part
+written. CfdSparseMatrix cannot be conjured -- fromCsr is the only door and the
+default constructor is private -- so an unvalidated matrix does not exist, and a
+system holding one by value inherits the guarantee. Compile-fail gates hold it.
+
+TWO OF THE FOURTEEN ITEMS ARE RECORDED NARROWER THAN THEIR WORDING, and the
+evidence states both rather than glossing them. "Define non-orthogonal
+correction policy" is a policy and a measurement, not a correction. "Symmetry
+where mathematically expected" is STRUCTURAL: gamma is computed once and
+scattered four times, so largestSymmetryError() == 0.0 is a property of the
+scatter, and the mutation sweep confirms it cannot see a wrong coefficient or a
+wrong diagonal. What carries the numerical claim instead is the row sum and an
+analytic fixture whose arithmetic is exact -- |d| = 5/4, d.n = 3/4,
+cos(theta) = 3/5 -- which is also where the choice of decomposition is pinned,
+because the deferred fraction must read 4/5 there and not 4/3 or sqrt(0.8).
+
+TWENTY MUTATIONS, ALL KILLED, across three sweeps. The adversarial review
+PREDICTED that eight specific source-vector mutations would survive the suite as
+it then stood; all eight are killed, which is a prediction and a measurement
+rather than an assertion. THE SWEEP FOUND ONE REAL GAP that neither review
+could: AFaceVaryingGradientIsReadAtItsOwnFace could not detect a hard-coded face
+index, because isInternal(face) is face.value() < internalFaces and the fixture's
+only contributing face was therefore index 0. Three probes are reported VOID
+rather than as survivors because they did not compile, which is P18-ELEM-001's
+finding F3 and its recorded remedy; one was MIS-PAIRED by this author against a
+test that cannot see a diagonal; one was a NO-OP inside an idempotent lambda.
+Each is recorded for what it was, because counting a void probe either way
+claims something that did not happen.
+
+TWO REVIEW FINDINGS WERE DEFECTS IN WHAT THIS AUTHOR HAD WRITTEN DOWN. ADR-069
+Decision 7 described an interpolation weight that did not exist -- no weight, no
+call site, no test -- in the Decision that is itself the evidence for it; it was
+implemented rather than reworded. And the symmetry claim was too strong; it is
+now recorded as structural, and the stronger claim made to the owner was
+corrected explicitly rather than left standing. A third was a test defect of the
+same family: the skew case took its expected value from a test-side oracle on
+both sides, so an operator dividing by |d| instead of d.n would have passed the
+very test whose comment ruled that out.
+
+AND THE AUTHOR'S OWN NEW TESTS CAUGHT TWO OF THE AUTHOR'S OWN DEFECTS BEFORE ANY
+REVIEW REPORTED. The first interpolation weight, |C_N - C_f| / |C_N - C_P|, is
+not a convex weight on a skewed mesh and measured 3.60954574408530382 on the
+Cylinder, which is ADR-065's recorded skewness of 6.5 arriving as a number; it
+was replaced by the normal-projection form. And cfdFaceViscosity was not exact
+for a constant field, because w*mu + (1-w)*mu is not mu; it was replaced by the
+stable lerp mu_N + w(mu_P - mu_N).
+
+Nine limitations are recorded. L3: THERE IS NO SOLVE AND NO MOMENTUM EQUATION,
+so nothing here is shown to produce a flow field -- this is one operator of an
+equation that does not exist yet, and the matrix has never been handed to a
+solver. L4: the input gate's boundary-currency arm is UNTESTED, because
+bindCfdBoundary deliberately returns a default source and no test can reach that
+arm; recorded rather than claimed, after a review found no test does. L2: no
+skewness correction exists, and it needs the same missing gradient. L9: no
+performance result, because nothing in cfd assembled a matrix before this
+milestone and there is no baseline. The one measurement worth recording is
+structural rather than temporal: nonZeros == cells + 2 * internalFaces on all
+eight reference bodies, so the pattern is the connectivity and nothing is stored
+twice.
+
+A SIXTH COUNTING TRAP was met while reading the run, and is recorded beside the
+five in FREEZE.txt. A grep for Skipped / Not Run / Disabled returns 8 lines per
+full log and 40 per repeat, which reads like a skip and is not: every one is a
+TEST NAME containing the word, four such tests, each printed twice per pass. The
+figure that answers the question is the Passed-marker total -- 6311, 6311, 6311,
+15620, 15620 -- because that says every selected test RAN, where "none failed"
+does not.
+```
 
 ---
 # P19-GRAD-001
@@ -4622,14 +4830,37 @@ P19-BC-001       PASS 2026-11-05. Authorized the same day by the owner
                  ADR-067. Evidence recorded.
 
 P19-IC-001       AUTHORIZED 2026-11-05 by the owner's "implement and fully
-                 verify", with the twelve item checklist quoted in full. IN
-                 PROGRESS; no item is ticked and no verdict is recorded. This
-                 authorization was written here BEFORE any implementation,
-                 which P19-BC-001's was not.
+                 verify", with the twelve item checklist quoted in full. PASS
+                 2026-11-06, all twelve items recorded (code and evidence
+                 c7ce82a). This authorization was written here BEFORE any
+                 implementation, which P19-BC-001's was not. 6240/6240 x 3
+                 presets, 3075 x 5 in two repeats, 17 of 17 stages exit 0, and
+                 the eight qualified subtrees identical across six readings.
+                 ADR-068: no field storage is added, the expansion writes into
+                 the caller's array. Nineteen review findings acted on; three
+                 documentation claims withdrawn as measurably false. Qualified
+                 on the third attempt, the two earlier ones void for a
+                 preflight refusal and a session teardown, both recorded.
+                 Evidence recorded.
 
-P19-DIFF-001     NOT AUTHORIZED. Next in the sequence, which is not
-                 permission. Authorizing it is the owner's decision alone, and
-                 everything after it likewise.
+P19-DIFF-001     AUTHORIZED 2026-11-06 by the owner's "implement and fully
+                 verify", with the fourteen item checklist quoted in full. PASS
+                 2026-11-06, all fourteen items recorded. This authorization was
+                 written here BEFORE any implementation, as P19-IC-001's was.
+                 6311/6311 x 3 presets, 3124 x 5 in two repeats, 17 of 17
+                 stages exit 0, qualified from clean on the first attempt, and
+                 the eight qualified subtrees identical across four readings.
+                 49 unit cases / 31,688 assertions, the count IDENTICAL in
+                 Debug and Release; 22 compile-fail gates. ADR-069: a
+                 per-component scalar matrix, an over-relaxed decomposition,
+                 and the non-orthogonal correction CALLER-SUPPLIED and its
+                 omission measured rather than computed. Twenty mutations
+                 killed, one of which found a real test gap. Two review
+                 findings were defects in this author's own written claims --
+                 a Decision describing code that did not exist, and a symmetry
+                 claim too strong -- and both are corrected rather than
+                 reworded. Evidence recorded. Everything after it is still the
+                 owner's decision alone.
 ```
 
 The text below is the standing record as of P18-QUAL-001 (2026-10-27) and is kept as history.

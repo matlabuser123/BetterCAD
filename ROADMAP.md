@@ -104,8 +104,8 @@ Current authorized development:
 P19 — CFD Integration, authorized 2026-10-27 by the owner's "start
 P19-ARCH-001": P19-ARCH-001 and P19-DATA-001 (2026-10-27), P19-FLUID-001
 (2026-10-28), P19-MESH-001, P19-TOPO-001 and P19-GEOM-001 (all 2026-10-31) and
-P19-DOF-001 and P19-BC-001 (both 2026-11-05) and P19-IC-001 (2026-11-06) have
-PASSED.
+P19-DOF-001 and P19-BC-001 (both 2026-11-05) and P19-IC-001 and P19-DIFF-001
+(both 2026-11-06) have PASSED.
 P19-MESH-001 was qualified by a second attempt on a replacement machine: its
 first attempt, on 2026-10-28, failed 5 of 17 stages when the previous machine's
 temp volume filled and no test suite ran, and that machine was then permanently
@@ -130,10 +130,13 @@ killed rather than failing, and that attempt is void — though its first preset
 had already passed 6240 of 6240, independently confirming the predicted count,
 and its repeat stages, pointed at a build tree that no longer existed, selected
 0 tests and were correctly COUNTED AS FAILED rather than passing as ctest's "No
-tests were found!!!". The third ran detached and qualified every stage. The
-harness has now run fifty-eight milestones unchanged, and is self-checked before
-each run, because an unchanged harness is not the same as a working one. No
-milestone is open, and nothing after P19-IC-001 is authorized; see TODO.md.
+tests were found!!!". The third ran detached and qualified every stage.
+P19-DIFF-001 qualified from clean on the FIRST attempt, launched detached from
+the start because of what had happened to P19-IC-001's second, and it is the
+first P19 milestone since P19-BC-001 to need only one. The harness has now run
+fifty-nine milestones unchanged, and is self-checked before each run, because an
+unchanged harness is not the same as a working one. No milestone is open, and
+nothing after P19-DIFF-001 is authorized; see TODO.md.
 
 The phases before it, and how each was qualified:
 
@@ -1023,6 +1026,64 @@ correctly bound starting state — no performance result is measured, and "exact
 undo / persistence semantics" is met as value semantics plus the fingerprint,
 not as a round trip, because no CFD serializer and no CFD command exist yet.
 Those are `P19-PERSIST-001` and `P19-CMD-001`, each the owner's to authorize.
+
+`P19-DIFF-001` (PASS 2026-11-06) is the first milestone in which BetterCAD
+ASSEMBLES A MATRIX FROM A MESH. It discretises the diffusion term
+`div(mu grad U)` over the finite-volume topology as a validated CSR matrix and a
+source vector, and `ADR-069` records what kind of object that is: a
+PER-COMPONENT SCALAR operator, which follows from `ADR-066` rather than being
+chosen here, because a segregated momentum predictor assembles no row coupling
+`u` to `v`, so one component's block simply *is* the cell-centred scalar array.
+The surface vector is split as `S_f = E_f + T_f` by the OVER-RELAXED
+decomposition, and the reason is the ratio that actually governs a
+deferred-correction iteration: `|T_f|/|E_f|` is `sin(theta)` there and stays at
+or below 1 at every angle, where minimum correction gives `tan(theta)` and so
+reaches 81.8 at the 89.3 degrees `ADR-063` measured on a reference mesh. The
+algebra was verified numerically over twenty thousand random configurations
+before any C++ existed, and both wrong turns taken on the way to it are recorded
+in the decision rather than tidied out of it.
+
+**The non-orthogonal correction is caller-supplied, and the omission is measured
+rather than assumed away.** The operator needs a gradient that belongs to
+`P19-GRAD-001`, so it accepts one, computes each face's deferred arm, and reports
+the worst omitted fraction in its summary; with no gradient supplied it is a
+correct Laplacian only on an orthogonal mesh, and no P16 reference mesh is one —
+the best maximum is 64.09 degrees. `ADR-063` F1 calls the correction "mandatory
+in the discretisation, not an option" and in the same breath reserves any
+accept-or-refuse threshold to `P19-VALID-001` and the owner, so this operator
+REPORTS rather than refuses, and the evidence carries that as a limitation
+rather than as a completion. Two of the fourteen checklist items are recorded
+narrower than their wording: the correction policy is a policy and a
+measurement, and the symmetry guarantee is STRUCTURAL — `gamma` is computed once
+and scattered to both sides, so a zero symmetry error is a property of the
+scatter and not an independent confirmation of the coefficient, which is what
+the row sum and the analytic fixture are for.
+
+Qualified at 6311/6311 in each of three presets, 3124 x 5 in two, 0 warnings
+under `-Werror`, 17 of 17 stages exit 0, and 31,688 assertions in 49 cases
+identically in Debug and Release, with the eight qualified subtrees identical
+across four readings; see
+[P19-DIFF-001](docs/verification/P19-DIFF-001/README.md). Twenty mutations were
+applied one at a time and all twenty killed, and the sweep earned its place:
+the adversarial review had PREDICTED that eight specific source-vector
+mutations would survive, and the eighth died only after the test written to
+catch it was itself repaired — a test that could not detect a hard-coded face
+index, because internal faces are numbered first and its only contributing face
+was therefore index 0. Three probes are reported VOID rather than as survivors
+because they did not compile, which is a lesson `P18-ELEM-001` had already
+written down. Two review findings were defects in what this author had WRITTEN
+DOWN rather than in the code: a decision describing an interpolation weight that
+did not exist, implemented rather than reworded; and a symmetry claim too strong,
+corrected to the owner explicitly rather than left standing. The author's own
+tests then caught two of the author's own defects before any review — a weight
+formula that is not convex on a skewed mesh, which measured 3.6095 on the
+Cylinder, and a viscosity interpolation that was not exact for a constant field.
+Recorded as less than a reader might assume: **there is no solve and no momentum
+equation**, so nothing here is shown to produce a flow field — this is one
+operator of an equation that does not exist yet, and the matrix has never been
+handed to a solver — no skewness correction exists, and no performance result is
+measured, because nothing in `cfd` assembled a matrix before this milestone and
+so there is no baseline to compare against.
 
 ```text
 incompressible laminar
