@@ -1002,11 +1002,12 @@ proportion across the board (`cli.mesh.zero-match-guard` 136.17 / 120.18 /
 reported as measured. **No gate depends on wall time**, and the correctness
 figures above are unaffected.
 
-**The qualified tree is the committed tree**, across FOUR readings: the freeze
+**The qualified tree is the committed tree**, across SIX readings: the freeze
 record, the harness's reading before the first build, its reading after the last
-test run, and a re-read from the live working tree by the harness's own method
+test run, a re-read from the live working tree by the harness's own method
 (scratch `GIT_INDEX_FILE`, `read-tree HEAD`, `add -A`, `write-tree --prefix`,
-and `ls-files -s` for the two files). All four are identical on all eight paths:
+and `ls-files -s` for the two files), the staged tree before the commit, and the
+commit object of `6c0ea6a` itself. All six are identical on all eight paths:
 
 ```text
 apps               fc398a3d2e524178cf38e8b667236379d8381086   unchanged
@@ -1020,10 +1021,10 @@ CMakePresets.json  3229f0f89b236744d7d5c082bed47c28b718288e   unchanged
 ```
 
 Exactly three moved, and they are exactly the three this milestone edited: no
-app, no example, no cmake module and neither root file. The two readings taken
-at commit time -- the staged tree, and the commit object itself -- cannot appear
-in this file's own commit, so this copy records four and the record pass raises
-it to six, as P19-DIFF-001's and P19-IC-001's did.
+app, no example, no cmake module and neither root file. The last two readings
+were taken at commit time, which is why `6c0ea6a` could not appear in its own
+commit's copy of this file: that copy recorded four readings, and this record
+pass raises it to six, as P19-DIFF-001's and P19-IC-001's did.
 
 There was **one attempt**, and it is the one reported above. It was launched
 detached, as the last two milestones were, because P19-IC-001's second attempt

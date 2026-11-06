@@ -1128,10 +1128,8 @@ flag hard-coded true whose stated justification was simply false.
 Qualified at 6381/6381 in each of three presets, 3170 x 5 in two repeats with
 15850 executions each, 0 warnings under `-Werror`, 17 of 17 stages exit 0, and
 82,762 assertions in 46 cases identically in Debug and Release, with the eight
-qualified subtrees identical across FOUR readings — the freeze, the harness
-before the first build, the harness after the last test run, and a re-read from
-the working tree by the harness's own method;
-see [P19-GRAD-001](docs/verification/P19-GRAD-001/README.md). Eighteen of twenty
+qualified subtrees identical across six readings, the committed tree (`6c0ea6a`)
+among them; see [P19-GRAD-001](docs/verification/P19-GRAD-001/README.md). Eighteen of twenty
 mutations were killed and two RETIRED WITH REASONS, and this sweep was the most
 useful thing in the milestone precisely because it went badly at first: the first
 pass killed only 10, and four of its seven survivors were real defects in the

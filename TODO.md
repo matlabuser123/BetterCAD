@@ -35,11 +35,12 @@ Previous milestone:
            recorded: 17 of 17 stages exit 0, qualified from clean on the FIRST
            attempt, 6381/6381 in each of the three presets, 3170 x 5 in two
            with 15850 counted executions each, 0 warnings under -Werror,
-           5h34m00s, and the eight qualified subtrees identical across FOUR
+           5h34m00s, and the eight qualified subtrees identical across SIX
            readings — at the freeze, by the harness before the first build, by
-           the harness after the last test run, and recomputed from the working
-           tree afterwards by the harness's own method — so the qualified tree
-           is the committed tree. 46 unit cases / 82,762 assertions and 24
+           the harness after the last test run, recomputed from the working
+           tree afterwards by the harness's own method, out of the staged tree
+           before the commit, and back out of the commit object of 6c0ea6a — so
+           the qualified tree is the committed tree. 46 unit cases / 82,762 assertions and 24
            compile-fail cases, and the assertion count is IDENTICAL in Debug
            and Release, so no assertion here is configuration-dependent. The
            cfd subsystem reads 630576 assertions in 359 cases, which is
@@ -4969,7 +4970,7 @@ P19-GRAD-001     AUTHORIZED 2026-11-07 by the owner's "implement and fully
                  6381/6381 x 3 presets, 3170 x 5 in two repeats with 15850
                  executions each, 17 of 17 stages exit 0, qualified from clean
                  on the first attempt, and the eight qualified subtrees
-                 identical across four readings at this commit.
+                 identical across six readings (code and evidence 6c0ea6a).
                  46 unit cases / 82,762 assertions, the count IDENTICAL in
                  Debug and Release; 24 compile-fail gates. The cfd subsystem
                  reads 630576 assertions in 359 cases, exactly 547814 + 82762
