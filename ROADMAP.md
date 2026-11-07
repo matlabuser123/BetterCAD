@@ -1339,8 +1339,8 @@ Qualified at 6525/6525 in each of three presets, 3258 x 5 in two repeats with
 16,290 executions each at a ratio of exactly 5.000, 0 warnings under `-Werror`,
 17 of 17 stages exit 0, 52,155 test executions, and 34,681 assertions in 48
 cases identically in Debug, Release and Debug-shared, with the eight qualified
-subtrees identical across three readings and equal to the eight its freeze
-recorded in advance; the `cfd` subsystem's 702,187 assertions in 447 cases are
+subtrees identical across four readings, the committed tree (`10ad63a`) among them,
+and equal to the eight its freeze recorded in advance; the `cfd` subsystem's 702,187 assertions in 447 cases are
 667,506 + 34,681 and 399 + 48 EXACTLY, so no pre-existing assertion moved, and
 76 tests were added with 0 removed by set difference against the previous
 milestone's own log. See

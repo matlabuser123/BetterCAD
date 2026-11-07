@@ -39,8 +39,9 @@ Previous milestone:
            5.000, 0 warnings under -Werror with
            BETTERCAD_WARNINGS_AS_ERRORS=ON read from each BUILT tree's own
            cache, 4h07m07s, 52,155 test executions in all, and the eight
-           qualified subtrees identical across three readings, so the
-           qualified tree is the committed tree. 48 unit cases / 34,681
+           qualified subtrees identical across four readings, the commit
+           object of 10ad63a among them, so the qualified tree is the committed
+           tree. 48 unit cases / 34,681
            assertions and 28 compile-fail cases, with the assertion count
            IDENTICAL in Debug, Release and Debug-shared. The cfd subsystem
            reads 702,187 assertions in 447 cases, which is 667,506 + 34,681
@@ -3625,10 +3626,11 @@ assertion moved. 76 tests added and 0 removed, established by a set difference
 against P19-DIV-001's own qualified log rather than by arithmetic on the
 totals.
 
-The eight qualified subtrees are identical across THREE readings — at the
-freeze, by the harness before the first build and after the last test run, and
+The eight qualified subtrees are identical across FOUR readings — at the
+freeze, by the harness before the first build and after the last test run,
 recomputed from the working tree by the harness's own method immediately
-before the commit — so the qualified tree is the committed tree.
+before the commit, and back out of the commit object of 10ad63a itself — so the
+qualified tree is the committed tree.
 
 **TWO INDEPENDENT REVIEWS WERE RUN BEFORE THE FREEZE**, which is the one thing
 this milestone did differently from P19-DIV-001, and the reason there is no
@@ -5187,7 +5189,7 @@ P19-CONV-001     PASS 2026-11-08. Fifteen of fifteen. A face mass-flux
                  compile-fail cases; the cfd subsystem's 702,187 assertions in
                  447 cases are 667,506 + 34,681 and 399 + 48 EXACTLY, so no
                  pre-existing cfd assertion moved. Qualified tree == committed
-                 tree across three readings.
+                 tree across four readings, 10ad63a among them.
                  TWO INDEPENDENT REVIEWS RAN BEFORE THE FREEZE -- the defect
                  P19-DIV-001 recorded against itself -- and found 25 issues:
                  six code defects, three false claims in ADR-072, eight test

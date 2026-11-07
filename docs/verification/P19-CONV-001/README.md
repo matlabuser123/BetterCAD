@@ -677,7 +677,10 @@ third time by this author immediately before the commit — all by `qualify.cmd`
 own method (a scratch `GIT_INDEX_FILE`, `read-tree HEAD`, `add -A`,
 `write-tree --prefix` per directory, `ls-files -s` for the two files), never by
 `git rev-parse HEAD:<path>`, which would read the committed tree and miss every
-uncommitted change. All three readings agree on all eight paths. Exactly three
+uncommitted change. A **fourth** reading was then taken back out of the commit
+object of `10ad63a`, where `git rev-parse HEAD:<path>` is the correct tool because
+the tree in question is precisely the committed one. All four readings agree on
+all eight paths. Exactly three
 moved — `include`, `src`, `tests` — and they are exactly the three this
 milestone edited.
 
@@ -814,6 +817,7 @@ VALIDATION:      six independent references -- the closed-form velocity-inlet
                  against the velocity divergence to density scaling, and hand
                  arithmetic on the 1D chain asserted with no tolerance
 RESULT:          PASS
+COMMIT:          10ad63a -- production code and evidence together
 EVIDENCE:        this directory
                  qualification/run-qualification.out    the verdict sentence
                  qualification/qualification-times.txt  17 stages, 0 failed
