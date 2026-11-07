@@ -1230,6 +1230,45 @@ containment           the two production files include no OCCT header, no Qt
                       false hits the first time
 ```
 
+### The qualified tree is the committed tree
+
+Across **SIX readings**: the freeze record, the harness's reading before the
+first build, its reading after the last test run, a re-read from the live
+working tree by the harness's own method (scratch `GIT_INDEX_FILE`,
+`read-tree HEAD`, `add -A`, `write-tree --prefix`, and `ls-files -s` for the two
+files), the staged tree before the commit, and the commit object of `5732e8d`
+itself. All six are identical on all eight paths:
+
+```text
+apps               fc398a3d2e524178cf38e8b667236379d8381086   unchanged
+include            18d1f2afab9a2a482981b6c042f8500b8b8cf01d   moved
+src                b36f4e8f9dada86c91af233e8bb4d4777e58d441   moved
+tests              964099c33ebefc36f418186246770bad3ef406d7   moved
+examples           4da234ebf4779f7c16d5df0075f106f7e3d4c958   unchanged
+cmake              5a382115d7ed7775189d40b55e40f318eaae6cc7   unchanged
+CMakeLists.txt     3ec3c10f2a4c522f36c60b1ce1a58e99c4db1ecd   unchanged
+CMakePresets.json  3229f0f89b236744d7d5c082bed47c28b718288e   unchanged
+```
+
+Exactly three moved, and they are exactly the three this milestone edited: no
+app, no example, no cmake module and neither root file. **The three that moved
+are also the three the review fixes touched**, which is why they differ from
+attempt 1's while the other five are byte-identical to attempt 1's as well as
+to P19-GRAD-001's. The last two readings were taken at commit time, which is
+why `5732e8d` could not appear in its own commit's copy of this file: that copy
+recorded five readings, and the record pass raises it to six, as
+P19-GRAD-001's, P19-DIFF-001's and P19-IC-001's did.
+
+Reading 4 is also the check that **editing `TODO.md`, `ROADMAP.md` and this
+directory did not void the qualification**: all three are outside the frozen
+surface, so all eight identities had to be unchanged afterwards, and the
+re-read confirms it rather than assuming it.
+
+The staged diff confirms the BLAST RADIUS figure independently: across the
+tracked frozen surface, `git diff --cached --numstat` gives
+27 + 1 + 1 + 42 + 71 = **142 insertions and 0 deletions**, with every deletion
+in the whole commit (63) falling in `TODO.md` and `ROADMAP.md`.
+
 ### Counting traps that fired during this reconciliation
 
 All of them in the measurement, none in the result. The first three are carried

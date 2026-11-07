@@ -37,10 +37,11 @@ Previous milestone:
            each, 0 warnings under -Werror with
            BETTERCAD_WARNINGS_AS_ERRORS=ON read from each BUILT tree's own
            cache, 3h00m04s, and the eight qualified subtrees identical across
-           FIVE readings — at the freeze, by the harness before the first
+           SIX readings — at the freeze, by the harness before the first
            build, by the harness after the last test run, recomputed from the
-           working tree afterwards by the harness's own method, and out of the
-           staged tree before the commit. 40 unit cases / 36,930 assertions and
+           working tree afterwards by the harness's own method, out of the
+           staged tree before the commit, and back out of the commit object of
+           5732e8d — so the qualified tree is the committed tree. 40 unit cases / 36,930 assertions and
            28 compile-fail cases, and the assertion count is IDENTICAL in
            Debug, Release and Debug-shared, so no assertion here is
            configuration-dependent. The cfd subsystem reads 667,506 assertions

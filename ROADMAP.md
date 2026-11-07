@@ -1238,9 +1238,9 @@ unified.
 Qualified at 6449/6449 in each of three presets, 3210 x 5 in two repeats with
 16,050 executions each, 0 warnings under `-Werror`, 17 of 17 stages exit 0, and
 36,930 assertions in 40 cases identically in Debug, Release and Debug-shared,
-with the eight qualified subtrees unchanged across the run and equal to the
-eight its freeze recorded in advance; see
-[P19-DIV-001](docs/verification/P19-DIV-001/README.md). Twenty-two mutations
+with the eight qualified subtrees identical across six readings, the
+committed tree (`5732e8d`) among them, and equal to the eight its freeze recorded
+in advance; see [P19-DIV-001](docs/verification/P19-DIV-001/README.md). Twenty-two mutations
 were killed in all — sixteen in the original sweep, whose first pass killed only
 8 of 16, and six more written for the claims the reviews pinned. Each original
 survivor had the same shape, an assertion that reads as evidence and cannot
