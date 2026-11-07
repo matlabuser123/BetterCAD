@@ -1,0 +1,267 @@
+P19-DIV-001 — QUALIFICATION FREEZE, ATTEMPT 2
+=============================================
+
+Written BEFORE the run, so every number the evidence later reports can be
+reconciled against something recorded in advance rather than explained
+afterwards. P19-DOF-001 is why this file exists: its attempt 1 ran 352 tests
+instead of 2991 and passed every one, while its launcher reported success.
+
+Milestone      P19-DIV-001 — Divergence / Flux Operator
+Authorized     2026-11-07, the owner's "Authorize DIV-001", in answer to a
+               question naming this milestone and no other. The twelve item
+               checklist was already in TODO.md and the owner neither quoted
+               nor altered it, so the checklist is the scope. The owner did not
+               say "implement and fully verify" in those words; authorizing the
+               milestone is read as permission to implement it under this
+               repository's own definition of done, and nothing wider.
+ADR            ADR-071, with the Decision 6 amendment below
+Candidate      df99157a9731b36f6f4f28772a54cf2a0fa0d2ce  (== HEAD)
+
+
+WHY THERE IS AN ATTEMPT 2
+-------------------------
+
+ATTEMPT 1 PASSED EVERY STAGE AND IS VOID. Its verdict was genuine -- 17 of 17
+stages exit 0, 6446/6446 in each of three presets, 3207 x 5 in two repeats, the
+eight identities unchanged -- and its logs are preserved under
+qualification/attempt-1/ rather than erased, as P19-DOF-001's failed attempt is.
+
+IT IS VOID BECAUSE SOURCE AND TESTS CHANGED AFTER THE FREEZE, which this
+repository's rule makes a re-run from clean, and because of WHY they changed:
+
+    TWO INDEPENDENT REVIEWS HAD NOT BEEN RUN. P19-IC-001, P19-DIFF-001 and
+    P19-GRAD-001 each carry one. CLAUDE.md's lifecycle puts ADVERSARIAL REVIEW
+    before FULL REGRESSION and QUALIFICATION, and this milestone reached a
+    freeze, a launch and a PASS with only the author's own pass and a
+    sixteen-probe mutation sweep behind it. The reviews were then run against
+    the frozen tree and found five defects in the code and eight in the suite.
+
+The two sharpest were reached INDEPENDENTLY by both reviewers, which is the
+strongest signal either produced:
+
+  the interpolation weight was completely unpinned -- every internal face the
+  velocity path interpolated across under an assertion has w = 2/3 EXACTLY, so
+  `interpolationWeight` replaced by `return 2.0 / 3.0;` survived the whole
+  suite; and the oracle that should have caught it was a
+  character-for-character copy of production, under a header claiming a
+  transposition "cannot be mirrored here" -- P19-GRAD-001's r5 defect recurring
+
+  exact cancellation was pinned only on the MASS path, where `faceFlux` is one
+  array slot read by index, so a GATHER would pass too. ADR-071 Decision 2 is a
+  claim about the VELOCITY path. The author had found the same tautology in the
+  experiment's own Q2a hours earlier and had not followed it into the suite
+
+ADR-071 DECISION 6 SAID "the weight therefore has exactly one definition, and
+both operators read it", AND THAT WAS FALSE WHEN WRITTEN. Three copies existed:
+the exported `cfdFaceInterpolationWeight`, CfdGradient.cpp's private copy from
+P19-GRAD-001, and a third this milestone added -- under a comment claiming it
+was "read from one definition and not re-derived". The non-degenerate arithmetic
+was identical in all three, so NO NUMBER THIS MILESTONE MEASURED MOVES; the
+degenerate branches were not, and the copies returned 0.5 where the exported
+form refuses. This operator calls the exported definition now, and the ADR
+carries the withdrawn sentence as a labelled amendment.
+
+
+THE EIGHT FROZEN SUBTREES
+-------------------------
+
+Taken by qualify.cmd's OWN method -- scratch GIT_INDEX_FILE, `read-tree HEAD`,
+`add -A` over the eight paths, `write-tree --prefix=<dir>/` per directory and
+`ls-files -s` for the two files. NOT `git rev-parse HEAD:<path>`, which reads
+the COMMITTED tree and would miss every uncommitted change, which is all of
+this milestone.
+
+  apps               fc398a3d2e524178cf38e8b667236379d8381086   unchanged
+  include            18d1f2afab9a2a482981b6c042f8500b8b8cf01d   MOVED
+  src                b36f4e8f9dada86c91af233e8bb4d4777e58d441   MOVED
+  tests              964099c33ebefc36f418186246770bad3ef406d7   MOVED
+  examples           4da234ebf4779f7c16d5df0075f106f7e3d4c958   unchanged
+  cmake              5a382115d7ed7775189d40b55e40f318eaae6cc7   unchanged
+  CMakeLists.txt     3ec3c10f2a4c522f36c60b1ce1a58e99c4db1ecd   unchanged
+  CMakePresets.json  3229f0f89b236744d7d5c082bed47c28b718288e   unchanged
+
+EXACTLY THREE MOVED AGAINST ATTEMPT 1'S FREEZE, and they are exactly the three
+the review fixes touched -- which was PREDICTED IN THE SCRIPT and compared as a
+set, not read by eye. The other five are byte-identical to attempt 1's and to
+P19-GRAD-001's, so no app, no example, no cmake module and neither root file has
+been touched by this milestone at all.
+
+THE PUBLIC API CHANGE IS STILL PURELY ADDITIVE. `VolumetricFlowRate` and
+`MassFlowRate` are added to CfdData.hpp and nothing is removed or renamed. The
+review fixes added a long note to one enumerator's documentation and changed no
+declaration. `git diff --stat` over the whole frozen surface: insertions only,
+ZERO DELETIONS.
+
+
+THE HARNESS
+-----------
+
+All SIX files byte-identical to P19-GRAD-001's by `cmp`, with sha256 (first 8)
+matching that milestone's own record:
+
+  launch.cmd            a3bd87be
+  preflight-space.cmd   455c7cc7
+  preflight-space.ps1   e4841827
+  qualify.cmd           0dcba54b
+  run-qualification.cmd 4435262a
+  verify-harness.cmd    145195cd
+
+SIX, AND THE COUNT WAS CHECKED AGAINST AN UNFILTERED LISTING. P19-IC-001's
+attempt 1 was refused by the preflight because the harness had been copied by
+listing the previous directory through a `grep -iE 'cmd|txt|out|err'` filter,
+which silently dropped preflight-space.ps1 -- and the report that "all five
+harness files are byte-identical" was true and still incomplete.
+
+AND ALL FIVE HASHES run-qualification.cmd RECORDS FOR ITSELF WERE VERIFIED by
+`git hash-object`, read BY LABEL off the line that NAMES each file rather than
+by grepping the first two 40-hex strings out of it -- those are qualify.cmd's
+and verify-harness.cmd's, and taking them for the preflight pair is the mis-read
+P19-GRAD-001 caught itself making:
+
+  launch.cmd            f11039e6dc366d7c469a15cf74fb3867fd5ffeff   matches
+  preflight-space.cmd   a65d6578000b6e8a2811d5154bcec24be09c2b54   matches
+  preflight-space.ps1   2f0d4228488f6a574ca57ec89f0fad0107b16b59   matches
+  qualify.cmd           d313a64070718c44fae290ac042fe259d1a03c8b   matches
+  verify-harness.cmd    11855b8ff891093b021d1e0351761283d0eedd24   matches
+
+So this is the SIXTY-FIRST milestone run on an unchanged harness, and attempt 1
+and attempt 2 differ in NOTHING but the tree under test.
+
+AND THE HARNESS WAS SELF-CHECKED AGAIN, because an unchanged harness is not the
+same as a working one. verify-harness.cmd points it at a preset that does not
+exist and requires a non-zero exit; it also checks that a zero-match repeat
+filter is counted as a failed stage. Result, this freeze:
+
+    QUALIFICATION FAILED: 2 stage(s) failed.
+    PASS: a failed stage gave qualify.cmd exit 2, and a zero-match
+          repeat filter was counted as a failed stage.
+
+PREFLIGHT, with QUALIFY_MIN_FREE_GB=20:
+
+    RESULT: OK. Every distinct volume has at least 20 GB free.
+    preflight-space.ps1 exit 0
+
+
+EXPECTED COUNTS — THE NUMBERS THE EVIDENCE MUST RECONCILE AGAINST
+-----------------------------------------------------------------
+
+  full set, per preset      6449  = 6446 (attempt 1) + 3 new unit cases
+  repeat set, per preset    3210  = 3207 (attempt 1) + 3 new unit cases
+  repeat executions per log 16050 = 3210 x 5
+
+  measured with ctest -N:   6449 full, 3210 repeat.  BOTH EXACT.
+
+The three new cases are the review fixes that needed their own names; the other
+ten fixes strengthened existing cases, and one case was RENAMED
+(`ThePredictorAgreesWithTheOperatorOnEveryFixture` ->
+`ASuccessfulInputPredictsNoProblem`) because the old name claimed more than it
+does. Compile-fail is unchanged at 28 and stays EXCLUDED from the repeat, which
+is why the repeat grows by 3 and not 31.
+
+THE SUBSYSTEM AND THE TAG, measured in BOTH configurations:
+
+  unit.CfdDivergence_       40 cases, up from 37
+  the [div] tag          36930 assertions in 40 cases, in Debug
+                         36930 assertions in 40 cases, in Release
+                         IDENTICAL, so no assertion is configuration-dependent
+                         -- a count agreeing only in Debug would mean a branch
+                         compiled out. Up from 11,304: the new per-cell checks
+                         on eight reference bodies and the Cylinder's 946
+                         internal faces are most of it
+
+  the [cfd] subsystem   667506 assertions in 399 cases, in Debug
+                        667506 assertions in 399 cases, in Release
+                         667506 - 36930 = 630576 and 399 - 40 = 359, EXACTLY the
+                         pre-existing cfd totals, so no pre-existing cfd
+                         assertion moved
+
+  compile_fail.cfddiv.*     28 cases, unchanged, and the CONTROL target still
+                         compiles clean
+
+  cli.mesh.zero-match-guard 40 anchored names and both group counts (40 and 28),
+                         REGENERATED from the source's own TEST_CASE lines
+                         rather than edited, and diffed back against them as a
+                         SET in both directions: 40 against 40, equal
+
+OTHER GATES ALREADY MEASURED BEFORE THIS FREEZE:
+
+  0 warnings and 0 errors in Debug and in Release, under the project's full
+  warning set with -Werror, for both changed translation units
+  6 OF 6 REVIEW MUTATIONS KILLED -- each one a mutation a reviewer named as
+  SURVIVING the suite as it stood, applied alone to a clean tree, with the tree
+  restored and verified byte-identical afterwards:
+      the weight is the hard-coded 2/3 both hand fixtures have      KILLED
+      largestMagnitude returns zero                                 KILLED
+      largestMagnitude drops the absolute value                     KILLED
+      toString's seven names are rotated by one                     KILLED
+      the skewness reduction is hoisted above the mass early return KILLED
+      the neighbour RE-DERIVES the face value (a gather)            KILLED
+  and the original sweep's 16 of 16 still stand, on the same claims
+  layering: the production files include only cfd (42) and core (0) headers --
+  CfdDiffusion.hpp is now among them, same module, same layer -- and no OCCT
+  header, no Qt header, no OCCT or Qt identifier
+  CfdSparse deliberately NOT linked: a divergence is a reduction, not an
+  operator with rows
+  the experiment reproduces BYTE-FOR-BYTE from its committed seed (20261107)
+
+
+COUNTING TRAPS
+--------------
+
+P19-GRAD-001's freeze recorded nine and its evidence added a tenth; attempt 1's
+freeze added (a) to (h). All still apply. These are the ones that fired AFTER
+attempt 1's launch, every one in the author's own measurement rather than in the
+result.
+
+(i) A PARSE THAT FINDS NOTHING READS AS A PASS. The first attempt to count
+    attempt 1's stage table anchored its regex at end-of-line, and every stage
+    line ends with a TIMESTAMP after the exit code. It matched 0 of 17 lines and
+    reported "stages that did NOT exit 0: 0" -- literally true and completely
+    empty. This is P19-DOF-001's own failure in a new place: a check whose
+    denominator is zero cannot fail. The parse prints the number of stage lines
+    it found FIRST now, and 17 is itself the assertion.
+
+(j) `grep -c "Failed"` RETURNS 158 HITS PER PASSING LOG. Every one is a test
+    NAME -- 73 on Start lines, 79 on passing result lines, and 6 more on Start
+    lines whose names contain the word `error`. A repeat log gives 410. They are
+    classified individually now, not waved away. (And `grep -c "Passed"`
+    overcounts by exactly 1 per full log and 5 per repeat log, for the same
+    reason: a test name ends `...WhetherOrNotItPassed`.)
+
+(k) COUNTING BY DISPLAY NAME UNDERCOUNTS BY 2. Two names are each registered
+    under two ctest IDs, so 6446 IDs showed as 6444 names. Counts are taken by
+    ctest ID.
+
+(l) A COUNT TRUE OF EIGHT BODIES IS NOT TRUE OF ONE. A review fix asserted
+    `internalFaces > 1000` on the Cylinder, which has 946, by analogy with the
+    closure case's `totalInternal > 1000` -- a sum over ALL EIGHT reference
+    bodies. That is this milestone's own trap (`internalFaces() > 100` on the
+    Block, which has six) and P19-GRAD-001's before it (`> 10` on the same
+    body), for the THIRD time in two milestones.
+
+(m) AN ANCHOR VALIDATOR EARNS ITS KEEP. The review-fix patch script checked all
+    ten anchors before writing anything and refused the whole run when one
+    matched twice -- `if (view.path == Path::MassFlux) {` appears in two places.
+    Nothing was written and the script named the anchor. That is trap (a) from
+    attempt 1's freeze, answered.
+
+(n) `grep -c $'\\r'` IN GIT BASH MATCHES EVERY LINE. It reported 817 lines with
+    a carriage return in a file that has none; the byte count from Python is
+    CR 0, LF 817. A line-ending check has to count bytes.
+
+
+WHAT A PASS MUST SHOW
+---------------------
+
+  17 stages, every one exit 0
+  6449/6449 in each of debug-ext, release-ext, debug-shared-ext
+  3210/3210 x 5 in release-ext and debug-ext repeats, 16050 result lines each
+  0 warnings under -Werror, read from each BUILT tree's own CMakeCache.txt
+  no-op rebuilds recompiling nothing
+  the eight identities above, unchanged, read by the harness before the first
+  build and again after the last test run
+
+AND THE VERDICT IS NOT THE LAUNCHER'S EXIT CODE. It is run-qualification.out's
+own sentence together with qualification-times.txt's failed-stage count, and
+the evidence quotes those rather than a shell's exit status. P19-DOF-001's
+launcher reported success while two of seventeen stages had failed.

@@ -105,7 +105,8 @@ P19 — CFD Integration, authorized 2026-10-27 by the owner's "start
 P19-ARCH-001": P19-ARCH-001 and P19-DATA-001 (2026-10-27), P19-FLUID-001
 (2026-10-28), P19-MESH-001, P19-TOPO-001 and P19-GEOM-001 (all 2026-10-31) and
 P19-DOF-001 and P19-BC-001 (both 2026-11-05) and P19-IC-001 and P19-DIFF-001
-(both 2026-11-06) and P19-GRAD-001 (2026-11-07) have PASSED.
+(both 2026-11-06) and P19-GRAD-001 and P19-DIV-001 (both 2026-11-07) have
+PASSED.
 P19-MESH-001 was qualified by a second attempt on a replacement machine: its
 first attempt, on 2026-10-28, failed 5 of 17 stages when the previous machine's
 temp volume filled and no test suite ran, and that machine was then permanently
@@ -138,10 +139,18 @@ on one attempt, and its freeze went further than its predecessor's in one
 respect worth recording: all FIVE harness hashes that run-qualification.cmd
 records for itself were verified rather than only the two preflight ones, after
 it turned out that the first two 40-hex strings in that file are not the pair a
-reader would assume. The harness has now run SIXTY milestones unchanged, and is
-self-checked before each run, because an unchanged harness is not the same as a
-working one. No milestone is open, and nothing after P19-GRAD-001 is authorized;
-see TODO.md.
+reader would assume. P19-DIV-001 needed TWO attempts, and for the first time in
+P19 the reason was neither a machine nor a defect in the tree but the ORDER THE
+WORK WAS DONE IN: its first attempt passed every stage before either
+independent review had been run, and the reviews then found five defects in the
+implementation and eight in the test suite. Fixing them changed source and
+tests, which voids a qualification under the freeze's own rule, so the gate was
+re-run from clean on the repaired tree. That first attempt's logs are kept under
+qualification/attempt-1/ rather than erased, because it passed genuinely and the
+reason it does not count is the useful part. The harness has now run SIXTY-ONE
+milestones unchanged, and is self-checked before each run, because an unchanged
+harness is not the same as a working one. No milestone is open, and nothing
+after P19-DIV-001 is authorized; see TODO.md.
 
 The phases before it, and how each was qualified:
 
@@ -1158,6 +1167,119 @@ problem, not that two implementations agree. Skewness is MEASURED and reported,
 never corrected. And there is still no solve and no momentum equation, so
 nothing here is shown to produce a flow field; no performance result is measured,
 because nothing in `cfd` has a baseline and this milestone does not create one.
+
+`P19-DIV-001` (PASS 2026-11-07) TAKES THE DIVERGENCE over that same
+finite-volume topology — of a face mass flow rate and of a cell velocity field —
+and it is the milestone in which a measurement contradicted the design's own
+first draft before a line of it was written. `ADR-071` stores the
+FACE-INTEGRATED flux and divides by the cell volume on read, because the
+integral is the conserved quantity, and it scatters one face product into the
+owner and its exact negation into the neighbour rather than gathering per cell.
+That choice rests on a measured fact: `(-S).U` is bit-for-bit `-(S.U)` over two
+hundred thousand trials with not one mismatch, so an internal face's two
+contributions cancel EXACTLY, and conservation becomes a property of the
+traversal instead of a numerical hope.
+
+**But the global sum is NOT bit-exact, and the ADR's first draft said it would
+be.** Each cell accumulates its own faces before the two meet, and
+`(a + x) + (b - x)` is not `a + b` in floating point: over twenty thousand
+random meshes the global imbalance is bit-zero on 40.34% of them, with a worst
+relative figure of 1.125e-16. A test asserting a bit-zero global imbalance would
+therefore have FAILED on a correct operator. The imbalance is a published
+measurement now, the ADR carries the withdrawn prediction rather than being
+quietly reworded, and two summary members were deleted before any code existed
+for the same reason — one would have asked whether `x + (-x) == 0.0` for a finite
+`x`, and the other would have reported a constant-mode flag that the measurement
+shows to be false as derived. The first draft of the experiment itself divided by
+`max(|total|, 1e-300)` and reported a worst gap of `9.992e+284` for arithmetic
+correct to half an eps, which is `P19-GRAD-001`'s own recorded mistake recurring
+in the first thing this milestone measured; the denominator is the magnitude of
+the terms accumulated now, never the answer.
+
+**Reading the existing code changed the design twice, and both corrections are
+conservation errors avoided rather than found.** `phi` was already the
+face-INTEGRATED `rho (U . Sf)` in kg/s by `ADR-066`, not a per-area flux, so its
+divergence is a pure signed sum with no area factor — a design that multiplied
+by the face area would have been wrong while staying dimensionally plausible.
+And there is no prescribed `phi` at a boundary to read at all: a boundary face
+carries a pressure and a velocity, and `ADR-067`'s `phi` column is `Computed` at
+both pressure boundaries, so the mass path consults no boundary and must NOT
+refuse `Computed`, which is the opposite of what a defensive reading suggests. A
+compile-fail gate holds that asymmetry at compile time.
+
+**THE MILESTONE REACHED A PASSING QUALIFICATION WITH NO INDEPENDENT REVIEW, and
+that is recorded as its first defect rather than tidied away.** The three
+milestones before it each carry one, and the lifecycle puts adversarial review
+BEFORE the gate. Two reviews were then run against the frozen tree, and they
+converged independently on the same two findings. The first: **the interpolation
+weight was completely unpinned.** Every internal face the velocity path ever
+interpolated across under an assertion has `w = 2/3` exactly — both hand
+fixtures have a 2:1 apex-height ratio — so replacing the whole weight with
+`return 2.0 / 3.0;` survived the entire suite, and the oracle that should have
+caught it was a character-for-character transcription of the production
+expression under a file header claiming independence. That is `P19-GRAD-001`'s
+own recorded defect recurring one milestone later, and it is the clearest
+argument in the phase so far for why an oracle must be re-derived rather than
+copied: the weight is now checked against a form written from the two cell
+centroids and the face centroid, reading neither accessor production reads, and
+checked over the Cylinder's 946 internal faces where the weight genuinely
+varies. The second: **the exact-cancellation claim was pinned only where it is a
+tautology**, on the mass path, where the face value is one array slot and the
+assertion holds for any implementation — while `ADR-071` Decision 2 is a claim
+about the velocity path. Three further code defects followed: range guards that
+ran AFTER the span reads they protect, a degenerate face silently returning a
+midpoint weight instead of refusing, and a phase reporting another phase's
+enumerator. And `ADR-071` Decision 6's claim that the weight "has exactly one
+definition, and both operators read it" was FALSE WHEN IT WAS WRITTEN — there
+were three copies — so the ADR carries a dated amendment and the gradient's
+surviving private copy is recorded as a limitation rather than silently
+unified.
+
+Qualified at 6449/6449 in each of three presets, 3210 x 5 in two repeats with
+16,050 executions each, 0 warnings under `-Werror`, 17 of 17 stages exit 0, and
+36,930 assertions in 40 cases identically in Debug, Release and Debug-shared,
+with the eight qualified subtrees unchanged across the run and equal to the
+eight its freeze recorded in advance; see
+[P19-DIV-001](docs/verification/P19-DIV-001/README.md). Twenty-two mutations
+were killed in all — sixteen in the original sweep, whose first pass killed only
+8 of 16, and six more written for the claims the reviews pinned. Each original
+survivor had the same shape, an assertion that reads as evidence and cannot
+fail. A closed cell's flux total is `U . sum_f S_f`, which closure makes zero for
+ANY constant velocity, so a test of which velocity was used could not fail; and
+moving the claim to a single facet was not enough, because three of a
+tetrahedron's four facets lie in coordinate planes and are each blind to two
+components. A valid moving wall cannot distinguish a prescribed velocity from a
+prescribed zero at all, and that follows from `P19-BC-001`'s own validation,
+which requires a wall velocity to be TANGENTIAL: a velocity inlet, whose
+prescribed velocity is NORMAL to the face, is the case that can. A fixture built
+so the boundary total nearly cancels made it cancel EXACTLY, so a wrong
+denominator escaped through its own `> 0` guard. One survivor was a finding
+about the code rather than the suite: the per-cell finiteness check is redundant
+in BEHAVIOUR, since the total is the sum of the per-cell values, and it is kept
+for the DIAGNOSTIC — the totals check names no cell — with the test now
+asserting the message says which one. The sharpest of the six later probes had
+to be STRUCTURAL rather than a one-line change, because exact cancellation
+cannot be broken by flipping a sign: `-flux`, `(-1.0) * flux` and `0.0 - flux`
+are all the same double, so the probe is a gather that re-derives the face value
+from the neighbour's side — precisely the implementation Decision 2 rejects.
+
+Recorded as less than a reader might assume: **nothing consumes this divergence
+either.** It is one term of an equation `P19-MOM-001` and `P19-PRES-001` have not
+assembled, so no flow field is produced and none is claimed. The velocity path is
+exactly as mesh-sensitive as Green-Gauss, because it is the same surface sum with
+the same interpolation — linear-exact with the true face value, and no better
+than the interpolation on a skewed mesh, with `worstSkewness` as the measured
+bound; the trace of a least-squares gradient would be mesh-independent and is NOT
+built, since the checklist states the surface-sum identity. Global conservation is
+reported, not guaranteed. Mesh quality is reported and never refused, because
+`ADR-063`'s own finding reserves a quality threshold to the owner. Two of the
+seven refusals are unreachable through the public API and are recorded as
+unreached rather than as covered. One problem enumerator is reachable and tested
+but observable only through the diagnostic's wording, which sits against the
+`cfd` module's own "a message is not a tag" rule and is recorded rather than
+fixed, because adding an accessor is public API this checklist does not contain.
+And there is no performance result, because nothing consumes the operator and a
+baseline for an operator with no caller would be a number with no meaning.
 
 ```text
 incompressible laminar

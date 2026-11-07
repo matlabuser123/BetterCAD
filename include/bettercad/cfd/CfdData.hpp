@@ -165,6 +165,33 @@ using PressureGradient = decltype(Pressure{} / Length{});
 /// A pressure gradient, resolved onto X, Y and Z.
 using PressureGradient3 = CartesianVector<PressureGradient>;
 
+// ---------------------------------------------------------------------------
+// Integrated flux quantities
+// ---------------------------------------------------------------------------
+//
+// THESE ARE FACE-INTEGRATED RATES, NOT PER-AREA FLUXES, and the distinction is
+// the one `CfdFields.hpp` already makes about `phi`: ADR-066's table carries
+// the mass variable as kg/s, the face-INTEGRATED `rho (U . Sf)`, because that
+// is what a control-volume balance sums over a cell's faces. The per-area form
+// would have to be multiplied by `faceArea` at every site, and the site that
+// forgot would be a conservation error that still looked dimensionally
+// plausible.
+//
+// A DIVERGENCE FIELD STORES ONE OF THESE AND DIVIDES ON READ (ADR-071
+// Decision 1). The stored quantity is the volume integral `sum_f F_f . S_f`,
+// which is the conserved one; dividing by the cell volume gives the divergence
+// proper, and `decltype(Q{} / Volume{})` names that type without an alias of
+// its own -- for velocity it is `1/s`, which is already `VelocityGradient`, so
+// a separate name would suggest a distinction the type system does not make.
+
+/// A volumetric flow rate, in `m^3/s`: `U . Sf` integrated over a face, and
+/// the quantity a velocity divergence field stores per cell.
+using VolumetricFlowRate = decltype(Volume{} / Time{});
+
+/// A mass flow rate, in `kg/s`: ADR-066's `phi`, and the quantity a mass-flux
+/// divergence field stores per cell.
+using MassFlowRate = decltype(Mass{} / Time{});
+
 /// Every component finite.
 template <typename Q>
 [[nodiscard]] bool isFinite(const CartesianVector<Q>& vector) noexcept {

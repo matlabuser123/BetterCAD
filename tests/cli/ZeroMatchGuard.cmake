@@ -630,6 +630,48 @@ set(_filters
     # exactly so the compiler would carry it. And each case a rename or a drop
     # would otherwise hide. The escaping matches the rest of this file:
     # \\. is a literal dot, where \. would be a wildcard.
+    "unit\\.CfdDivergence_" 40
+    "compile_fail\\.cfddiv\\." 28
+    "unit\\.CfdDivergence_AConstantVelocityDivergesToZeroOnAFixture$" 1
+    "unit\\.CfdDivergence_AConstantVelocityDivergesToZeroOnEveryReferenceBody$" 1
+    "unit\\.CfdDivergence_AFieldDoesNotHoldACellItWasNotBuiltWith$" 1
+    "unit\\.CfdDivergence_AFixedValueFacetUsesThePrescribedVelocity$" 1
+    "unit\\.CfdDivergence_ALinearVelocityDivergesToItsTraceOnAFixture$" 1
+    "unit\\.CfdDivergence_ALinearVelocityDivergesToItsTraceOnEveryReferenceBody$" 1
+    "unit\\.CfdDivergence_ALinearVelocityDivergesToItsTraceWithTrueFaceValues$" 1
+    "unit\\.CfdDivergence_AMassFluxDivergenceIsTheSignedSumOfItsFaceValues$" 1
+    "unit\\.CfdDivergence_AMassFluxDivergenceNeedsOneValuePerFace$" 1
+    "unit\\.CfdDivergence_ANonFiniteResultIsRefusedRatherThanReturned$" 1
+    "unit\\.CfdDivergence_ANonFiniteValueIsRefusedAfterTheLength$" 1
+    "unit\\.CfdDivergence_AStaleBoundaryIsRefusedOnTheVelocityPathOnly$" 1
+    "unit\\.CfdDivergence_AStaleGeometryIsRefusedFirst$" 1
+    "unit\\.CfdDivergence_ASuccessfulInputPredictsNoProblem$" 1
+    "unit\\.CfdDivergence_ASymmetryFacetContributesExactlyZeroFlux$" 1
+    "unit\\.CfdDivergence_AVelocityDivergenceNeedsThreeValuesPerCell$" 1
+    "unit\\.CfdDivergence_AZeroGradientFacetUsesTheOwnersOwnVelocity$" 1
+    "unit\\.CfdDivergence_AnAnalyticOneCellTetMatchesClosedFormArithmetic$" 1
+    "unit\\.CfdDivergence_AnInternalFacesTwoContributionsSumToExactlyZero$" 1
+    "unit\\.CfdDivergence_AnInternalFacesTwoVelocityContributionsSumToExactlyZero$" 1
+    "unit\\.CfdDivergence_DividingTwiceGivesBitIdenticalFields$" 1
+    "unit\\.CfdDivergence_EveryProblemHasAName$" 1
+    "unit\\.CfdDivergence_TheBoundaryPolicyCountsSumToTheBoundaryFaceCount$" 1
+    "unit\\.CfdDivergence_TheDeclaredPhaseOrderIsTheCheckOrder$" 1
+    "unit\\.CfdDivergence_TheDivergenceIsInvariantUnderARigidMotion$" 1
+    "unit\\.CfdDivergence_TheFluxQuantitiesCarryTheDimensionsTheirNamesClaim$" 1
+    "unit\\.CfdDivergence_TheGlobalNetFluxEqualsTheBoundaryFluxToRounding$" 1
+    "unit\\.CfdDivergence_TheGlobalNetFluxIsTheSumOfEveryCellsNetOutflow$" 1
+    "unit\\.CfdDivergence_TheInterpolationWeightMatchesItsClosedFormAndVariesOnARealMesh$" 1
+    "unit\\.CfdDivergence_TheLargestMagnitudeIsTheMaximumAbsoluteNetOutflow$" 1
+    "unit\\.CfdDivergence_TheMassFluxPathTakesNoBoundaryAndAcceptsAComputedPolicy$" 1
+    "unit\\.CfdDivergence_TheOwnerSignIsReadAndNotAssumed$" 1
+    "unit\\.CfdDivergence_TheRelativeImbalanceIsMeasuredAgainstTheAccumulatedMagnitude$" 1
+    "unit\\.CfdDivergence_TheRelativeImbalanceIsZeroWhenNothingWasAccumulated$" 1
+    "unit\\.CfdDivergence_TheStoredQuantityIsTheIntegralAndDivergenceAtDividesByTheVolume$" 1
+    "unit\\.CfdDivergence_TheSummaryCountsMatchTheTopology$" 1
+    "unit\\.CfdDivergence_TheSymmetryExactZeroBeatsTheProjectedAlternative$" 1
+    "unit\\.CfdDivergence_TheVelocityDivergenceAgreesWithTheTraceOfTheGreenGaussGradient$" 1
+    "unit\\.CfdDivergence_TheWorstClosureIsReportedAndBoundsTheConstantModeResidual$" 1
+    "unit\\.CfdDivergence_TheWorstSkewnessIsReportedOnInterpolatedFacesOnly$" 1
     "unit\\.CfdGradient_" 46
     "compile_fail\\.cfdgrad\\." 24
     "unit\\.CfdGradient_ABoundaryCoveringAnotherFaceCountIsRefused$" 1

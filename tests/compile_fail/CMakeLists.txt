@@ -1139,6 +1139,77 @@ foreach(_case
         "is private within this context|private|no matching function|use of deleted" BetterCAD::cfd)
 endforeach()
 
+# Divergence / flux operator (P19-DIV-001, ADR-071). The claims a value test
+# cannot reach: a CfdDivergenceField cannot be conjured, because a divergence is
+# the only door and it runs the whole input gate; a MASS-flow field and a
+# VOLUMETRIC-flow field cannot be swapped, which is why Decision 4 chose one
+# template with two instantiations; the stored INTEGRAL and the derived
+# DIVERGENCE are different types, so confusing them -- a factor of a volume, and
+# exactly what would make a conservation claim quietly wrong -- is refused; and
+# THE MASS ENTRY POINT TAKES NO BOUNDARY, which is Decision 5 enforced by the
+# compiler rather than by a comment.
+#
+# EVERY EXPECTED DIAGNOSTIC BELOW WAS READ OFF THE COMPILER, not predicted:
+# all 28 cases were compiled one at a time first, and each emits exactly one
+# error. P19-GRAD-001 had three gates fail because its regex did not list
+# `invalid initialization`, which is what GCC emits for a reference bound to the
+# wrong type -- the gates were right and the expectation was incomplete.
+set(_cfddiv "${CMAKE_CURRENT_SOURCE_DIR}/CfdDivergenceMisuse.cpp")
+bettercad_compile_fail_group(cfddiv "${_cfddiv}" BetterCAD::cfd)
+foreach(_case
+        A_SUMMARY_HOLDS_THE_FLUXES
+        AN_INPUT_HOLDS_A_FIELD)
+    bettercad_compile_fail_case(cfddiv "${_cfddiv}" ${_case}
+        "no member named|has no member"
+        BetterCAD::cfd)
+endforeach()
+foreach(_case
+        A_VELOCITY_DIVERGENCE_FIELD_IS_A_MASS_FLUX_FIELD
+        A_MASS_FLUX_FIELD_IS_A_VELOCITY_DIVERGENCE_FIELD
+        A_MASS_FLOW_RATE_IS_A_VOLUMETRIC_FLOW_RATE
+        A_VOLUMETRIC_FLOW_RATE_IS_A_MASS_FLOW_RATE
+        A_MASS_FLOW_RATE_IS_A_MASS
+        A_VOLUMETRIC_FLOW_RATE_IS_A_VOLUME
+        A_MASS_FLOW_RATE_IS_A_BARE_DOUBLE
+        A_DIVERGENCE_IS_ITS_OWN_INTEGRAL
+        AN_INTEGRAL_IS_ITS_OWN_DIVERGENCE
+        A_VELOCITY_DIVERGENCE_IS_A_MASS_DIVERGENCE
+        A_MASS_DIVERGENCE_IS_A_DENSITY
+        A_MASS_FLUX_INPUT_IS_A_VELOCITY_INPUT
+        A_VELOCITY_INPUT_IS_A_MASS_FLUX_INPUT
+        THE_MASS_ENTRY_POINT_TAKES_A_VELOCITY_INPUT
+        THE_VELOCITY_ENTRY_POINT_TAKES_A_MASS_INPUT
+        THE_MASS_ENTRY_POINT_TAKES_NO_BOUNDARY
+        A_DIVERGENCE_PROBLEM_IS_AN_INTEGER
+        A_DIVERGENCE_PROBLEM_IS_A_BOUNDARY_POLICY)
+    bettercad_compile_fail_case(cfddiv "${_cfddiv}" ${_case}
+        "could not convert|cannot convert|no matching function|no match for|invalid conversion|conversion from|invalid initialization"
+        BetterCAD::cfd)
+endforeach()
+foreach(_case
+        A_FLUX_SUM_MIXES_DIMENSIONS
+        THE_FACE_FLUX_TAKES_TYPED_RATES
+        THE_CURRENT_VELOCITY_TAKES_TYPED_VECTORS)
+    bettercad_compile_fail_case(cfddiv "${_cfddiv}" ${_case}
+        "no match for|no matching function"
+        BetterCAD::cfd)
+endforeach()
+foreach(_case
+        DEFAULT_CONSTRUCT_A_VELOCITY_DIVERGENCE_FIELD
+        DEFAULT_CONSTRUCT_A_MASS_FLUX_DIVERGENCE_FIELD
+        A_FIELD_EXPOSES_ITS_SI_ARRAY
+        A_FIELD_EXPOSES_ITS_VOLUME_ARRAY)
+    bettercad_compile_fail_case(cfddiv "${_cfddiv}" ${_case}
+        "is private within this context|private|no matching function|use of deleted"
+        BetterCAD::cfd)
+endforeach()
+foreach(_case
+        A_FIELD_SUMMARY_IS_WRITABLE)
+    bettercad_compile_fail_case(cfddiv "${_cfddiv}" ${_case}
+        "read-only|assignment of member|discards qualifiers|no match for"
+        BetterCAD::cfd)
+endforeach()
+
 # Gradient reconstruction (P19-GRAD-001, ADR-070). The claims a value test
 # cannot reach: a CfdGradientField cannot be conjured, because a reconstruction
 # is the only door and it runs the whole input gate; a pressure gradient and a

@@ -62,6 +62,7 @@ bettercad_add_library(bettercad_cfd
         CfdBoundary.cpp
         CfdData.cpp
         CfdDiffusion.cpp
+        CfdDivergence.cpp
         CfdFields.cpp
         CfdFluid.cpp
         CfdGeometry.cpp

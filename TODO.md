@@ -23,12 +23,89 @@ Prerequisite:
            may set). P17's F1-F3 stand unchanged beneath them.
 
 Current milestone:
-           NONE. P19-GRAD-001 PASSED 2026-11-07, and finishing a milestone is
-           itself a stop condition. The next milestone is a scope decision for
-           the owner, not Claude's to make: P19-DIV-001 is next in the phase
-           plan below and is NOT authorized.
+           NONE. P19-DIV-001 PASSED on 2026-11-07, and finishing a milestone is
+           itself a stop condition. The next milestone is a scope decision and
+           is the owner's alone to make: P19-CONV-001 is next in the phase plan
+           and is NOT authorized.
 
 Previous milestone:
+           P19-DIV-001 — Divergence / Flux Operator. AUTHORIZED 2026-11-07 by
+           the owner's "Authorize DIV-001", in answer to a question that named
+           this milestone and no other. PASS 2026-11-07. All twelve items are
+           recorded: 17 of 17 stages exit 0, 6449/6449 in each of the three
+           presets, 3210 x 5 in two repeats with 16,050 counted executions
+           each, 0 warnings under -Werror with
+           BETTERCAD_WARNINGS_AS_ERRORS=ON read from each BUILT tree's own
+           cache, 3h00m04s, and the eight qualified subtrees identical across
+           FIVE readings — at the freeze, by the harness before the first
+           build, by the harness after the last test run, recomputed from the
+           working tree afterwards by the harness's own method, and out of the
+           staged tree before the commit. 40 unit cases / 36,930 assertions and
+           28 compile-fail cases, and the assertion count is IDENTICAL in
+           Debug, Release and Debug-shared, so no assertion here is
+           configuration-dependent. The cfd subsystem reads 667,506 assertions
+           in 399 cases, which is 630,576 + 36,930 and 359 + 40 EXACTLY, so no
+           pre-existing cfd assertion moved. This authorization was written
+           here BEFORE any implementation, as the three before it were.
+           THE SCOPE WAS THE TWELVE ITEM CHECKLIST ALREADY IN THIS FILE, which
+           the owner did not quote and did not alter — unlike the four
+           milestones before it, where the checklist arrived pasted in the
+           instruction. The owner also did not say "implement and fully verify"
+           in those words; authorizing the milestone was read as permission to
+           implement it under this file's own definition of done, and nothing
+           wider. P19-CONV-001 was not started.
+           THE MILESTONE REACHED A FREEZE, A LAUNCH AND A PASS WITH NO
+           INDEPENDENT REVIEW, and that is recorded as its first defect
+           because it is the one that let the other twelve reach a passing
+           qualification. The three milestones before it each carry a review,
+           and CLAUDE.md's lifecycle puts ADVERSARIAL REVIEW before
+           QUALIFICATION. The author's own pass and a sixteen-probe mutation
+           sweep had been treated as sufficient. They were not.
+           TWO INDEPENDENT REVIEWS THEN CONVERGED ON THE SAME TWO SHARPEST
+           FINDINGS from readings that could not see each other: the
+           interpolation weight was COMPLETELY UNPINNED — every internal face
+           the velocity path interpolated across under an assertion has
+           w = 2/3 exactly, so `return 2.0 / 3.0;` survived the whole suite —
+           and the oracle that should have caught it was a
+           character-for-character transcription of production under a header
+           claiming independence, which is P19-GRAD-001's r5 defect recurring
+           one milestone later. The second: the exact-cancellation claim was
+           pinned only on the MASS path, where the assertion holds for any
+           implementation, while ADR-071 Decision 2 is a claim about the
+           VELOCITY path. Both were confirmed in the source before anything
+           was changed.
+           THE OTHER CODE DEFECTS: range guards that ran AFTER the span reads
+           they protect; a silently swallowed failure returning 0.5 on a
+           degenerate face, which would have produced a SUCCESSFUL field
+           interpolated at a midpoint nobody asked for; and a phase-5 branch
+           reporting a phase-2 enumerator. ADR-071 Decision 6's claim that the
+           weight "has exactly one definition, and both operators read it" was
+           FALSE WHEN WRITTEN — there were three copies — and the ADR now
+           carries a dated amendment saying so rather than being reworded.
+           22 MUTATIONS KILLED IN TOTAL: 16 in the original four-pass sweep,
+           whose first pass killed only 8 of 16, and 6 more written for the
+           claims the reviews pinned. The sharpest of the six had to be
+           structural, because exact cancellation cannot be broken by any
+           one-line change — `-flux`, `(-1.0) * flux` and `0.0 - flux` are all
+           the same double — so the probe is a gather that re-derives the face
+           value from the neighbour's side, which is the implementation
+           ADR-071 Decision 2 rejects.
+           THE DESIGN WAS MEASURED BEFORE IT WAS WRITTEN, and the measurement
+           contradicted it. ADR-071's first draft predicted a bit-exact global
+           sum; a 20,000-mesh experiment run before any C++ existed measured
+           bit-exactness on 40.34%, with a worst relative imbalance of
+           1.125e-16, because each cell accumulates its own faces before the
+           two meet and (a + x) + (b - x) is not a + b. A test asserting a
+           bit-zero global imbalance would therefore have FAILED on a correct
+           operator. The global imbalance is REPORTED, never asserted to be
+           zero (L3), and the script is committed with its output.
+           Nothing consumes this divergence yet (L1), as nothing consumes
+           P19-GRAD-001's gradient: it is one term of an equation
+           P19-MOM-001 and P19-PRES-001 have not assembled, and wiring them
+           together is a coupling step no authorized checklist contains.
+           (docs/verification/P19-DIV-001/README.md.)
+
+Milestone before that:
            P19-GRAD-001 — Gradient Reconstruction. AUTHORIZED 2026-11-07 by the
            owner ("implement and fully verify", with the fourteen item
            checklist quoted in full). PASS 2026-11-07. All fourteen items are
@@ -127,7 +204,7 @@ Previous milestone:
            milestone's own tooling, and is recorded as r9.
            (docs/verification/P19-GRAD-001/README.md.)
 
-Milestone before that:
+Before those:
            P19-DIFF-001 — Diffusion Operator. AUTHORIZED 2026-11-06 by the
            owner ("implement and fully verify", with the fourteen item
            checklist quoted in full). PASS 2026-11-06. All fourteen items are
@@ -215,7 +292,7 @@ Milestone before that:
            question is the Passed-marker total.
            (docs/verification/P19-DIFF-001/README.md.)
 
-Before those:
+Earlier still:
            P19-IC-001 — CFD Initial Conditions. AUTHORIZED 2026-11-05 by the
            owner ("implement and fully verify", with the twelve item checklist
            quoted in full). PASS 2026-11-06. All twelve items are recorded:
@@ -295,7 +372,7 @@ Before those:
            holding under a condition nobody arranged.
            (docs/verification/P19-IC-001/README.md.)
 
-Earlier still:
+Earlier than those:
            P19-BC-001 — CFD Boundary Conditions. AUTHORIZED 2026-11-05 by the
            owner ("implement and fully verify", with the twenty item checklist
            and the canonical / derived split quoted). PASS 2026-11-05. All
@@ -343,37 +420,19 @@ Earlier still:
            REVISION r1 rather than tidying it away.
            (docs/verification/P19-BC-001/README.md.)
 
-Earlier than those:
-           P19-DOF-001 — CFD Field / DOF Model. AUTHORIZED 2026-11-04 by the
-           owner ("implement and fully verify", with the seventeen item
-           checklist and the recommended p / U / phi layout quoted). PASS
-           2026-11-05. All seventeen items are recorded: 17 of 17 stages exit
-           0, 6120/6120 in each of the three presets, 2991 x 5 in two with
-           14955 counted Passed markers each, 0 warnings and 0 errors under
-           -Werror, 3h03m28s, and the eight qualified subtrees identical at
-           the freeze, before the first build, after the last test run and
-           when recomputed from the working tree afterwards and in the
-           committed tree (cdd42a3) — five readings.
-           27 unit cases / 58,197 assertions and 35 compile-fail cases.
-           QUALIFIED ON THE SECOND ATTEMPT: attempt 1 failed 2 of 17 stages
-           while its launcher exited 0 — which is why the harness's own
-           verdict, not an exit code, is what is read — and it is preserved
-           under qualification/attempt-1/ rather than erased. Its cause was
-           measured, not guessed: the machine ran out of Windows commit, so a
-           compile exited 1 with no diagnostic at all, and the dead build cost
-           the repeat stage its Catch2 discovery, which selected 352 tests
-           instead of 2991 and passed every one. Exactly one line of this
-           milestone's own driver differs between the attempts
-           (CMAKE_BUILD_PARALLEL_LEVEL 16 → 4); qualify.cmd and all four
-           gate-defining settings are byte-identical, and no file in the
-           frozen surface was touched, so the same tree was qualified. Two
-           independent reviews found the same four evidence defects — among
-           them a canonical-state proof that was VACUOUS and a staged-gate
-           line that was a NO-OP on every tested path — and both of those
-           fixes are verified by mutation.
-           (docs/verification/P19-DOF-001/README.md.)
-
            Earlier P19 milestones, each at its own recorded verdict:
+           P19-DOF-001 PASSED 2026-11-05 on attempt 2 (6120/6120 x 3 presets,
+           2991 x 5 in two, 17 items, 27 unit cases / 58,197 assertions and
+           35 compile-fail cases, ADR-066; attempt 1 failed 2 of 17 stages
+           while its launcher exited 0 — which is why the harness's own
+           verdict and NOT an exit code is what is read — and the dead build
+           cost the repeat stage its Catch2 discovery, which selected 352
+           tests instead of 2991 and passed every one, the founding defect
+           the zero-match guard exists to catch; attempt 1 is preserved under
+           qualification/attempt-1/ rather than erased, and two independent
+           reviews found the same four evidence defects, among them a
+           canonical-state proof that was VACUOUS and a staged-gate line that
+           was a NO-OP on every tested path);
            P19-GEOM-001 PASSED 2026-10-31 (6058/6058 x 3 presets,
            2964 x 5 in two, 21 items, ADR-065; the per-cell surface-vector
            sum closes to 2.03e-16 of the cell's own area scale on all eight
@@ -408,13 +467,13 @@ Qualified:
            P18 — Thermal Analysis
 
 Next:
-           NOTHING IS AUTHORIZED. P19-GRAD-001 passed on 2026-11-07 and no
-           milestone is open. P19-DIV-001 is next in the phase plan, and
-           being next is not permission: each milestone is started by the
-           owner, as every P17, P18 and P19 milestone was, and a
-           predecessor's PASS is not permission to start the one after it.
-           Finishing a milestone is itself a stop condition. AWAITING AN
-           EXPLICIT SCOPE DECISION.
+           NOTHING IS AUTHORIZED. P19-DIV-001 PASSED on 2026-11-07 and no
+           milestone is open. Each milestone is started by the owner, as every
+           P17, P18 and P19 milestone was, and a predecessor's PASS is not
+           permission to start the one after it. Finishing a milestone is
+           itself a stop condition. P19-CONV-001 is next in the phase plan and
+           is NOT authorized; the next milestone is a scope decision, not
+           Claude's to make.
 
 P19 objective, as planned:
            authoritative CAD / fluid / mesh state
@@ -3470,18 +3529,32 @@ Implement finite-volume divergence.
 ∫_V ∇·F dV = Σ_f F_f · Sf
 ```
 
-* [ ] Scalar flux divergence
-* [ ] Velocity divergence
-* [ ] Face-flux summation
-* [ ] Internal-face cancellation
-* [ ] Boundary-face contribution
-* [ ] Constant-field validation
-* [ ] Linear-field validation
-* [ ] Closed-volume conservation
-* [ ] Independent analytical validation
-* [ ] Determinism PASS
-* [ ] Regression PASS
-* [ ] Evidence recorded
+**AUTHORIZED 2026-11-07** by the owner's "Authorize DIV-001", in answer to a
+question naming this milestone and no other. **PASS 2026-11-07.** The twelve
+items below were the scope; they stood exactly as they did before the
+authorization, because the owner neither quoted nor altered them. Nothing after
+this milestone is authorized.
+
+QUALIFIED ON THE SECOND ATTEMPT, and the reason is a process defect of this
+milestone's own: attempt 1 passed before either independent review had been
+run. The reviews then found five defects in the code and eight in the suite,
+and fixing them changed `include`, `src` and `tests` — so that qualification
+was VOID by the freeze's own rule and was run again from clean. Attempt 1's
+logs are preserved under `qualification/attempt-1/` rather than erased.
+(docs/verification/P19-DIV-001/README.md.)
+
+* [x] Scalar flux divergence
+* [x] Velocity divergence
+* [x] Face-flux summation
+* [x] Internal-face cancellation
+* [x] Boundary-face contribution
+* [x] Constant-field validation
+* [x] Linear-field validation
+* [x] Closed-volume conservation
+* [x] Independent analytical validation
+* [x] Determinism PASS
+* [x] Regression PASS
+* [x] Evidence recorded
 
 ---
 # P19-CONV-001
@@ -4989,8 +5062,40 @@ P19-GRAD-001     AUTHORIZED 2026-11-07 by the owner's "implement and fully
                  twice and the Decision was corrected rather than reworded.
                  Nothing consumes this output yet (L1): the face interpolation
                  that would close P19-DIFF-001's L1 is not in this checklist.
-                 Evidence recorded. Everything after it is still the owner's
-                 decision alone.
+                 Evidence recorded.
+
+P19-DIV-001      PASS 2026-11-07. Twelve of twelve items. AUTHORIZED
+                 2026-11-07 by the owner's "Authorize DIV-001", in answer to a
+                 question naming this milestone and no other; the authorization
+                 was written here BEFORE any implementation, as P19-GRAD-001's
+                 was. The scope was the twelve item checklist already in this
+                 file, which the owner did not quote and did not alter.
+                 17 of 17 stages exit 0, 6449/6449 x 3 presets, 3210 x 5 in
+                 two repeats, 0 warnings under -Werror, 3h00m04s, 40 unit
+                 cases / 36,930 assertions IDENTICAL in Debug, Release and
+                 Debug-shared, 28 compile-fail cases, ADR-071.
+                 QUALIFIED ON THE SECOND ATTEMPT, and the first attempt's PASS
+                 is VOID rather than quietly reused: it was reached before
+                 either independent review had run, which is this milestone's
+                 own first defect. The reviews found five code defects and
+                 eight suite defects and converged independently on the two
+                 sharpest — an interpolation weight that was COMPLETELY
+                 UNPINNED, because every internal face under an assertion has
+                 w = 2/3 exactly, together with an oracle that was a
+                 character-for-character copy of the production expression it
+                 was supposed to check; and an exact-cancellation claim pinned
+                 only where it is a tautology. Fixing them changed source and
+                 tests, so the qualification was re-run from clean.
+                 ADR-071 Decision 6 asserted the weight had "exactly one
+                 definition" and there were three; the ADR carries a dated
+                 amendment rather than a rewording, and the gradient's
+                 surviving private copy is recorded as L11. 22 mutations
+                 killed in all. The design was measured before it was written
+                 and the measurement contradicted it: a bit-exact global sum
+                 was predicted and measured at 40.34%, so the imbalance is
+                 REPORTED and never asserted to be zero (L3).
+                 Nothing consumes this divergence yet (L1). Evidence
+                 recorded.
 ```
 
 The text below is the standing record as of P18-QUAL-001 (2026-10-27) and is kept as history.

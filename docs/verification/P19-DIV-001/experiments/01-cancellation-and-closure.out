@@ -1,0 +1,50 @@
+P19-DIV-001 experiment 01 -- cancellation, closure and linear exactness
+seed = 20261107   (deterministic; python's Mersenne Twister)
+==========================================================================
+
+Q1  the sign flip:  (-S) . U  ==  -(S . U)  bit-for-bit?
+    (the internal-face cancellation claim rests on this)
+    trials: 200000   mismatches: 0   worst relative gap: 0.000e+00
+    VERDICT: EXACT -- the flip never changes a bit
+
+Q2  the face-centred SCATTER -- two separate claims
+    Q2a per internal face, owner + neighbour contribution == 0.0:
+        faces: 20000   bit-exact: 20000 (100.00%)
+        VERDICT: EXACT on every face -- cancellation is STRUCTURAL
+    Q2b globally, sum over cells vs the boundary sum:
+        meshes: 20000   bit-exact: 8067 (40.34%)
+        worst |imbalance| / sum_f |flux_f| = 1.125e-16   (eps = 2.220e-16)
+        VERDICT: NOT bit-exact, and it cannot be -- each cell
+        accumulates its own faces first, and (a + x) + (b - x) is
+        not a + b in floating point. The imbalance is at ROUNDING
+        and must be MEASURED, never asserted to be zero.
+
+Q3  closure  sum_f S_f = 0  and the CONSTANT field
+    tetrahedra: 20000
+    sum_f S_f bit-zero in 972 (4.86%);   worst |sum S| / sum |S| = 3.993e-16  (eps = 2.220e-16)
+    constant-field divergence bit-zero in 4827 (24.14%);  worst residual / (sum|S| |c|) = 2.144e-16
+    READ THIS CAREFULLY: closure at rounding does NOT give a bit-zero
+    constant-field divergence, so the operator must MEASURE the flag
+    rather than assume it -- the same conclusion ADR-070 reached.
+
+Q4  LINEAR field, TRUE face value:  (1/V) sum_f U(C_f) . S_f  vs  trace(A)
+    (U = A x + b, so div U = trace(A) identically)
+    tetrahedra: 20000   worst |computed - trace(A)| / (sum|S||U| / V) = 2.966e-16   (eps = 2.220e-16)
+    VERDICT: LINEAR-EXACT to rounding -- the divergence inherits
+    P19-GRAD-001's identity, so any inexactness is the INTERPOLATION's.
+
+==========================================================================
+CONCLUSIONS CARRIED INTO ADR-071:
+  1. the sign flip is exact, so an internal face's two contributions
+     cancel BIT-FOR-BIT. That is why the operator scatters one face
+     product rather than gathering per cell: conservation becomes a
+     property of the traversal instead of a numerical hope
+  2. BUT THE GLOBAL SUM IS NOT BIT-EXACT, and the first draft of this
+     experiment predicted that it would be. Each cell accumulates its
+     own faces before the two meet, and (a + x) + (b - x) is not
+     a + b. The global imbalance is REPORTED as a measured number
+  3. closure is at rounding but bit-zero on only 4.86% of random
+     tetrahedra, so the constant-field flag must be MEASURED per mesh
+     and never assumed -- the same conclusion ADR-070 reached
+  4. with the TRUE face value the surface sum is linear-exact, so the
+     interpolation is the only source of error on a skewed mesh
