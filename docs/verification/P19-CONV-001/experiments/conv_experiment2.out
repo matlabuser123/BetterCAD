@@ -1,0 +1,26 @@
+P19-CONV-001 pre-implementation measurement, revision 2, seed 202611072
+==============================================================================
+
+Q2  the row-sum oracle, with the inflow term restored
+  narrow 1e-2..1e2
+    Q2a rowSum vs same quantity, face order : exact on  6669/20000 ( 33.34%), worst rel 5.56e-16
+    Q2b rowSum + inflow vs div(phi)         : exact on  6382/20000 ( 31.91%), worst rel 5.56e-16
+  wide 1e-6..1e6
+    Q2a rowSum vs same quantity, face order : exact on  7766/20000 ( 38.83%), worst rel 6.332e-16
+    Q2b rowSum + inflow vs div(phi)         : exact on  7535/20000 ( 37.67%), worst rel 6.332e-16
+
+Q3  reverse flow:  A(-phi) == A(phi)^T - diag(div phi)
+    3a 1D chain, uniform flux, INTERIOR rows (div is bit-zero):
+       2000 chains, transpose BIT-EXACT on 2000 (100.00%)
+    3b general mesh, narrow 1e-2..1e2: exact on 890/5000 (17.80%), worst rel 4.934e-16
+    3b general mesh, wide 1e-6..1e6: exact on 729/5000 (14.58%), worst rel 5.616e-16
+
+Q4  boundedness: dominance deficit == -divergence (interior only)
+    narrow 1e-2..1e2: deficit BIT-EQUAL to -div on 3401/8000 (42.51%), worst rel 5.923e-16
+    wide 1e-6..1e6: deficit BIT-EQUAL to -div on 3748/8000 (46.85%), worst rel 5.787e-16
+    => upwind is WEAKLY diagonally dominant exactly when phi is
+       conservative; the deficit IS the divergence, so the boundedness
+       policy points at DIV-001's measured imbalance, not a new number.
+
+==============================================================================
+done

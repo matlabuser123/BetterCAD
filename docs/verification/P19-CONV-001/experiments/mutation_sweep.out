@@ -1,0 +1,10 @@
+  weight-constant-two-thirds   KILLED(compile)  
+  weight-midpoint              KILLED(compile)  
+  weight-transposed            KILLED           2 failing assertion lines
+  fixedvalue-before-sign       KILLED           13 failing assertion lines
+  boundary-through-scheme      KILLED           6 failing assertion lines
+  component-always-x           KILLED(compile)  
+  drop-total-finiteness        KILLED           1 failing assertion lines
+  wall-computes-its-flux       KILLED(compile)  
+
+probes: 8   killed: 8   survived: 0   anchor-miss: 0

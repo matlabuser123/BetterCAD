@@ -1,0 +1,31 @@
+P19-CONV-001 measurement revision 4, seed 202611075
+==============================================================================
+
+Q6  A(-phi) == A(phi)^T - diag(div phi), by scheme and boundary policy
+    (relative departure, denominator = max |entry| over the two matrices)
+    Upwind  FixedValue only    exact   770/4000 ( 19.25%)  worst rel 4.362e-16
+    Upwind  ZeroGradient only  exact     0/4000 (  0.00%)  worst rel 1
+    Upwind  mixed              exact   164/4000 (  4.10%)  worst rel 1
+    Central FixedValue only    exact     0/4000 (  0.00%)  worst rel 2.25
+    Central ZeroGradient only  exact     0/4000 (  0.00%)  worst rel 2.732
+    Central mixed              exact     0/4000 (  0.00%)  worst rel 2.114
+
+    => the published identity holds ONLY for Upwind with FixedValue
+       boundaries. Central departs by phi(2w-1) per face and a
+       ZeroGradient boundary face by phi_b -- FINITE errors, not
+       rounding, which is why the percentages collapse rather than
+       the relative figure staying near an eps.
+
+Q7  upwind dominance deficit:  published  -div   vs  corrected
+    -div + prescribedInflow
+    ZeroGradient only  published exact  1041/6000 ( 17.35%) worst 2 | corrected exact  1041/6000 ( 17.35%) worst 2
+    FixedValue only    published exact   529/6000 (  8.82%) worst 1 | corrected exact  1934/6000 ( 32.23%) worst 3.74e-16
+    mixed              published exact   741/6000 ( 12.35%) worst 2 | corrected exact  1427/6000 ( 23.78%) worst 2
+
+    => with no FixedValue face the two forms coincide, which is why
+       revision 1's Q4 (boundary=0) measured the published form clean.
+       Add one prescribed inflow face and the published form is wrong
+       by a finite amount; the corrected form stays at half an eps.
+
+==============================================================================
+done

@@ -1,0 +1,105 @@
+========================================================================
+1. THE VERDICT (not the launcher's exit code)
+========================================================================
+  OK    harness verdict sentence present: got True  want True
+  OK    failed-stage count parsed: got True  want True
+  OK    failed stages: got '0'  want '0'
+  OK    no 'Qualification FAILED' sentence: got False  want False
+
+========================================================================
+2. STAGES: 17, each exit 0
+========================================================================
+  per-preset stage lines: 15
+  repeat stage lines:     2
+  OK    total stages: got 17  want 17
+  OK    stages with a non-zero exit: got []  want []
+  OK    presets: got ['debug-ext', 'debug-shared-ext', 'release-ext']  want ['debug-ext', 'debug-shared-ext', 'release-ext']
+  OK    repeat presets: got ['debug-ext', 'release-ext']  want ['debug-ext', 'release-ext']
+
+========================================================================
+3. TESTS PER PRESET: 6525 = 6449 + 48 + 28, zero failed
+========================================================================
+  OK    debug-ext: ctest summary lines: got 1  want 1
+  OK    debug-ext: tests total: got '6525'  want '6525'
+  OK    debug-ext: no FAILED block: got False  want False
+  OK    debug-ext: no 'tests failed' clause: got False  want False
+  OK    release-ext: ctest summary lines: got 1  want 1
+  OK    release-ext: tests total: got '6525'  want '6525'
+  OK    release-ext: no FAILED block: got False  want False
+  OK    release-ext: no 'tests failed' clause: got False  want False
+  OK    debug-shared-ext: ctest summary lines: got 1  want 1
+  OK    debug-shared-ext: tests total: got '6525'  want '6525'
+  OK    debug-shared-ext: no FAILED block: got False  want False
+  OK    debug-shared-ext: no 'tests failed' clause: got False  want False
+
+========================================================================
+4. REPEAT: 3258 selected per preset, 16290 EXECUTIONS = 3258 x 5
+========================================================================
+  OK    release-ext: selects line present once: got 1  want 1
+  OK    release-ext: selected: got '3258'  want '3258'
+  OK    release-ext: repeat result lines (one per test): got 3258  want 3258
+  OK    release-ext: repeat EXECUTIONS (Start markers) = 3258 x 5: got 16290  want 16290
+  OK    release-ext: executions per test: got 5.0  want 5.0
+  OK    release-ext: non-passing repeat lines: got 0  want 0
+  OK    release-ext: no FAILED block: got False  want False
+  OK    release-ext: repeat summary: got ['3258']  want ['3258']
+  OK    debug-ext: selects line present once: got 1  want 1
+  OK    debug-ext: selected: got '3258'  want '3258'
+  OK    debug-ext: repeat result lines (one per test): got 3258  want 3258
+  OK    debug-ext: repeat EXECUTIONS (Start markers) = 3258 x 5: got 16290  want 16290
+  OK    debug-ext: executions per test: got 5.0  want 5.0
+  OK    debug-ext: non-passing repeat lines: got 0  want 0
+  OK    debug-ext: no FAILED block: got False  want False
+  OK    debug-ext: repeat summary: got ['3258']  want ['3258']
+
+========================================================================
+5. WARNINGS: 0, with WARNINGS_AS_ERRORS=ON read from each BUILT cache
+========================================================================
+  OK    debug-ext: 'warning:' occurrences in the build log: got 0  want 0
+  OK    debug-ext: WARNINGS_AS_ERRORS in the built cache: got ['ON']  want ['ON']
+  ..    debug-ext: no-op rebuild log = '[1/8] Checking git revision'
+  OK    release-ext: 'warning:' occurrences in the build log: got 0  want 0
+  OK    release-ext: WARNINGS_AS_ERRORS in the built cache: got ['ON']  want ['ON']
+  ..    release-ext: no-op rebuild log = '[1/8] Checking git revision'
+  OK    debug-shared-ext: 'warning:' occurrences in the build log: got 0  want 0
+  OK    debug-shared-ext: WARNINGS_AS_ERRORS in the built cache: got ['ON']  want ['ON']
+  ..    debug-shared-ext: no-op rebuild log = '[1/20] Checking git revision'
+
+========================================================================
+6. THE EIGHT SUBTREE IDENTITIES: before == after == FREEZE.txt
+========================================================================
+  OK    apps: recorded twice (before and after): got 2  want 2
+  OK    apps: before == after: got 'fc398a3d2e524178cf38e8b667236379d8381086'  want 'fc398a3d2e524178cf38e8b667236379d8381086'
+  OK    apps: == FREEZE.txt: got 'fc398a3d2e524178cf38e8b667236379d8381086'  want 'fc398a3d2e524178cf38e8b667236379d8381086'
+  OK    include: recorded twice (before and after): got 2  want 2
+  OK    include: before == after: got '451a0c459213be6036411ec834341583bf1796b8'  want '451a0c459213be6036411ec834341583bf1796b8'
+  OK    include: == FREEZE.txt: got '451a0c459213be6036411ec834341583bf1796b8'  want '451a0c459213be6036411ec834341583bf1796b8'
+  OK    src: recorded twice (before and after): got 2  want 2
+  OK    src: before == after: got '92e5f8040fea4a7c680171c3e25a2f46816e930c'  want '92e5f8040fea4a7c680171c3e25a2f46816e930c'
+  OK    src: == FREEZE.txt: got '92e5f8040fea4a7c680171c3e25a2f46816e930c'  want '92e5f8040fea4a7c680171c3e25a2f46816e930c'
+  OK    tests: recorded twice (before and after): got 2  want 2
+  OK    tests: before == after: got 'e18793bd21b2011b24ae301f75c243813a7f4774'  want 'e18793bd21b2011b24ae301f75c243813a7f4774'
+  OK    tests: == FREEZE.txt: got 'e18793bd21b2011b24ae301f75c243813a7f4774'  want 'e18793bd21b2011b24ae301f75c243813a7f4774'
+  OK    examples: recorded twice (before and after): got 2  want 2
+  OK    examples: before == after: got '4da234ebf4779f7c16d5df0075f106f7e3d4c958'  want '4da234ebf4779f7c16d5df0075f106f7e3d4c958'
+  OK    examples: == FREEZE.txt: got '4da234ebf4779f7c16d5df0075f106f7e3d4c958'  want '4da234ebf4779f7c16d5df0075f106f7e3d4c958'
+  OK    cmake: recorded twice (before and after): got 2  want 2
+  OK    cmake: before == after: got '5a382115d7ed7775189d40b55e40f318eaae6cc7'  want '5a382115d7ed7775189d40b55e40f318eaae6cc7'
+  OK    cmake: == FREEZE.txt: got '5a382115d7ed7775189d40b55e40f318eaae6cc7'  want '5a382115d7ed7775189d40b55e40f318eaae6cc7'
+  OK    CMakeLists.txt: recorded twice (before and after): got 2  want 2
+  OK    CMakeLists.txt: before == after: got '3ec3c10f2a4c522f36c60b1ce1a58e99c4db1ecd'  want '3ec3c10f2a4c522f36c60b1ce1a58e99c4db1ecd'
+  OK    CMakeLists.txt: == FREEZE.txt: got '3ec3c10f2a4c522f36c60b1ce1a58e99c4db1ecd'  want '3ec3c10f2a4c522f36c60b1ce1a58e99c4db1ecd'
+  OK    CMakePresets.json: recorded twice (before and after): got 2  want 2
+  OK    CMakePresets.json: before == after: got '3229f0f89b236744d7d5c082bed47c28b718288e'  want '3229f0f89b236744d7d5c082bed47c28b718288e'
+  OK    CMakePresets.json: == FREEZE.txt: got '3229f0f89b236744d7d5c082bed47c28b718288e'  want '3229f0f89b236744d7d5c082bed47c28b718288e'
+
+========================================================================
+7. CANDIDATE == HEAD, and the frozen surface is still the frozen surface
+========================================================================
+  OK    candidate recorded: got 1  want 1
+  OK    candidate == HEAD at read time: got '8bc2c88a0d5d805a0df501260539fd843952c4c7'  want '8bc2c88a0d5d805a0df501260539fd843952c4c7'
+
+========================================================================
+RESULT
+========================================================================
+  Every figure FREEZE.txt recorded in advance is matched by the run.

@@ -1,0 +1,204 @@
+P19-CONV-001 — QUALIFICATION FREEZE
+===================================
+
+Written BEFORE the run, so every number the evidence later reports can be
+reconciled against something recorded in advance rather than explained
+afterwards. P19-DOF-001 is why this file exists: its attempt 1 ran 352 tests
+instead of 2991 and passed every one, while its launcher reported success.
+
+Milestone      P19-CONV-001 — Convective Flux
+Authorized     2026-11-07, the owner's "Implement nd fully verify" over the
+               fifteen-item checklist, which arrived PASTED into the
+               instruction as P19-BC-001's, P19-IC-001's, P19-DIFF-001's and
+               P19-GRAD-001's did.
+
+               THE PASTED TEXT WAS DIFFED AGAINST TODO.md's OWN SECTION BEFORE
+               ANY WORK BEGAN, and is byte-for-byte identical across all 32
+               lines: 15 unticked items, 0 ticked, both counted rather than
+               eyeballed. So the scope is this repository's own checklist
+               unaltered, and the owner neither quoted a different scope nor
+               changed this one. The checklist's "Recommended first qualified
+               scheme: first-order upwind, before higher-order schemes" is read
+               as part of that scope and as binding.
+ADR            ADR-072, with the Decision 6, 7 and 8 corrections below
+Candidate      8bc2c88a0d5d805a0df501260539fd843952c4c7  (== HEAD)
+
+
+THE DIFFERENCE FROM P19-DIV-001, WHICH IS THE POINT
+---------------------------------------------------
+
+P19-DIV-001 REACHED A FREEZE, A LAUNCH AND A PASS WITH NO INDEPENDENT REVIEW,
+and recorded that as its own first defect: the reviews were run afterwards,
+found five code defects and eight suite defects, and the three-hour
+qualification had to be thrown away and run again from clean.
+
+THIS MILESTONE RAN BOTH REVIEWS BEFORE THIS FREEZE. Two independent reviewers
+read the tree without seeing each other or this author's conclusions — one
+against the implementation, one against the suite — and returned 25 findings
+between them. Every one was verified against the code before being accepted,
+and the serious ones were fixed BEFORE this file was written. That is the whole
+reason there is no attempt 1 to preserve here.
+
+The two reviews converged independently on two findings, which is the strongest
+signal either produced:
+
+  * the row-sum identity's PRESCRIBED INFLOW term was never non-zero in any
+    test of that identity. The test's own comment claimed "a mixture:
+    prescribed inflow at some facets, zero-gradient at others" while binding a
+    boundary that makes every facet zero-gradient, so the term was provably
+    `+ 0.0` on every iteration — and the structural error ADR-072 Decision 5
+    exists to prevent (a relative 0.9995 on 15% of cells) was not reproducible
+    by the suite at all.
+
+  * the public header promised a refusal the code does not perform:
+    "its stamp, its cell count or its boundary-face count disagrees", while
+    `problemOf` compared only the boundary-face count. That made this operator
+    strictly WEAKER than the one it cited as precedent, and a boundary prepared
+    against a different mesh with the same facet count was silently accepted.
+
+WHAT THE REVIEWS FOUND THAT CHANGED THE CODE
+
+  F1  NO OWNER/NEIGHBOUR RANGE GUARD, and here the unvalidated index is used
+      for WRITES. `CellIndex{}` is `SIZE_MAX` and `topology.owner` returns it
+      for a face it does not hold, so `pattern[owner].push_back(...)` and
+      `source[owner] -= ...` could write at `SIZE_MAX`. P19-DIV-001 carries
+      this guard and its comment records that a review forced it there; this
+      operator had none, which is that correction REGRESSED one milestone
+      later. Now phase 3.
+  F4  the conditional stamp check, restored to P19-DIFF-001's form.
+  F5  `ResultIsNotFinite` was a catch-all for three faults that are not
+      non-finiteness — a symbolic-pass miss, any `fromCsr` refusal, a missing
+      neighbour. Split out as `AssemblyIsInconsistent`.
+  F6  the three reported flow totals escaped the finiteness gate, so an
+      assembly could succeed with `outflow == +inf` while every coefficient was
+      finite. Now inside it.
+  F9  `input.component` was never validated and indexes a three-element array;
+      a cast can produce a value outside the three. Now `ComponentOutOfRange`.
+  F11 the producer's `kind` switch had no guard, so a seventh boundary kind
+      would silently inherit a WALL'S EXACT ZERO — the inverse of the leak
+      Decision 2 exists to prevent. Now a static_assert on the kind count.
+
+WHAT THE REVIEWS FOUND THAT CHANGED THE PUBLISHED CLAIMS
+
+  ADR-072 DECISION 8's TRANSPOSE IDENTITY WAS FALSE AS WRITTEN, in two
+  independent ways. `A(-phi) == A(phi)^T - diag(div phi)` was derived from the
+  UPWIND scatter rule and then stated unqualified; a central share is geometric
+  and does not swap, failing by `phi(2w-1)` per face, and a ZeroGradient or
+  Symmetry boundary face carries its full `phi` on the diagonal, failing by
+  `phi_b`. Re-measured: Upwind with FixedValue boundaries 19.25% bit-exact at
+  worst 4.36e-16; Upwind with ZeroGradient 0.00% at worst relative 1; Central
+  0.00% at worst 2.1 to 2.7. The original measurement had NO CENTRAL BRANCH and
+  modelled every boundary face as FixedValue, so it was of a model narrower
+  than the claim.
+
+  ADR-072 DECISION 7's DOMINANCE IDENTITY WAS MISSING THE PRESCRIBED INFLOW
+  TERM — Decision 5's own correction, repeated one paragraph later in the
+  neighbouring decision. And re-measuring found A THIRD CONDITION neither the
+  review nor the ADR had stated: the deficit uses `|a_ii|`, so once backflow
+  drives the diagonal negative the identity breaks whatever the inflow term is.
+  The scope is `a_ii >= 0`, which makes `backflowFaces` the identity's validity
+  condition rather than a diagnostic beside it.
+
+  ADR-072 DECISION 6 AND THE HEADER BOTH CLAIMED "a compile-fail case holds the
+  asymmetry" AND NOTHING HELD IT. The compile-fail group's five enumerated
+  claims are about other things, and no compile-fail case could express this
+  one: it is a runtime branch. Both claims removed and the absence recorded.
+
+
+THE EIGHT FROZEN SUBTREE IDENTITIES
+-----------------------------------
+
+Computed by qualify.cmd's own method — a scratch GIT_INDEX_FILE, `read-tree
+HEAD`, `add -A`, `write-tree --prefix` per directory and `ls-files -s` for the
+two files — and NOT by `git rev-parse HEAD:<path>`, which reads the committed
+tree and would miss every uncommitted change, which is the whole point here.
+
+    apps               fc398a3d2e524178cf38e8b667236379d8381086   unchanged
+    include            451a0c459213be6036411ec834341583bf1796b8   moved
+    src                92e5f8040fea4a7c680171c3e25a2f46816e930c   moved
+    tests              e18793bd21b2011b24ae301f75c243813a7f4774   moved
+    examples           4da234ebf4779f7c16d5df0075f106f7e3d4c958   unchanged
+    cmake              5a382115d7ed7775189d40b55e40f318eaae6cc7   unchanged
+    CMakeLists.txt     3ec3c10f2a4c522f36c60b1ce1a58e99c4db1ecd   unchanged
+    CMakePresets.json  3229f0f89b236744d7d5c082bed47c28b718288e   unchanged
+
+EXACTLY THREE MOVED, and they are exactly the three this milestone edited: no
+app, no example, no cmake module and neither root file. The five unchanged ones
+are byte-identical to P19-DIV-001's qualified set.
+
+
+THE HARNESS
+-----------
+
+Byte-identical to the one P19-DIV-001 qualified with, verified file by file
+rather than assumed:
+
+    qualify.cmd             d313a6407071
+    run-qualification.cmd   f2a37a172bf1
+    launch.cmd              f11039e6dc36
+    preflight-space.cmd     a65d6578000b
+    preflight-space.ps1     2f0d4228488f
+    verify-harness.cmd      11855b8ff891
+
+This is the SIXTY-SECOND milestone to run it unchanged.
+
+ONE STALE COMMENT IS LEFT IN IT DELIBERATELY. run-qualification.cmd's comment
+block says "repeat set, per preset 3039", which was already wrong for
+P19-DIV-001 (whose actual repeat set was 3210) and is wrong again here. It is a
+COMMENT and not a gate, and correcting it would change the harness's hash and
+break the byte-identical property every milestone since P16-SIZE-001 relies on.
+Recorded here instead. The gate that actually matters is the zero-match guard,
+which records the SELECTED count in the times file at run time.
+
+
+FIGURES TO RECONCILE AFTERWARDS
+-------------------------------
+
+Recorded now so the evidence cannot quietly adopt whatever the run produces.
+
+    total tests, per preset          6525   = 6449 + 48 + 28
+                                            6449 is P19-DIV-001's qualified
+                                            total; 48 new Catch2 cases; 28 new
+                                            compile-fail cases
+    repeat set, per preset           3258   = 3210 + 48
+                                            compile_fail is excluded from the
+                                            repeat, as in every milestone
+    repeat result lines per log     16290   = 3258 x 5
+    stages                             17
+    presets                             3   debug-ext, release-ext,
+                                            debug-shared-ext
+    repeat presets                      2   release-ext, debug-ext
+    warnings                            0   with
+                                            BETTERCAD_WARNINGS_AS_ERRORS=ON,
+                                            read from each BUILT tree's own
+                                            cache and not from the source
+
+    new unit cases                     48   in tests/cfd/CfdConvectionTests.cpp
+    new compile-fail cases             28   in
+                                            tests/compile_fail/CfdConvectionMisuse.cpp
+                                            all 28 compiled one at a time
+                                            first, each emitting exactly one
+                                            error, with every expected
+                                            diagnostic READ OFF THE COMPILER
+    mutation probes                    10   10 killed BY THE SUITE, 0 by the
+                                            compiler, 0 survived. The first run
+                                            of that sweep reported 8 of 8
+                                            killed with FOUR killed by -Werror
+                                            on an unused variable, which is not
+                                            evidence about the suite; the
+                                            probes were corrected and the
+                                            verdict now distinguishes the two.
+
+THE VERDICT IS NOT THE LAUNCHER'S EXIT CODE. It is run-qualification.out's own
+sentence plus the failed-stage count in qualification-times.txt. P19-DOF-001's
+attempt 1 exited 0 from the launcher with 2 of 17 stages failed.
+
+
+WHAT THIS MILESTONE DOES NOT CLAIM
+----------------------------------
+
+Nothing consumes this operator. It is one term of an equation P19-MOM-001 and
+P19-PRES-001 have not assembled, exactly as P19-GRAD-001's gradient and
+P19-DIV-001's divergence are. No flow field is produced and none is claimed.
+There is no solve, no limiter, no Peclet report and no refusal of a
+non-conservative `phi`.

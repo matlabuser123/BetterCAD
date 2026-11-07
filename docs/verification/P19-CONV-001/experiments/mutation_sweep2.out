@@ -1,0 +1,12 @@
+  weight-constant-two-thirds   KILLED           3176 failing assertion lines
+  weight-midpoint              KILLED           6 failing assertion lines
+  weight-transposed            KILLED           2 failing assertion lines
+  fixedvalue-before-sign       KILLED           13 failing assertion lines
+  boundary-through-scheme      KILLED           6 failing assertion lines
+  component-always-x           KILLED           5 failing assertion lines
+  drop-total-finiteness        KILLED           1 failing assertion lines
+  wall-computes-its-flux       KILLED           16 failing assertion lines
+  prescribed-inflow-sign       KILLED           6 failing assertion lines
+  neighbour-not-negated        KILLED           27 failing assertion lines
+
+probes 10 | killed BY THE SUITE 10 | killed by the compiler 0 | survived 0 | anchor-miss 0

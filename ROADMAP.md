@@ -105,8 +105,8 @@ P19 — CFD Integration, authorized 2026-10-27 by the owner's "start
 P19-ARCH-001": P19-ARCH-001 and P19-DATA-001 (2026-10-27), P19-FLUID-001
 (2026-10-28), P19-MESH-001, P19-TOPO-001 and P19-GEOM-001 (all 2026-10-31) and
 P19-DOF-001 and P19-BC-001 (both 2026-11-05) and P19-IC-001 and P19-DIFF-001
-(both 2026-11-06) and P19-GRAD-001 and P19-DIV-001 (both 2026-11-07) have
-PASSED.
+(both 2026-11-06) and P19-GRAD-001 and P19-DIV-001 (both 2026-11-07) and
+P19-CONV-001 (2026-11-08) have PASSED.
 P19-MESH-001 was qualified by a second attempt on a replacement machine: its
 first attempt, on 2026-10-28, failed 5 of 17 stages when the previous machine's
 temp volume filled and no test suite ran, and that machine was then permanently
@@ -147,10 +147,22 @@ implementation and eight in the test suite. Fixing them changed source and
 tests, which voids a qualification under the freeze's own rule, so the gate was
 re-run from clean on the repaired tree. That first attempt's logs are kept under
 qualification/attempt-1/ rather than erased, because it passed genuinely and the
-reason it does not count is the useful part. The harness has now run SIXTY-ONE
-milestones unchanged, and is self-checked before each run, because an unchanged
-harness is not the same as a working one. No milestone is open, and nothing
-after P19-DIV-001 is authorized; see TODO.md.
+reason it does not count is the useful part. P19-CONV-001 then qualified from
+clean on ONE attempt, by doing the only thing its predecessor had got wrong:
+BOTH INDEPENDENT REVIEWS RAN BEFORE THE FREEZE. They returned 25 findings — six
+code defects, three false published claims and eight test defects — and every
+one was fixed before the gate was launched, so no run had to be discarded. The
+most serious was a MISSING OWNER/NEIGHBOUR RANGE GUARD that let an unvalidated
+SIZE_MAX index reach WRITES: P19-DIV-001's own review had forced that guard into
+that operator, and the correction had REGRESSED one milestone later, which is
+the clearest evidence in P19 that a review catches what an author's own pass
+does not. Its first LAUNCH was a no-op — the launcher could not find its own
+script, printed "is not recognized" and the surrounding task still reported exit
+code 0 — caught by looking for the output files rather than trusting the code,
+which is the same reading rule P19-DOF-001 established. The harness has now run
+SIXTY-TWO milestones unchanged, and is self-checked before each run, because an
+unchanged harness is not the same as a working one. No milestone is open, and
+nothing after P19-CONV-001 is authorized; see TODO.md.
 
 The phases before it, and how each was qualified:
 
@@ -1280,6 +1292,84 @@ but observable only through the diagnostic's wording, which sits against the
 fixed, because adding an accessor is public API this checklist does not contain.
 And there is no performance result, because nothing consumes the operator and a
 baseline for an operator with no caller would be a number with no meaning.
+
+`P19-CONV-001` (PASS 2026-11-08) TRANSPORTS A SCALAR BY THE FLOW over that same
+finite-volume topology: it makes the face mass flux `phi` that three milestones
+had each been inventing privately, and assembles the convective operator from it
+as a first-order upwind or a central scheme. `ADR-072` writes the scatter so an
+internal face computes one owner share and writes its exact negation to the
+neighbour in the same visit, so internal-face conservation is a property of the
+traversal rather than a tolerance, and the matrix is ASYMMETRIC by construction
+— no symmetry tolerance is passed to `fromCsr` and the suite asserts the
+asymmetry, because convection is directional and a symmetric convection operator
+would be wrong rather than merely loose. A wall's flux is the boundary table's
+literal `0.0` and never a computed dot product, because a moving wall prescribes
+a TANGENTIAL velocity whose `w . S_b` is zero in exact arithmetic and not
+bit-zero once the centroid, the area vector and the velocity have each been
+rounded, and a computed wall flux leaks mass through a solid boundary.
+
+**Three of this milestone's own published claims were FALSE when written, and
+the measurements that had confirmed them were of models narrower than the
+claims.** The transpose identity `A(-phi) == A(phi)^T - diag(div phi)` was
+derived from the upwind rule and stated unqualified, but a central share is
+geometric and does not swap, and a zero-gradient boundary face carries its whole
+`phi` on the diagonal, so reversing the flux flips that term instead of removing
+it: re-measured, upwind with fixed-value boundaries is 19.25% bit-exact at worst
+4.36e-16, while upwind with zero-gradient boundaries and central with any policy
+are 0.00% bit-exact at worst relative 1 and 2.1 to 2.7 — finite errors, not
+rounding. The original figure of 4.93e-16 was a right number about the wrong
+thing: that script had NO CENTRAL BRANCH and modelled every boundary as
+fixed-value. The dominance identity was missing the prescribed-inflow term that
+the neighbouring decision had corrected one paragraph earlier, measured where
+there were no boundary faces at all. And both the ADR and the header claimed a
+compile-fail case held the asymmetry when nothing held it, nor could: it is a
+runtime branch with no type-level expression.
+
+**Re-measuring then produced an understanding neither the author nor either
+reviewer had going in.** The dominance deficit is defined with `|a_ii|`, so once
+backflow at a zero-gradient boundary drives the diagonal negative the identity
+breaks whatever the inflow term is — which makes `backflowFaces` the identity's
+VALIDITY CONDITION rather than a diagnostic standing beside it. The row-sum
+identity's correction term is the PRESCRIBED inflow and not all inflow, because
+a pressure inlet's velocity column is zero-gradient and its negative flux stays
+in the matrix; the all-inflow form departs by a relative 0.9995 on 20,815 of
+139,802 cells, a structural error rather than a rounding one.
+
+Qualified at 6525/6525 in each of three presets, 3258 x 5 in two repeats with
+16,290 executions each at a ratio of exactly 5.000, 0 warnings under `-Werror`,
+17 of 17 stages exit 0, 52,155 test executions, and 34,681 assertions in 48
+cases identically in Debug, Release and Debug-shared, with the eight qualified
+subtrees identical across three readings and equal to the eight its freeze
+recorded in advance; the `cfd` subsystem's 702,187 assertions in 447 cases are
+667,506 + 34,681 and 399 + 48 EXACTLY, so no pre-existing assertion moved, and
+76 tests were added with 0 removed by set difference against the previous
+milestone's own log. See
+[P19-CONV-001](docs/verification/P19-CONV-001/README.md). Ten mutation probes
+are killed by the suite, each one a mutation a review had shown survived the
+first draft; the sharpest, a constant interpolation weight, now costs 3,176
+failing assertions and was INVISIBLE before the review, because the hand
+fixtures' weight genuinely is 2/3 and the suite's only velocity builder was
+uniform — with equal velocities either side, the face value is independent of
+the weight for every weight, so the cross-check the ADR designates to protect
+the duplicated interpolation was a TAUTOLOGY. That is the same defect
+`P19-GRAD-001` and `P19-DIV-001` each recorded, in the same place, a third time.
+
+Recorded as less than a reader might assume: **nothing consumes this operator
+either, and boundedness is CONDITIONAL.** Upwind is bounded given a discretely
+conservative `phi` and no backflow at a zero-gradient boundary; the operator
+cannot see the first, implements the second because the boundary table
+prescribes it, and REPORTS both without refusing either. `Central` is unbounded
+wherever the cell Peclet number exceeds two, and there is no limiter, no
+blending and no Peclet-based switching — nor any Peclet report, which would need
+a viscosity this operator does not take. There is no solve, so the one analytic
+transport claim is asserted as a residual rather than by solving. Five of twelve
+refusals are unreachable through the public API and are recorded as unreached
+rather than covered. A non-zero `phi` at a wall is accepted on the assembly
+path, deliberately, because a policy says where a value comes from and not
+whether a sum may be taken over it. The face-velocity interpolation's
+three-line application still exists twice, pinned by a test rather than unified,
+because unifying it means editing a qualified operator for a convenience. And
+there is still no performance baseline, for the same reason as its predecessor.
 
 ```text
 incompressible laminar

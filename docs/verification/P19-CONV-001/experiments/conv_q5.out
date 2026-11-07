@@ -1,0 +1,8 @@
+Q5  per-face row-sum contribution by scheme: fl(phi*s) + fl(phi*(1-s)) vs phi
+
+  UPWIND  share in {0,1}   bit-exact on 200000/200000 (100.00%), worst relative 0
+  CENTRAL share in (0,1)   bit-exact on 178457/200000 ( 89.23%), worst relative 2.22e-16
+
+  => UPWIND is exact per face because the share is exactly 0 or 1, so
+     phi*1 is phi and phi*0 is a signed zero.
+     CENTRAL is not: two rounded products need not sum to phi.

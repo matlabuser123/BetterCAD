@@ -1964,3 +1964,72 @@ foreach(_case
 endforeach()
 bettercad_compile_fail_case(thermalcmd "${_thermalcmd}" THE_EDIT_BASE_CANNOT_BE_INSTANTIATED
     "protected|abstract|cannot declare" BetterCAD::thermal)
+
+# Convective flux (P19-CONV-001, ADR-072). The claims a value test cannot
+# reach: a CfdConvectionSystem cannot be conjured, because it holds a
+# CfdSparseMatrix whose default constructor is private and possession is the
+# evidence; the ASSEMBLY input and the PRODUCER input cannot be swapped, which
+# matters because one is `faces` long and the other `3 * cells`; THE ASSEMBLY
+# TAKES NO DENSITY, since `phi` already carries it, and no value test can show
+# that is impossible; THE FAILURE CHANNEL IS TAGGED rather than a plain Error,
+# which is what makes the output-judging refusal observable as a tag and is
+# P19-DIV-001's recorded limitation L10 answered; and the dimensioned summary
+# members are typed, so a bare double cannot reach one and a mass flow rate
+# cannot be confused with a volumetric one, a density or a mass.
+#
+# EVERY EXPECTED DIAGNOSTIC BELOW WAS READ OFF THE COMPILER, not predicted: all
+# 28 cases were compiled one at a time first, each emitting exactly one error,
+# and the control compiles clean with no macro defined. P19-GRAD-001 had three
+# gates fail because its regex did not list `invalid initialization`, which is
+# what GCC emits for a reference bound to the wrong type -- the gates were right
+# and the expectation was incomplete. Two of the cases below emit exactly that.
+set(_cfdconv "${CMAKE_CURRENT_SOURCE_DIR}/CfdConvectionMisuse.cpp")
+bettercad_compile_fail_group(cfdconv "${_cfdconv}" BetterCAD::cfd)
+foreach(_case
+        A_CONVECTION_INPUT_HOLDS_A_DENSITY
+        A_CONVECTION_INPUT_HOLDS_A_VELOCITY
+        A_MASS_FLUX_INPUT_HOLDS_A_SCHEME
+        A_SUMMARY_HOLDS_THE_MATRIX)
+    bettercad_compile_fail_case(cfdconv "${_cfdconv}" ${_case}
+        "no member named|has no member"
+        BetterCAD::cfd)
+endforeach()
+foreach(_case
+        DEFAULT_CONSTRUCT_A_CONVECTION_SYSTEM
+        DEFAULT_CONSTRUCT_A_SPARSE_MATRIX)
+    bettercad_compile_fail_case(cfdconv "${_cfdconv}" ${_case}
+        "is private within this context|private|no matching function|use of deleted"
+        BetterCAD::cfd)
+endforeach()
+foreach(_case
+        AN_INFLOW_TAKES_A_BARE_DOUBLE
+        A_FLOW_SUM_MIXES_DIMENSIONS)
+    bettercad_compile_fail_case(cfdconv "${_cfdconv}" ${_case}
+        "no match for|no matching function"
+        BetterCAD::cfd)
+endforeach()
+foreach(_case
+        AN_INFLOW_IS_A_BARE_DOUBLE
+        A_CONVECTION_INPUT_IS_A_MASS_FLUX_INPUT
+        A_MASS_FLUX_INPUT_IS_A_CONVECTION_INPUT
+        A_CONVECTION_PROBLEM_IS_AN_INTEGER
+        A_CONVECTION_PROBLEM_IS_A_BOUNDARY_POLICY
+        A_CONVECTION_PROBLEM_IS_A_DIVERGENCE_PROBLEM
+        A_FAILURE_IS_AN_ERROR
+        A_FAILURE_IS_ITS_PROBLEM
+        A_MASS_FLOW_RATE_IS_A_VOLUMETRIC_FLOW_RATE
+        A_MASS_FLOW_RATE_IS_A_DENSITY
+        A_MASS_FLOW_RATE_IS_A_MASS
+        A_SCHEME_IS_AN_INTEGER
+        A_SCHEME_IS_A_VECTOR_COMPONENT
+        A_VECTOR_COMPONENT_IS_A_SCHEME
+        THE_ASSEMBLY_RETURNS_A_PLAIN_RESULT
+        THE_PRODUCER_RETURNS_A_PLAIN_RESULT
+        THE_ASSEMBLY_TAKES_A_MASS_FLUX_INPUT
+        THE_PRODUCER_TAKES_A_CONVECTION_INPUT
+        THE_DENSITY_TAKES_A_BARE_DOUBLE
+        THE_FACE_FLUX_TAKES_TYPED_RATES)
+    bettercad_compile_fail_case(cfdconv "${_cfdconv}" ${_case}
+        "could not convert|cannot convert|no matching function|no match for|invalid conversion|conversion from|invalid initialization"
+        BetterCAD::cfd)
+endforeach()

@@ -1,0 +1,19 @@
+P19-CONV-001 measurement revision 3, seed 202611073
+==============================================================================
+
+Q2' the identity with the policy distinguished
+  narrow 1e-2..1e2
+    CORRECTED (prescribed inflow): exact on  6251/20000 ( 31.25%), worst rel 7.633e-15
+    revision 2 (all inflow)      : exact on  2052/20000 ( 10.26%)
+    cells where rev-2's formula is WRONG BY MORE THAN ROUNDING: 20815 of 139802, worst rel 0.9995
+  wide 1e-6..1e6
+    CORRECTED (prescribed inflow): exact on  7287/20000 ( 36.44%), worst rel 1.938e-14
+    revision 2 (all inflow)      : exact on  2392/20000 ( 11.96%)
+    cells where rev-2's formula is WRONG BY MORE THAN ROUNDING: 20652 of 140134, worst rel 0.9987
+
+    => the corrected term agrees to half an eps; the revision-2 term
+       is wrong by a FINITE amount wherever an inflow face is
+       zero-gradient, which is a pressure inlet. Not a rounding bug.
+
+==============================================================================
+done

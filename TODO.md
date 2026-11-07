@@ -23,12 +23,49 @@ Prerequisite:
            may set). P17's F1-F3 stand unchanged beneath them.
 
 Current milestone:
-           NONE. P19-DIV-001 PASSED on 2026-11-07, and finishing a milestone is
-           itself a stop condition. The next milestone is a scope decision and
-           is the owner's alone to make: P19-CONV-001 is next in the phase plan
-           and is NOT authorized.
+           NONE. P19-CONV-001 PASSED on 2026-11-08, and finishing a milestone
+           is itself a stop condition. The next milestone is a scope decision
+           and is the owner's alone; P19-MOM-001 is next in the phase plan and
+           is NOT authorized.
 
 Previous milestone:
+           P19-CONV-001 — Convective Flux. AUTHORIZED 2026-11-07 by the
+           owner's "Implement nd fully verify" over the fifteen-item
+           checklist, which arrived pasted into the instruction as
+           P19-BC-001's, P19-IC-001's, P19-DIFF-001's and P19-GRAD-001's did.
+           PASS 2026-11-08. All fifteen items are recorded: 17 of 17 stages
+           exit 0, 6525/6525 in each of the three presets, 3258 x 5 in two
+           repeats with 16,290 counted executions each at a ratio of exactly
+           5.000, 0 warnings under -Werror with
+           BETTERCAD_WARNINGS_AS_ERRORS=ON read from each BUILT tree's own
+           cache, 4h07m07s, 52,155 test executions in all, and the eight
+           qualified subtrees identical across three readings, so the
+           qualified tree is the committed tree. 48 unit cases / 34,681
+           assertions and 28 compile-fail cases, with the assertion count
+           IDENTICAL in Debug, Release and Debug-shared. The cfd subsystem
+           reads 702,187 assertions in 447 cases, which is 667,506 + 34,681
+           and 399 + 48 EXACTLY, so no pre-existing cfd assertion moved; 76
+           tests added and 0 removed by set difference against P19-DIV-001's
+           own log. This authorization was written here BEFORE any
+           implementation, as the four before it were. THE PASTED TEXT WAS
+           DIFFED AGAINST THIS FILE'S OWN SECTION FIRST and is byte-for-byte
+           identical across all 32 lines, 15 unticked items and 0 ticked --
+           counted, not assumed -- so the scope was this file's checklist
+           unaltered.
+           TWO INDEPENDENT REVIEWS WERE RUN BEFORE THE FREEZE, which is the
+           one defect P19-DIV-001 recorded against itself and the reason there
+           is no discarded attempt here. 25 findings: six code defects, three
+           false published claims in ADR-072, eight test defects. The most
+           serious was a MISSING OWNER/NEIGHBOUR RANGE GUARD with the
+           unvalidated SIZE_MAX index used for WRITES — the guard
+           P19-DIV-001's own review had already forced into that operator,
+           REGRESSED one milestone later. The interpolation weight was left
+           unpinned in the same place P19-GRAD-001 and P19-DIV-001 had each
+           left it unpinned. The author's own pass found none of the six code
+           defects and wrote three of the false claims. Nothing after this
+           milestone was started.
+
+Before that:
            P19-DIV-001 — Divergence / Flux Operator. AUTHORIZED 2026-11-07 by
            the owner's "Authorize DIV-001", in answer to a question that named
            this milestone and no other. PASS 2026-11-07. All twelve items are
@@ -54,7 +91,8 @@ Previous milestone:
            instruction. The owner also did not say "implement and fully verify"
            in those words; authorizing the milestone was read as permission to
            implement it under this file's own definition of done, and nothing
-           wider. P19-CONV-001 was not started.
+           wider. P19-CONV-001 was not started then; it was authorized
+           separately afterwards and has since PASSED.
            THE MILESTONE REACHED A FREEZE, A LAUNCH AND A PASS WITH NO
            INDEPENDENT REVIEW, and that is recorded as its first defect
            because it is the one that let the other twelve reach a passing
@@ -468,12 +506,12 @@ Qualified:
            P18 — Thermal Analysis
 
 Next:
-           NOTHING IS AUTHORIZED. P19-DIV-001 PASSED on 2026-11-07 and no
+           NOTHING IS AUTHORIZED. P19-CONV-001 PASSED on 2026-11-08 and no
            milestone is open. Each milestone is started by the owner, as every
            P17, P18 and P19 milestone was, and a predecessor's PASS is not
            permission to start the one after it. Finishing a milestone is
-           itself a stop condition. P19-CONV-001 is next in the phase plan and
-           is NOT authorized; the next milestone is a scope decision, not
+           itself a stop condition. P19-MOM-001 is next in the phase plan and
+           is NOT authorized: the next milestone is a scope decision, not
            Claude's to make.
 
 P19 objective, as planned:
@@ -3564,21 +3602,62 @@ logs are preserved under `qualification/attempt-1/` rather than erased.
 
 Implement convection discretisation.
 
-* [ ] Define mass flux `phi`
-* [ ] Define interpolation scheme
-* [ ] First-order upwind baseline
-* [ ] Central scheme if in scope
-* [ ] Sign convention for `phi`
-* [ ] Internal-face conservation
-* [ ] Boundary treatment
-* [ ] Boundedness policy
-* [ ] Constant-field transport test
-* [ ] 1D advection test
-* [ ] Reverse-flow behavior
-* [ ] Sparse assembly
-* [ ] Determinism PASS
-* [ ] Regression PASS
-* [ ] Evidence recorded
+**AUTHORIZED 2026-11-07** by the owner's "Implement nd fully verify" over the
+fifteen-item checklist below, pasted into the instruction. THE PASTED CHECKLIST
+WAS DIFFED AGAINST THIS SECTION BEFORE ANY WORK BEGAN and is byte-for-byte
+identical to the fifteen items as they already stood -- so the owner neither
+quoted a different scope nor altered this one, and the items stand unchanged.
+The recommended first qualified scheme, first-order upwind before higher-order
+schemes, is part of that scope and was read as binding.
+
+**PASS 2026-11-08.** All fifteen items are recorded. 17 of 17 stages exit 0;
+6525/6525 tests in each of debug-ext, release-ext and debug-shared-ext; 3258
+selected tests x 5 executions in each of two repeat presets, 16,290 executions
+per log counted from the `Start` markers at a ratio of exactly 5.000; 0
+warnings with BETTERCAD_WARNINGS_AS_ERRORS read as ON from each BUILT tree's
+own cache; 4h07m07s. 52,155 test executions in all.
+
+48 unit cases / 34,681 assertions and 28 compile-fail cases, and the assertion
+count is IDENTICAL in Debug, Release and Debug-shared, so no assertion here is
+configuration-dependent. The cfd subsystem reads 702,187 assertions in 447
+cases, which is 667,506 + 34,681 and 399 + 48 EXACTLY, so no pre-existing cfd
+assertion moved. 76 tests added and 0 removed, established by a set difference
+against P19-DIV-001's own qualified log rather than by arithmetic on the
+totals.
+
+The eight qualified subtrees are identical across THREE readings — at the
+freeze, by the harness before the first build and after the last test run, and
+recomputed from the working tree by the harness's own method immediately
+before the commit — so the qualified tree is the committed tree.
+
+**TWO INDEPENDENT REVIEWS WERE RUN BEFORE THE FREEZE**, which is the one thing
+this milestone did differently from P19-DIV-001, and the reason there is no
+discarded attempt here. 25 findings: six code defects, three false published
+claims in ADR-072, eight test defects. The most serious was a MISSING
+OWNER/NEIGHBOUR RANGE GUARD with the unvalidated SIZE_MAX index used for
+WRITES — a guard P19-DIV-001 carries and whose comment records that a review
+forced it there, so it was that correction REGRESSED one milestone later. The
+interpolation weight was also left completely unpinned, in the same place
+P19-GRAD-001 and P19-DIV-001 had each left it unpinned before. The author's own
+pass found none of the six code defects and wrote three of the false claims.
+
+Evidence: [docs/verification/P19-CONV-001/](docs/verification/P19-CONV-001/)
+
+* [x] Define mass flux `phi`
+* [x] Define interpolation scheme
+* [x] First-order upwind baseline
+* [x] Central scheme if in scope
+* [x] Sign convention for `phi`
+* [x] Internal-face conservation
+* [x] Boundary treatment
+* [x] Boundedness policy
+* [x] Constant-field transport test
+* [x] 1D advection test
+* [x] Reverse-flow behavior
+* [x] Sparse assembly
+* [x] Determinism PASS
+* [x] Regression PASS
+* [x] Evidence recorded
 
 Recommended first qualified scheme:
 
@@ -5097,6 +5176,32 @@ P19-DIV-001      PASS 2026-11-07. Twelve of twelve items. AUTHORIZED
                  REPORTED and never asserted to be zero (L3).
                  Nothing consumes this divergence yet (L1). Evidence
                  recorded.
+P19-CONV-001     PASS 2026-11-08. Fifteen of fifteen. A face mass-flux
+                 producer and an upwind / central convection operator
+                 assembling into CfdSparseMatrix, with a twelve-phase refusal
+                 gate and a tagged error channel. 17 of 17 stages exit 0,
+                 6525/6525 x 3 presets, 3258 x 5 x 2 repeats (16,290
+                 executions per log, ratio exactly 5.000), 0 warnings,
+                 4h07m07s, 52,155 test executions. 48 unit cases / 34,681
+                 assertions, identical in all three configurations, and 28
+                 compile-fail cases; the cfd subsystem's 702,187 assertions in
+                 447 cases are 667,506 + 34,681 and 399 + 48 EXACTLY, so no
+                 pre-existing cfd assertion moved. Qualified tree == committed
+                 tree across three readings.
+                 TWO INDEPENDENT REVIEWS RAN BEFORE THE FREEZE -- the defect
+                 P19-DIV-001 recorded against itself -- and found 25 issues:
+                 six code defects, three false claims in ADR-072, eight test
+                 defects. A missing owner/neighbour range guard let an
+                 unvalidated SIZE_MAX index reach WRITES: P19-DIV-001's own
+                 review had forced that guard, and it had regressed. The
+                 interpolation weight was unpinned in the same place
+                 P19-GRAD-001 and P19-DIV-001 had each left it unpinned. The
+                 author's own pass found none of the six and wrote three of
+                 the false claims.
+                 Boundedness is CONDITIONAL and the condition is not enforced
+                 (L3); Central is unbounded and nothing corrects it (L4).
+                 Nothing consumes this operator yet (L1) and there is no
+                 solve (L2). Evidence recorded.
 ```
 
 The text below is the standing record as of P18-QUAL-001 (2026-10-27) and is kept as history.
