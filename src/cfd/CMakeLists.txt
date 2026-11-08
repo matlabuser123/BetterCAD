@@ -70,6 +70,7 @@ bettercad_add_library(bettercad_cfd
         CfdGradient.cpp
         CfdInitialField.cpp
         CfdMesh.cpp
+        CfdMomentum.cpp
         CfdSparse.cpp
         CfdTarget.cpp
         CfdTopology.cpp

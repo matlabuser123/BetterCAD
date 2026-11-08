@@ -1,0 +1,52 @@
+P19-MOM-001 / ADR-073 -- arithmetic measured before implementation
+seed 202611081, plain IEEE-754 double, no numpy, order as written
+
+Q1  matrix term accumulation order
+  Q1a ((conv+diff)+trans) vs (conv+(diff+trans))        200000 cases   78.06% bit-exact  worst rel 4.034e-13
+      if this is not 100%, the accumulation ORDER is part of the contract
+  Q1b ((conv+diff)+trans) vs ((trans+diff)+conv)        200000 cases   78.06% bit-exact  worst rel 4.034e-13
+
+Q2  hydrostatic cancellation
+  Q2a -(V*fl(rho*g)) + ((rho*V)*g) == 0.0 exactly: 130101/200000 (65.05%)
+  Q2b worst |residual| / |gravity term| = 3.649e-16
+      so a bit-zero claim would be FALSE, and the bound is RELATIVE to the term
+
+Q3  row-sum additivity
+  Q3a rowSum(conv+diff) vs rowSum(conv)+rowSum(diff), rel to the SUM   50000 cases   47.39% bit-exact  worst rel 5.264e-12
+  Q3b the same departure relative to the ROW SCALE (max |a_ij|):  47.39% bit-exact  worst 1.085e-14
+      Q3b is the bound a test may assert; Q3a is why it must not divide by the sum
+
+Q4  the transient diagonal against a steady diagonal, in kg/s
+  transient term invisible in the diagonal sum: 45162/200000 (22.58%)
+  largest ratio |trans/steady| at which it was still LOST: 1.087e-16
+      so 'a large dt approaches the steady system' is a BOUND, not an equality:
+      |A_transient - A_steady| <= max_c rho V_c / dt, which is what a test may assert
+
+  [ANNOTATED AFTER THE FACT, 2026-11-08] THAT BOUND IS THE EXACT-ARITHMETIC ONE
+  AND IT IS NOT THE FLOATING-POINT ONE. The test asserted it and FAILED at
+  dt = 1e9: measured gap 1.29646e-12 against the claimed 1.29644e-12. The gap is
+  recovered as a difference of two diagonals and the transient diagonal is
+  fl(a_steady + trans), so recovering trans from it carries that sum's rounding:
+  |fl(a + t) - a| <= t + eps |fl(a + t)|. The surplus 2e-17 is eps times the
+  diagonal's magnitude, exactly as the inequality predicts. The bound in the
+  suite therefore carries a + 2 eps |a_ii| term, which is a real part of the
+  bound rather than slack. Recorded here because this log predicted the bound
+  and the implementation disproved it, and ADR-073 annotates its own Q2 and Q4
+  artefacts in the same way.
+
+Q5  source accumulation order
+  Q5a declared order vs reversed order                  200000 cases   57.45% bit-exact  worst rel 3.044e-13
+  Q5b declared order vs ascending-magnitude order       200000 cases   68.64% bit-exact  worst rel 3.044e-13
+      ascending magnitude is the numerically best order and is NOT used:
+      the declared order is fixed and documented; it is not the most accurate
+      order, and claiming otherwise would be a claim no measurement supports
+
+CONCLUSIONS CARRIED INTO ADR-073
+  1. No order-independence may be claimed of either accumulation (Q1, Q3, Q5).
+     The assembly fixes ONE order and the suite reproduces that order.
+  2. Hydrostatic cancellation is NOT bit-zero (Q2). The test asserts a
+     RELATIVE bound against the term magnitude, measured here.
+  3. The transient term vanishes into the diagonal for a large dt (Q4), so
+     the steady limit is a bound and never an equality.
+  4. Term decomposition can still be asserted BIT-EXACTLY, because the test
+     reproduces the production ORDER rather than a mathematically equal one.

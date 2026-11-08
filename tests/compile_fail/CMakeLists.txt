@@ -2033,3 +2033,62 @@ foreach(_case
         "could not convert|cannot convert|no matching function|no match for|invalid conversion|conversion from|invalid initialization"
         BetterCAD::cfd)
 endforeach()
+
+# ---------------------------------------------------------------------------
+# P19-MOM-001 -- the momentum assembly, ADR-073
+# ---------------------------------------------------------------------------
+#
+# EVERY EXPECTED DIAGNOSTIC BELOW WAS READ OFF THE COMPILER, never predicted.
+# P19-GRAD-001 had three gates fail because its regex did not list
+# `invalid initialization`, which is what GCC emits for a reference bound to the
+# wrong type -- the gates were right and the expectation was incomplete.
+set(_cfdmom "${CMAKE_CURRENT_SOURCE_DIR}/CfdMomentumMisuse.cpp")
+bettercad_compile_fail_group(cfdmom "${_cfdmom}" BetterCAD::cfd)
+foreach(_case
+        A_MOMENTUM_INPUT_HOLDS_A_REFERENCE_HEIGHT
+        A_MOMENTUM_INPUT_HOLDS_A_PRESSURE
+        A_MOMENTUM_SUMMARY_HOLDS_THE_MATRIX)
+    bettercad_compile_fail_case(cfdmom "${_cfdmom}" ${_case}
+        "no member named|has no member"
+        BetterCAD::cfd)
+endforeach()
+foreach(_case
+        DEFAULT_CONSTRUCT_A_MOMENTUM_SYSTEM)
+    bettercad_compile_fail_case(cfdmom "${_cfdmom}" ${_case}
+        "is private within this context|private|no matching function|use of deleted"
+        BetterCAD::cfd)
+endforeach()
+foreach(_case
+        A_PRESSURE_GRADIENT_TAKES_A_BARE_DOUBLE
+        A_TRANSIENT_COEFFICIENT_TAKES_A_BARE_DOUBLE
+        THE_DENSITY_TAKES_A_BARE_DOUBLE)
+    bettercad_compile_fail_case(cfdmom "${_cfdmom}" ${_case}
+        "no match for|no matching function|cannot convert|could not convert|invalid conversion"
+        BetterCAD::cfd)
+endforeach()
+foreach(_case
+        THE_PRESSURE_GRADIENT_TAKES_A_VELOCITY_GRADIENT
+        THE_FACE_GRADIENT_TAKES_A_PRESSURE_GRADIENT
+        A_PRESSURE_GRADIENT_IS_A_VELOCITY_GRADIENT
+        THE_DENSITY_TAKES_A_VISCOSITY
+        THE_VISCOSITY_TAKES_A_DENSITY
+        THE_TIME_STEP_TAKES_A_BARE_DOUBLE
+        THE_TIME_STEP_TAKES_A_LENGTH
+        GRAVITY_TAKES_AN_ACCELERATION_VECTOR
+        A_GRAVITY_RECORD_IS_AN_ACCELERATION_VECTOR
+        THE_ASSEMBLY_RETURNS_A_PLAIN_RESULT
+        A_FAILURE_IS_AN_ERROR
+        A_FAILURE_IS_ITS_PROBLEM
+        A_MOMENTUM_PROBLEM_IS_AN_INTEGER
+        A_MOMENTUM_PROBLEM_IS_A_CONVECTION_PROBLEM
+        A_MOMENTUM_PROBLEM_IS_A_DIFFUSION_PROBLEM
+        A_CONVECTION_PROBLEM_IS_A_MOMENTUM_PROBLEM
+        A_TRANSIENT_COEFFICIENT_IS_A_BARE_DOUBLE
+        A_TRANSIENT_COEFFICIENT_IS_A_FORCE
+        A_MASS_FLOW_RATE_IS_A_FORCE
+        A_MOMENTUM_INPUT_IS_A_CONVECTION_INPUT
+        A_MOMENTUM_INPUT_IS_A_DIFFUSION_INPUT)
+    bettercad_compile_fail_case(cfdmom "${_cfdmom}" ${_case}
+        "could not convert|cannot convert|no matching function|no match for|invalid conversion|conversion from|invalid initialization"
+        BetterCAD::cfd)
+endforeach()

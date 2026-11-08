@@ -366,6 +366,7 @@ if(TARGET bettercad_reference_models)
         cfd/CfdGradientTests.cpp
         cfd/CfdInitialFieldTests.cpp
         cfd/CfdMeshTests.cpp
+        cfd/CfdMomentumTests.cpp
         cfd/CfdTopologyTests.cpp
         qualification/P15MaterialsQualificationTests.cpp
         qualification/P16MeshingQualificationTests.cpp

@@ -1,0 +1,80 @@
+P19-MOM-001 -- MUTATION PROBES, MEASURED
+==============================================================================
+baseline: suite PASSES -- All tests passed (14198 assertions in 47 test cases)
+==============================================================================
+M1  conv + diff -> conv - diff
+    KILLED: 7 case(s) failed, first: CfdMomentum_TheTransientDiagonalIsDensityTimesVolumeOverTheTimeStep
+    (predicted KILLED)
+M2  rho*V/dt -> rho*V*dt
+    KILLED BY THE COMPILER: did not compile
+    (predicted KILLED -- and now a COMPILE error, which is stronger)
+M3  drop faceGradient from the assembly's diffusion input
+    KILLED: 1 case(s) failed, first: CfdMomentum_PassesTheFaceGradientThroughToTheDeferredCorrection
+    (predicted SURVIVOR)
+M4  delete phase 1 (geometry describes topology)
+    KILLED: 1 case(s) failed, first: CfdMomentum_RefusesMetricsBuiltForAnotherMesh
+    (predicted SURVIVOR)
+M5  delete phase 2's face-count arm
+    KILLED: 1 case(s) failed, first: CfdMomentum_RefusesABoundaryPreparedForAnotherMesh
+    (predicted SURVIVOR)
+M6  largestTransient = *least (both fields report the minimum)
+    KILLED: 1 case(s) failed, first: CfdMomentum_ReportsTheSmallestAndLargestTransientCoefficientInClosedForm
+    (predicted SURVIVOR)
+M7  smallestTransient = *most (both report the maximum)
+    KILLED: 1 case(s) failed, first: CfdMomentum_ReportsTheSmallestAndLargestTransientCoefficientInClosedForm
+    (predicted SURVIVOR)
+M9  never increment notDominant
+    KILLED: 2 case(s) failed, first: CfdMomentum_CountsEveryNonDominantRowOnAFixtureBuiltToHaveThem
+    (predicted CONDITIONAL)
+M11 previousVelocity[comp*cells + c] -> [c]
+    KILLED BY THE COMPILER: did not compile
+    (predicted KILLED)
+M12 pressure term sign
+    KILLED: 5 case(s) failed, first: CfdMomentum_OnTheReferenceBodiesTheDecompositionAndRowSumIdentitiesHold
+    (predicted KILLED)
+M13 drop the volume from the body force
+    KILLED: 5 case(s) failed, first: CfdMomentum_TheSourceIsExactlyTheFiveTermsInTheDeclaredOrder
+    (predicted KILLED)
+M14 every cell uses cell 0's volume
+    KILLED: 6 case(s) failed, first: CfdMomentum_ThePressureTermIsMinusVolumeTimesTheGradientComponent
+    (predicted PARTLY)
+M15 isfinite -> isnan in the scalar array gate
+    KILLED: 3 case(s) failed, first: CfdMomentum_RefusesANonFiniteValueInEveryArrayItAccepts
+    (predicted SURVIVOR)
+M17 hard-code Upwind in the assembly's convection input
+    KILLED: 3 case(s) failed, first: CfdMomentum_RefusesASchemeThatIsNotOneOfTheTwo
+    (predicted CONDITIONAL)
+M18 transient diagonal += -> =
+    SURVIVED: All tests passed (14198 assertions in 47 test cases)
+    (no-op control: the suite must still PASS)
+M20 delete the source finiteness loop
+    KILLED: 1 case(s) failed, first: CfdMomentum_RefusesANonFiniteSourceWhileEveryCoefficientStaysFinite
+    (predicted SURVIVOR)
+M22 drop the interpolation weight's effect: scheme ignored in the gate
+    KILLED: 4 case(s) failed, first: CfdMomentum_RowSumIsTheSumOfTheTermsOwnRowSums
+    (tolerance tightened past the measurement: the suite must FAIL, which shows the row-sum assertions are live)
+==============================================================================
+CfdMomentum.cpp: reverted exactly = True
+CfdMomentum.hpp: reverted exactly = True
+
+SUMMARY
+  applied: 17   killed: 16   survived: 1
+  KILLED                   M1  conv + diff -> conv - diff
+  KILLED BY THE COMPILER   M2  rho*V/dt -> rho*V*dt
+  KILLED                   M3  drop faceGradient from the assembly's diffusion input
+  KILLED                   M4  delete phase 1 (geometry describes topology)
+  KILLED                   M5  delete phase 2's face-count arm
+  KILLED                   M6  largestTransient = *least (both fields report the minimum)
+  KILLED                   M7  smallestTransient = *most (both report the maximum)
+  KILLED                   M9  never increment notDominant
+  KILLED BY THE COMPILER   M11 previousVelocity[comp*cells + c] -> [c]
+  KILLED                   M12 pressure term sign
+  KILLED                   M13 drop the volume from the body force
+  KILLED                   M14 every cell uses cell 0's volume
+  KILLED                   M15 isfinite -> isnan in the scalar array gate
+  KILLED                   M17 hard-code Upwind in the assembly's convection input
+  SURVIVED                 M18 transient diagonal += -> =
+  KILLED                   M20 delete the source finiteness loop
+  KILLED                   M22 drop the interpolation weight's effect: scheme ignored in the gate
+
+final rebuild of the reverted tree: OK

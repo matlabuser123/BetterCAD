@@ -23,10 +23,30 @@ Prerequisite:
            may set). P17's F1-F3 stand unchanged beneath them.
 
 Current milestone:
-           NONE. P19-CONV-001 PASSED on 2026-11-08, and finishing a milestone
-           is itself a stop condition. The next milestone is a scope decision
-           and is the owner's alone; P19-MOM-001 is next in the phase plan and
-           is NOT authorized.
+           P19-MOM-001 - Momentum Equation. AUTHORIZED 2026-11-08 by the
+           owner's "implement and fully verify" over the thirteen-item
+           checklist, which arrived pasted into the instruction as
+           P19-BC-001's, P19-IC-001's, P19-DIFF-001's, P19-GRAD-001's and
+           P19-CONV-001's did. PASS 2026-11-08, thirteen of thirteen, ON THE
+           SECOND QUALIFICATION ATTEMPT; attempt 1 failed a release-only
+           build error in a test helper 66m28s in and is recorded in full at
+           docs/verification/P19-MOM-001/qualification-attempt-1/ rather than
+           discarded. NO MILESTONE IS NOW OPEN. THE PASTED TEXT WAS DIFFED
+           AGAINST THIS FILE'S OWN SECTION
+           FIRST and is byte-for-byte identical across all 32 lines, with 13
+           unticked items and 0 ticked -- counted, not assumed -- so the scope
+           is this file's checklist unaltered, and sha256 386e3242048e9e85
+           over both after CR normalization. This authorization was written
+           here BEFORE any implementation, as the five before it were.
+           Scope note recorded at authorization time, not discovered later:
+           the checklist's `+ rho g` body force is a CONSTANT gravitational
+           term at the single constant density P19 v1 carries. It is NOT
+           buoyancy, which this phase refuses (ADR-058) because buoyancy needs
+           density to vary with temperature. A constant `rho g` at constant
+           density is also absorbable into a modified pressure, so it changes
+           no velocity field in a closed domain with no fixed-pressure
+           boundary; that is a property of the equation and not a defect, and
+           the implementation must not pretend otherwise.
 
 Previous milestone:
            P19-CONV-001 — Convective Flux. AUTHORIZED 2026-11-07 by the
@@ -507,13 +527,17 @@ Qualified:
            P18 — Thermal Analysis
 
 Next:
-           NOTHING IS AUTHORIZED. P19-CONV-001 PASSED on 2026-11-08 and no
-           milestone is open. Each milestone is started by the owner, as every
+           NOTHING IS AUTHORIZED AND NO MILESTONE IS OPEN. P19-MOM-001 PASSED
+           on 2026-11-08 and was the last authorized work; see Current
+           milestone. It was the first milestone of this phase to CONSUME its
+           predecessors rather than add an operator beside them, which answers
+           the limitation P19-GRAD-001, P19-DIV-001 and P19-CONV-001 each
+           recorded against themselves -- that nothing consumed them.
+           P19-CONT-001 - Continuity Equation is next in the phase plan and is
+           NOT authorized. Each milestone is started by the owner, as every
            P17, P18 and P19 milestone was, and a predecessor's PASS is not
-           permission to start the one after it. Finishing a milestone is
-           itself a stop condition. P19-MOM-001 is next in the phase plan and
-           is NOT authorized: the next milestone is a scope decision, not
-           Claude's to make.
+           permission to start the one after it. **The next milestone is a
+           scope decision for the owner, not Claude's to make.**
 
 P19 objective, as planned:
            authoritative CAD / fluid / mesh state
@@ -3686,19 +3710,25 @@ rho (∂U/∂t + ∇·(U U))
 
 within v1 scope.
 
-* [ ] Steady momentum form
-* [ ] Transient momentum term
-* [ ] Convection contribution
-* [ ] Diffusion contribution
-* [ ] Pressure-gradient contribution
-* [ ] Gravity/body-force contribution
-* [ ] Boundary contributions
-* [ ] Sparse global matrix
-* [ ] Deterministic assembly
-* [ ] No hidden stabilization
-* [ ] Independent small-system oracle
-* [ ] Regression PASS
-* [ ] Evidence recorded
+PASS 2026-11-08, on the SECOND qualification attempt. Attempt 1 failed a
+release-only build error in a test helper 66m28s in, and is recorded in full
+rather than discarded.
+
+Evidence: [docs/verification/P19-MOM-001/](docs/verification/P19-MOM-001/)
+
+* [x] Steady momentum form
+* [x] Transient momentum term
+* [x] Convection contribution
+* [x] Diffusion contribution
+* [x] Pressure-gradient contribution
+* [x] Gravity/body-force contribution
+* [x] Boundary contributions
+* [x] Sparse global matrix
+* [x] Deterministic assembly
+* [x] No hidden stabilization
+* [x] Independent small-system oracle
+* [x] Regression PASS
+* [x] Evidence recorded
 
 ---
 # P19-CONT-001
@@ -5204,6 +5234,52 @@ P19-CONV-001     PASS 2026-11-08. Fifteen of fifteen. A face mass-flux
                  (L3); Central is unbounded and nothing corrects it (L4).
                  Nothing consumes this operator yet (L1) and there is no
                  solve (L2). Evidence recorded.
+P19-MOM-001      PASS 2026-11-08, ON THE SECOND ATTEMPT. Thirteen of
+                 thirteen. The momentum assembly is the SUM OF TWO ALREADY
+                 QUALIFIED OPERATORS plus a backward-Euler transient term, a
+                 caller-supplied pressure gradient and a constant body force,
+                 behind a fourteen-phase refusal gate with a tagged error
+                 channel. It is the first P19 milestone to CONSUME its
+                 predecessors, which answers the limitation P19-GRAD-001,
+                 P19-DIV-001 and P19-CONV-001 each recorded against
+                 themselves. The two sub-matrices' sparse patterns are
+                 VERIFIED IDENTICAL rather than assumed before they are
+                 summed. 17 of 17 stages exit 0, 6601/6601 x 3 presets,
+                 3306 x 5 x 2 repeats (16,530 executions per log, ratio
+                 exactly 5.000), 0 warnings, 3h43m06s, 52,863 test
+                 executions. 48 unit cases / 14,230 assertions, identical in
+                 all three configurations, and 28 compile-fail cases; the cfd
+                 subsystem's 716,417 assertions in 495 cases are 702,187 +
+                 14,230 and 447 + 48 EXACTLY, so no pre-existing cfd
+                 assertion moved. Qualified tree == committed tree.
+                 ATTEMPT 1 FAILED AND THE FAILURE WAS A PROCESS FAILURE, NOT
+                 A DEFECT THE GATES MISSED. A -Werror=array-bounds rejection
+                 at -O3 on a pop_back() the optimizer cannot prove safe was
+                 found and fixed in one test helper BEFORE that freeze, and
+                 recorded as having caught the class; a second helper thirty
+                 lines below carried the same defect, was written after the
+                 only release-ext build, and broke the Release build 66m28s
+                 into the gate. The published note had argued those sites
+                 safe because "no access follows them" -- but pop_back() IS
+                 the access, so the argument was false and the sites it
+                 excused were never compiled. The wrong paragraph is kept
+                 with a correction under it. The launcher reported exit code
+                 0 while the harness reported two failed stages, so the
+                 reading rule earned itself again. TWO INDEPENDENT REVIEWS
+                 RAN BEFORE THE FIRST FREEZE, 42 findings, all resolved: the
+                 sharpest two were that seven static_asserts constrained
+                 nothing because the assembly computed in raw doubles, and
+                 that the milestone's central claim -- convection and
+                 diffusion meeting with a PLUS -- had no independent check,
+                 every assertion having written the production expression.
+                 24 mutation probes applied to the real tree, 22 killed (two
+                 BY THE COMPILER, both only possible because of the typed
+                 arithmetic fix), two honest survivors and one no-op control;
+                 the one real survivor led to a new test, and two of its
+                 fixtures failed on their own premises first. Five
+                 measurement-tool defects of my own were found and published
+                 rather than quietly fixed. No field is produced and nothing
+                 is solved (L1, L2). Evidence recorded.
 ```
 
 The text below is the standing record as of P18-QUAL-001 (2026-10-27) and is kept as history.

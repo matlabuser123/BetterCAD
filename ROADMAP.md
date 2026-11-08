@@ -106,7 +106,7 @@ P19-ARCH-001": P19-ARCH-001 and P19-DATA-001 (2026-10-27), P19-FLUID-001
 (2026-10-28), P19-MESH-001, P19-TOPO-001 and P19-GEOM-001 (all 2026-10-31) and
 P19-DOF-001 and P19-BC-001 (both 2026-11-05) and P19-IC-001 and P19-DIFF-001
 (both 2026-11-06) and P19-GRAD-001 and P19-DIV-001 (both 2026-11-07) and
-P19-CONV-001 (2026-11-08) have PASSED.
+P19-CONV-001 and P19-MOM-001 (both 2026-11-08) have PASSED.
 P19-MESH-001 was qualified by a second attempt on a replacement machine: its
 first attempt, on 2026-10-28, failed 5 of 17 stages when the previous machine's
 temp volume filled and no test suite ran, and that machine was then permanently
@@ -159,10 +159,32 @@ the clearest evidence in P19 that a review catches what an author's own pass
 does not. Its first LAUNCH was a no-op — the launcher could not find its own
 script, printed "is not recognized" and the surrounding task still reported exit
 code 0 — caught by looking for the output files rather than trusting the code,
-which is the same reading rule P19-DOF-001 established. The harness has now run
-SIXTY-TWO milestones unchanged, and is self-checked before each run, because an
-unchanged harness is not the same as a working one. No milestone is open, and
-nothing after P19-CONV-001 is authorized; see TODO.md.
+which is the same reading rule P19-DOF-001 established. P19-MOM-001 needed TWO
+attempts, and its failure is the most instructive in the phase because nothing
+about it was environmental. Both independent reviews had run before the first
+freeze, as P19-CONV-001 established, and 42 findings were resolved; the gate
+still failed 66m28s in, on a `-Werror=array-bounds` rejection at `-O3` in a test
+helper. That class of defect had been FOUND AND FIXED BEFORE THAT FREEZE, in a
+helper thirty lines above the one that broke the build — and recorded as having
+caught the class. It had not. The published note argued the surviving sites safe
+because "no access follows them", which is false: `pop_back()` IS the access, it
+destroys `*(end() - 1)`, and that is the subscript the optimizer bounds at -1.
+Because those sites had been reasoned safe they were never compiled, on the very
+next line of a note promising that every site is re-verified by building the
+Release preset. So the lesson P19-DIV-001 taught — build the second preset
+before freezing — held, and was not enough: the preset must be built AFTER THE
+LAST EDIT to anything it compiles, proved by a no-op build rather than by a
+timestamp. That proof, added because of this failure, caught the same mistake
+again within the hour, when the first post-fix Release build was itself overtaken
+by a comment edit. Attempt 1's launcher reported exit code 0 while the harness
+reported two failed stages, the second time in two milestones. Its logs and the
+freeze it was launched under are kept under qualification-attempt-1/, including
+the claim that freeze got wrong, and all three places where the tree carried the
+false argument were CORRECTED IN PLACE rather than deleted, because the error is
+the finding. The harness has now run SIXTY-THREE milestones unchanged, and is
+self-checked before each run, because an unchanged harness is not the same as a
+working one. No milestone is open, and nothing after P19-MOM-001 is authorized;
+see TODO.md.
 
 The phases before it, and how each was qualified:
 
@@ -1370,6 +1392,80 @@ whether a sum may be taken over it. The face-velocity interpolation's
 three-line application still exists twice, pinned by a test rather than unified,
 because unifying it means editing a qualified operator for a convenience. And
 there is still no performance baseline, for the same reason as its predecessor.
+
+`P19-MOM-001` (PASS 2026-11-08) IS THE FIRST MILESTONE OF THIS PHASE THAT
+CONSUMES ITS PREDECESSORS instead of adding an operator beside them, which
+answers the limitation `P19-GRAD-001`, `P19-DIV-001` and `P19-CONV-001` had each
+recorded against themselves: that nothing consumed them. The momentum assembly
+is the SUM of the qualified convection and diffusion operators plus a
+backward-Euler transient diagonal, a caller-supplied pressure gradient and a
+constant body force, behind a fourteen-phase refusal gate. `ADR-073` keeps the
+terms separable and makes the meeting point explicit: both operators sit on the
+left with positive diagonals, so `A_conv + A_diff` is the operator and no sign is
+flipped where they meet. Their sparse patterns are VERIFIED IDENTICAL before the
+sums are taken, rather than assumed from the fact that both were built from the
+same topology.
+
+**The accumulation ORDER is part of the contract, not an implementation
+detail.** `((conv + diff) + trans)` was measured only 78.06% bit-exact against a
+different grouping of the same three terms, and the five-term source order
+57.45% against its reverse, so the suite reproduces production's order
+deliberately — which is why the decomposition identity is bit-exact while
+row-sum additivity is a measured bound at `1e-13` rather than an equality.
+
+**Two review findings were central and both were the author's.** Seven
+`static_assert`s claiming the dimensional identities — that `rho V/dt`, `mu A/d`
+and `phi` are all mass flow rates, and that every source term is a force —
+CONSTRAINED NOTHING, because the assembly computed in raw doubles; `ADR-073`'s
+own decision had claimed the opposite. Rewriting the assembly to compute in
+typed quantities and reach `double` only at storage made all seven load-bearing
+at zero arithmetic cost, since `operator*` and `operator/` are
+`fromSi(a.si() OP b.si())` and are bit-identical to the raw form. And the
+milestone's CENTRAL CLAIM — that convection and diffusion meet with a plus — had
+NO INDEPENDENT CHECK: every assertion wrote the production expression, and the
+one physically-motivated test was provably sign-blind, because a constant field
+lies in each operator's null space separately. Two new tests now pin the two
+signs independently.
+
+Qualified at 6601/6601 in each of three presets, 3306 x 5 in two repeats with
+16,530 executions each at a ratio of exactly 5.000, 0 warnings under `-Werror`,
+17 of 17 stages exit 0, 3h43m06s, 52,863 test executions, and 14,230 assertions
+in 48 cases identically in Debug, Release and Debug-shared, with the eight
+qualified subtrees identical across four readings including the committed tree;
+the `cfd` subsystem's 716,417 assertions in 495 cases are 702,187 + 14,230 and
+447 + 48 EXACTLY, so no pre-existing assertion moved. 24 mutation probes were
+applied to the real tree and 22 killed — TWO OF THEM BY THE COMPILER, which is
+the stronger failure, and both only possible because of the typed-arithmetic fix.
+The one real survivor exposed a genuine gap: deleting the matrix finiteness loop
+left the suite green, because every reachable overflow also produced a non-finite
+source. The route neither sub-operator can see is THE SUM, since each gates its
+own coefficients and `1.7e308 + 1.7e308` is not finite; the test that reaches it
+took three fixtures, and the first two failed on their own premises. See
+[P19-MOM-001](docs/verification/P19-MOM-001/README.md).
+
+**It needed two qualification attempts and the first failure was a process
+failure rather than a defect**, recorded above with the harness history. Five
+measurement-tool defects of the author's own were found and published rather
+than quietly fixed, which is the running theme of this phase: four during
+development and a fifth in the freshness check of the passing run itself, where
+`dir /s /b /o-d` over eight paths sorts within each argument and not across them,
+so it named a file two months stale as the newest under the frozen surface.
+
+Recorded as less than a reader might assume: **this produces a matrix and a
+source vector and solves nothing.** There is no velocity or pressure field, no
+pressure-velocity coupling and no solve, so every claim is a residual or an
+identity rather than a solved result. The body force is a CONSTANT `rho g` at
+the single constant density P19 v1 carries — not buoyancy, which `ADR-058`
+refuses — and at constant density it is absorbable into a modified pressure, so
+it changes no velocity field in a closed domain with no fixed-pressure boundary;
+that is a property of the equation, and the implementation does not pretend
+otherwise. The pressure gradient is supplied by the caller rather than computed,
+so nothing here closes the loop between pressure and velocity. Two mutation
+survivors stand: one needs an exact floating-point tie, and one drops a gate the
+ADR documents as unreachable, which the probe confirms rather than refutes. And
+there is still no performance baseline, for the third milestone running, because
+nothing solves yet and a baseline for an assembly with no solver behind it would
+be a number with no meaning.
 
 ```text
 incompressible laminar

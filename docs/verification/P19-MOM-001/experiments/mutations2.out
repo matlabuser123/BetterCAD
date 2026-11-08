@@ -1,0 +1,38 @@
+P19-MOM-001 -- MUTATION PROBES, ROUND 2
+==============================================================================
+baseline: suite PASSES -- All tests passed (14198 assertions in 47 test cases)
+==============================================================================
+M18 transient diagonal += -> = (the REAL one)
+    KILLED: 5 case(s) failed, first: CfdMomentum_RowSumIsTheSumOfTheTermsOwnRowSums
+    (predicted KILLED)
+M19 delete the MATRIX finiteness loop
+    SURVIVED: All tests passed (14198 assertions in 47 test cases)
+    (predicted SURVIVOR -- the source loop fires with the same tag)
+M16 reorder the three cell-wise source terms (gravity before pressure)
+    KILLED: 1 case(s) failed, first: CfdMomentum_OnTheReferenceBodiesTheDecompositionAndRowSumIdentitiesHold
+    (predicted PROBABLY, not by construction -- 57.45% per sample)
+M10 dominance `<` -> `<=`
+    SURVIVED: All tests passed (14198 assertions in 47 test cases)
+    (predicted SURVIVOR -- needs an exact tie)
+M23 drop the pattern verification (inner arrays)
+    SURVIVED: All tests passed (14198 assertions in 47 test cases)
+    (ADR-073 Decision 2's gate: unreachable, so a SURVIVOR is the honest answer)
+M24 scheme phase accepts anything (the silent substitution restored)
+    KILLED: 1 case(s) failed, first: CfdMomentum_RefusesASchemeThatIsNotOneOfTheTwo
+    (the new phase: must be KILLED or it is decoration)
+M25 convection sub-tag not mapped (the wrong tag restored)
+    KILLED: 1 case(s) failed, first: CfdMomentum_ReportsAConvectionOverflowAsANonFiniteResultAndNotAnInconsistency
+    (the review's finding 1 fix: must be KILLED)
+==============================================================================
+CfdMomentum.cpp: reverted exactly = True
+
+ROUND 2 SUMMARY
+  KILLED                   M18 transient diagonal += -> = (the REAL one)
+  SURVIVED                 M19 delete the MATRIX finiteness loop
+  KILLED                   M16 reorder the three cell-wise source terms (gravity before pressure)
+  SURVIVED                 M10 dominance `<` -> `<=`
+  SURVIVED                 M23 drop the pattern verification (inner arrays)
+  KILLED                   M24 scheme phase accepts anything (the silent substitution restored)
+  KILLED                   M25 convection sub-tag not mapped (the wrong tag restored)
+
+final rebuild: OK
