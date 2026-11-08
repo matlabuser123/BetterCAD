@@ -1,7 +1,7 @@
 # P19-CONT-001 — Continuity Equation
 
 RESULT: PASS — qualified on all three presets from a clean tree, 0 stages failed
-COMMIT: pending
+COMMIT: 234462afcf95bcd8989606450d4e777a9236c2ad
 
 ## TASK
 
@@ -648,7 +648,35 @@ CMakePresets.json  3229f0f89b236744d7d5c082bed47c28b718288e
 ```
 
 Nothing under the frozen surface moved during the 3 h 12 m, so the qualification
-is not void. A fourth reading is taken out of the commit object below.
+is not void.
+
+THREE FURTHER READINGS WERE TAKEN, AND THE EIGHT ARE IDENTICAL IN ALL SIX:
+
+```text
+1  at the freeze, before the launch                     FREEZE.md
+2  by the harness BEFORE the first build                qualification-times.txt
+3  by the harness AFTER the last test run               qualification-times.txt
+4  from the WORKING TREE, after the documentation,
+   TODO.md and ROADMAP.md edits                         the harness's own method
+5  out of the STAGED tree, before the commit existed    git write-tree --prefix=
+6  out of the COMMIT OBJECT of 234462a                  git rev-parse HEAD:<path>
+```
+
+Reading 4 uses the harness's own method — a scratch `GIT_INDEX_FILE`,
+`git read-tree HEAD`, `git add -A` over the eight paths, `git write-tree
+--prefix=` per directory and `git ls-files -s` for the two files. Reading 5 takes
+`git write-tree --prefix=` over the REAL index, once the files were staged.
+Neither uses `git rev-parse HEAD:<path>`, because at both moments four of the
+files were still absent from the COMMITTED tree that command reads: it would
+have returned the PREVIOUS milestone's hashes and matched nothing of this one.
+Reading 6 is the only one where `git rev-parse` is legitimate, and it is the
+decisive one. Reading 4 exists specifically to catch a documentation edit that
+had strayed inside the frozen surface, which is not hypothetical on this
+milestone: a reviewer left a backup file in `src/cfd/`.
+
+**THE QUALIFIED TREE IS THE COMMITTED TREE.** Documentation, `TODO.md` and
+`ROADMAP.md` were written between readings 3 and 4 and are outside the frozen
+surface, which is why readings 3, 4, 5 and 6 agree.
 
 ### Zero diagnostics, and what the naive grep says instead
 
@@ -985,3 +1013,12 @@ own linked outputs, **none** older than the newest source, and every object
 postdating its own preset's clean. The first form is recorded because it would
 have read as a qualification failure, and a gate must not be relaxed to clear
 one — it has to be understood first.
+
+**r18** — committed as `234462a` with its evidence in the same commit, and the
+eight frozen subtrees then read back OUT OF THE COMMIT OBJECT as the sixth and
+decisive reading. All eight match the freeze. `TODO.md` went 676 ticked boxes to
+688 — twelve, counted before and after rather than assumed — and `ROADMAP.md`
+gained the capability entry and the phase-status line. Both were edited only
+after the harness had written its verdict, and both are outside the frozen
+surface, so neither can void the qualification. The commit message claims
+nothing the logs in `qualification/` do not contain.
