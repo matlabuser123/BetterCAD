@@ -2158,3 +2158,67 @@ foreach(_case
         "could not convert|cannot convert|no matching function|no match for|invalid conversion|conversion from|invalid initialization|no member named|has no member"
         BetterCAD::cfd)
 endforeach()
+
+# P19-PVCOUPLE-001 — coupling misuse. ADR-075.
+#
+# THE REGEXES LIST EVERY DIAGNOSTIC GCC CAN EMIT FOR THE CASE, not the one a
+# reader expects. P19-GRAD-001 had three gates fail because its regex omitted
+# `invalid initialization`.
+set(_cfdpvc "${CMAKE_CURRENT_SOURCE_DIR}/CfdCouplingMisuse.cpp")
+bettercad_compile_fail_group(cfdpvc "${_cfdpvc}" BetterCAD::cfd)
+foreach(_case
+        A_CORRECTION_SUMMARY_HOLDS_A_CLOSURE_BOUND
+        AN_ITERATION_SUMMARY_HOLDS_A_COMPATIBILITY_RESIDUAL
+        A_CORRECTION_SUMMARY_HOLDS_A_CONTINUITY_CLOSED_FLAG
+        AN_ITERATION_SUMMARY_HOLDS_A_PINNED_CELL)
+    bettercad_compile_fail_case(cfdpvc "${_cfdpvc}" ${_case}
+        "no member named|has no member"
+        BetterCAD::cfd)
+endforeach()
+foreach(_case
+        DEFAULT_CONSTRUCT_A_PRESSURE_CORRECTION_SYSTEM
+        DEFAULT_CONSTRUCT_A_COUPLING_ITERATION)
+    bettercad_compile_fail_case(cfdpvc "${_cfdpvc}" ${_case}
+        "is private within this context|private|no matching function|use of deleted|deleted function"
+        BetterCAD::cfd)
+endforeach()
+foreach(_case
+        THE_SYMMETRY_TOLERANCE_IS_ASSIGNABLE
+        THE_CLOSURE_FLOOR_IS_ASSIGNABLE)
+    bettercad_compile_fail_case(cfdpvc "${_cfdpvc}" ${_case}
+        "read-only|assignment of read-only|cannot assign|lvalue required"
+        BetterCAD::cfd)
+endforeach()
+foreach(_case
+        A_CORRECTION_SUMMARY_IS_AN_ITERATION_SUMMARY
+        AN_ITERATION_SUMMARY_IS_A_CORRECTION_SUMMARY
+        THE_DENSITY_TAKES_A_BARE_DOUBLE
+        THE_DENSITY_IS_A_PRESSURE
+        THE_DENSITY_IS_A_VELOCITY
+        A_PINNED_CELL_IS_A_FACE
+        A_PINNED_CELL_IS_A_BOUNDARY_FACE
+        A_PINNED_CELL_IS_A_PATCH
+        A_PINNED_CELL_IS_A_BARE_SIZE
+        A_COUPLING_PROBLEM_IS_AN_INTEGER
+        A_COUPLING_PROBLEM_IS_A_CONTINUITY_PROBLEM
+        A_COUPLING_PROBLEM_IS_A_SPARSE_PROBLEM
+        A_VERDICT_IS_A_PROBLEM
+        A_VERDICT_IS_A_BOOL
+        A_CORRECTION_INPUT_IS_A_PRESSURE_CORRECTION_INPUT
+        A_PREDICTOR_INPUT_IS_AN_ITERATION_INPUT
+        AN_ITERATION_INPUT_IS_A_PREDICTOR_INPUT
+        THE_ITERATION_SETTINGS_ARE_CONVERGENCE_SETTINGS
+        THE_LINEAR_SETTINGS_ARE_STEADY_SETTINGS
+        THE_BUDGET_TAKES_CONVERGENCE_SETTINGS
+        THE_VERDICT_TAKES_ITERATION_SETTINGS
+        A_MOMENTUM_SYSTEM_IS_A_PRESSURE_SYSTEM
+        A_PRESSURE_SYSTEM_IS_A_MOMENTUM_SYSTEM
+        THE_SOLVE_RETURNS_A_BARE_VECTOR
+        THE_SOLVE_TAKES_A_MOMENTUM_SYSTEM
+        A_SOLVE_RESULT_IS_A_BARE_VECTOR
+        THE_PINNED_CELL_IS_NOT_OPTIONAL
+        THE_SOLVE_RESIDUAL_IS_NOT_AN_ARRAY)
+    bettercad_compile_fail_case(cfdpvc "${_cfdpvc}" ${_case}
+        "could not convert|cannot convert|no matching function|no match for|invalid conversion|conversion from|invalid initialization|no member named|has no member"
+        BetterCAD::cfd)
+endforeach()

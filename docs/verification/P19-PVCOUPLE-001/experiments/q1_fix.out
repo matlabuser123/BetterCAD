@@ -1,0 +1,7 @@
+Q1 RE-MEASURED, w as a real interpolation weight dist_n/(dist_o+dist_n)
+      samples                        2000000
+      `1 - w` round-trips exactly    1365457 / 2000000   = 68.2728%
+      two visits bit-identical       1147406 / 2000000   = 57.3703%
+      worst relative difference      1.241051e-14
+      w + w' == 1 exactly            1740752 / 2000000   = 87.0376%
+      CONTROL one value, both rows   2000000 / 2000000   = 100.0000%

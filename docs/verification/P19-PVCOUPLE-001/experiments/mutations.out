@@ -1,0 +1,16 @@
+P19-PVCOUPLE-001 mutation probes 
+ 
+S 8ce5a98f479f70246c9c25851d383fab81892320e3dd3b46a53c2a7c75b61ba3
+H 6e24d02d741c149d3e5b502e4f6983ee938e7ec27341967fe2d3d75da26d2e8e
+ 
+BASELINE All tests passed (4950 assertions in 79 test cases) 
+ 
+KILL KILLED M3b the interpolation is taken from the other side (1 - w), GRADED mesh 
+KILL KILLED M9b the system residual is discarded (replaces the deleted flag) 
+KILL KILLED M16b the compatibility throughput loses its one half, MARGINAL case present 
+KILL COMPILER M9c the pinned row is NOT excluded from the system residual 
+SURVIVE SURVIVED M24 NO-OP CONTROL: two independent summary assignments reordered 
+ 
+FINAL All tests passed (4950 assertions in 79 test cases) 
+S 8ce5a98f479f70246c9c25851d383fab81892320e3dd3b46a53c2a7c75b61ba3
+H 6e24d02d741c149d3e5b502e4f6983ee938e7ec27341967fe2d3d75da26d2e8e

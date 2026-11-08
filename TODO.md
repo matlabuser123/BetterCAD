@@ -23,6 +23,101 @@ Prerequisite:
            may set). P17's F1-F3 stand unchanged beneath them.
 
 Current milestone:
+           NONE IS OPEN, AND THE NEXT ONE IS NOT CLAUDE'S TO CHOOSE.
+           P19-PVCOUPLE-001 passed its gates on 2026-11-09 and finishing
+           a milestone is itself a stop condition: being next in the
+           phase plan below, being small, or being obvious is not
+           authorization. The two milestones it would be easiest to
+           drift into are named under Next: so that the drift stays
+           visible.
+
+Previous milestone:
+           P19-PVCOUPLE-001 - Pressure-Velocity Coupling. AUTHORIZED
+           2026-11-08 by the owner's "implement and fully veify" over the
+           seventeen-item checklist, which arrived pasted into the instruction
+           as P19-BC-001's, P19-IC-001's, P19-DIFF-001's, P19-GRAD-001's,
+           P19-CONV-001's, P19-MOM-001's and P19-CONT-001's did. PASS 2026-11-09,
+           seventeen of seventeen, ON THE FIRST QUALIFICATION ATTEMPT:
+           6802/6802 x 3 presets, 3434 x 5 executions x 2 presets, 17 of
+           17 stages exit 0, 0 stage(s) failed, and the eight subtree
+           identities read FOUR times -- the freeze record, the harness
+           before its first build, the harness after its last test, and a
+           recomputation after the run -- all eight identical in all four.
+           The three qualified binaries each read 4,950 assertions in 79
+           cases for the coupling suite and 728,802 in 623 for cfd, so no
+           pre-existing cfd assertion moved. Evidence
+           docs/verification/P19-PVCOUPLE-001/ and ADR-075. THE PASTED TEXT WAS
+           DIFFED AGAINST THIS FILE'S OWN SECTION FIRST and is byte-for-byte
+           identical across all 36 lines, with 17 unticked items and 0 ticked
+           -- counted, not assumed -- so the scope is this file's checklist
+           unaltered, and sha256 43a305f28e5dd8f0 over both after CR
+           normalization. This authorization was written here BEFORE any
+           implementation, as the seven before it were.
+           Five scope notes recorded at authorization time, not discovered
+           later:
+           (1) THE LINEAR SOLVERS ARE NOT THIS MILESTONE'S, AND THREE
+           COMMITTED RECORDS SAY SO. src/cfd/CMakeLists.txt states "the SOLVE
+           -- still P19-LINSOLVE-001's decision, unchanged", CfdSparse.hpp
+           repeats it ("no factorisation, no solve, no iteration"), and
+           P19-LINSOLVE-001's own checklist owns "Pressure-system solver" and
+           "Momentum-system solver" BY NAME. BetterCAD::linalg is not linked
+           by cfd and no linalg header is included anywhere in it.
+           P19-LINSOLVE-001 IS NOT AUTHORIZED. So this milestone defines the
+           coupling and CONSUMES A CALLER-SUPPLIED LINEAR SOLVE, exactly as
+           P19-MOM-001 consumes a caller-supplied pressure gradient. It does
+           not link linalg, does not write a factorisation or an iterative
+           kernel, and does not spend the decision ADR-069 Decision 3
+           deliberately deferred. Ten of the seventeen items begin with the
+           word "Define", and P19-LINSOLVE-001's begin with the solvers: that
+           is the boundary, and it is the file's own.
+           (2) ADR-058 HAS ALREADY DEFINED FIVE OF THE SEVENTEEN ITEMS, AND
+           "DEFINE X" THEREFORE MEANS BIND TO AND COMPUTE THE DECLARED
+           DEFINITION. CfdIterationSettings fixes the under-relaxation policy
+           -- 0.7 and 0.3, "the classic SIMPLE pair", both in (0, 1], with a
+           validate(); CfdConvergenceSettings fixes the stopping criteria and
+           the divergence factor; CfdSteadySettings fixes the iteration budget
+           and states that reaching it "is a FAILURE ... never a result";
+           CfdReferencePressure plus CfdBoundaryCondition::fixesPressure() fix
+           the pressure reference; CfdResiduals fixes the residual vector's
+           shape and CfdMassBalance the continuity closure's two measures.
+           Inventing a second settings type, a second residual record or a
+           second relaxation policy would be the "second parameter system"
+           ARCHITECTURE.md rejects. This is the P19-CONT-001 lesson exactly
+           one milestone later: that milestone would have built one if its
+           UNDERSTAND phase had not read CfdData.hpp first.
+           (3) THE ORCHESTRATION AND THE PUBLICATION ARE P19-STEADY-001's, AND
+           IT IS NOT AUTHORIZED EITHER. That checklist owns "Validate inputs",
+           "Prepare mesh topology", "Prepare BCs", "Initialize fields",
+           "Convergence loop", "Atomic result publication" and the mapping
+           onto CfdFailureStage, which lives in CfdResult.hpp and belongs to
+           the result rather than to the coupling. This milestone therefore
+           works on SUPPLIED fields, a supplied mesh and a supplied solve, and
+           RETURNS a report; it does not read a Document, drive a solve from
+           one, or publish a CfdResult.
+           (4) "DO NOT SILENTLY COPY OPENFOAM IMPLEMENTATION" IS PART OF THE
+           AUTHORIZATION AND IS TREATED AS A CONSTRAINT, NOT A PREFERENCE.
+           SIMPLE is a published algorithm (Caretto, Gosman, Patankar and
+           Spalding 1972; Patankar, Numerical Heat Transfer and Fluid Flow,
+           1980) and is implemented here from the mathematics: every discrete
+           formula is written out in the ADR and derived against THIS
+           project's own topology, sign and scatter conventions (ADR-067,
+           ADR-072), whose owner/neighbour sign convention is not a
+           transcription of anyone else's. No OpenFOAM source is consulted or
+           transcribed, and where this implementation differs from the common
+           textbook formulation the difference is RECORDED rather than
+           smoothed over.
+           (5) ITEM 4'S CLAIM IS CHECKED BY P19-CONT-001 AND NOT BY THIS
+           MILESTONE'S OWN ARITHMETIC. The face-flux correction exists so that
+           the corrected face fluxes satisfy discrete continuity, and the
+           instrument that measures exactly that was qualified on 2026-11-08
+           as an independent operator -- written before this one existed and
+           without knowledge of it. So the central claim is validated against
+           a qualified EXTERNAL measure rather than against a restatement of
+           its own formula. That trap is not hypothetical here: P19-GRAD-001's
+           r5 and P19-CONV-001's second review both recorded an "independent"
+           oracle that turned out to be a character-for-character
+           transcription of production.
+Before that:
            P19-CONT-001 - Continuity Equation. AUTHORIZED 2026-11-08 by the
            owner's "implement and fully verify" over the twelve-item
            checklist, which arrived pasted into the instruction as
@@ -32,7 +127,8 @@ Current milestone:
            3355 x 5 executions x 2 presets, 17 of 17 stages exit 0, and the
            eight subtree identities after the last test run identical to the
            eight before the first build. Evidence
-           docs/verification/P19-CONT-001/. NO MILESTONE IS NOW OPEN.
+           docs/verification/P19-CONT-001/. P19-PVCOUPLE-001 IS NOW OPEN; see
+           Current milestone.
            THE PASTED TEXT WAS DIFFED AGAINST
            THIS FILE'S OWN SECTION FIRST and is byte-for-byte identical across
            all 31 lines, with 12 unticked items and 0 ticked -- counted, not
@@ -97,7 +193,7 @@ Current milestone:
            recorded here so the later milestone inherits a known boundary
            instead of rediscovering it.
 
-Previous milestone:
+And before that:
            P19-MOM-001 - Momentum Equation. AUTHORIZED 2026-11-08 by the
            owner's "implement and fully verify" over the thirteen-item
            checklist, which arrived pasted into the instruction as
@@ -123,7 +219,7 @@ Previous milestone:
            boundary; that is a property of the equation and not a defect, and
            the implementation must not pretend otherwise.
 
-Before that:
+Milestone before that:
            P19-CONV-001 — Convective Flux. AUTHORIZED 2026-11-07 by the
            owner's "Implement nd fully verify" over the fifteen-item
            checklist, which arrived pasted into the instruction as
@@ -161,7 +257,7 @@ Before that:
            defects and wrote three of the false claims. Nothing after this
            milestone was started.
 
-And before that:
+Before those:
            P19-DIV-001 — Divergence / Flux Operator. AUTHORIZED 2026-11-07 by
            the owner's "Authorize DIV-001", in answer to a question that named
            this milestone and no other. PASS 2026-11-07. All twelve items are
@@ -240,7 +336,7 @@ And before that:
            together is a coupling step no authorized checklist contains.
            (docs/verification/P19-DIV-001/README.md.)
 
-Milestone before that:
+Earlier still:
            P19-GRAD-001 — Gradient Reconstruction. AUTHORIZED 2026-11-07 by the
            owner ("implement and fully verify", with the fourteen item
            checklist quoted in full). PASS 2026-11-07. All fourteen items are
@@ -339,7 +435,7 @@ Milestone before that:
            milestone's own tooling, and is recorded as r9.
            (docs/verification/P19-GRAD-001/README.md.)
 
-Before those:
+Earlier than those:
            P19-DIFF-001 — Diffusion Operator. AUTHORIZED 2026-11-06 by the
            owner ("implement and fully verify", with the fourteen item
            checklist quoted in full). PASS 2026-11-06. All fourteen items are
@@ -427,7 +523,7 @@ Before those:
            question is the Passed-marker total.
            (docs/verification/P19-DIFF-001/README.md.)
 
-Earlier still:
+And earlier:
            P19-IC-001 — CFD Initial Conditions. AUTHORIZED 2026-11-05 by the
            owner ("implement and fully verify", with the twelve item checklist
            quoted in full). PASS 2026-11-06. All twelve items are recorded:
@@ -507,7 +603,7 @@ Earlier still:
            holding under a condition nobody arranged.
            (docs/verification/P19-IC-001/README.md.)
 
-Earlier than those:
+Earlier than all of those:
            P19-BC-001 — CFD Boundary Conditions. AUTHORIZED 2026-11-05 by the
            owner ("implement and fully verify", with the twenty item checklist
            and the canonical / derived split quoted). PASS 2026-11-05. All
@@ -602,17 +698,19 @@ Qualified:
            P18 — Thermal Analysis
 
 Next:
-           P19-CONT-001 - Continuity Equation, AUTHORIZED by the owner on
-           2026-11-08 and PASS 2026-11-08; see Current milestone. It MEASURES
-           rather than assembles: where P19-MOM-001 consumed two qualified
-           operators into a matrix, this one asks whether the mass flux those
-           operators are built on actually conserves mass, which is the first
-           time this phase checks a property of `phi` instead of using it.
-           NOTHING BEYOND P19-CONT-001 IS AUTHORIZED. Each milestone is
-           started by the owner, as every P17, P18 and P19 milestone was, and
-           a predecessor's PASS is not permission to start the one after it:
-           P19-PVCOUPLE-001 is next in the phase plan and is NOT authorized,
-           and neither is P19-LINSOLVE-001.
+           NOTHING IS AUTHORIZED. This file records no open milestone,
+           which is a stop condition in CLAUDE.md's own terms: the next
+           milestone is a scope decision and it belongs to the owner.
+           Two milestones it would be easy to drift into are named here
+           so that the drift is visible. P19-LINSOLVE-001 owns the
+           pressure-system and momentum-system SOLVERS -- the decision
+           ADR-069 Decision 3 deferred and P19-PVCOUPLE-001 deliberately
+           did not spend, which is exactly why the coupling consumes a
+           CALLER-SUPPLIED solve. P19-STEADY-001 owns the orchestration
+           and the atomic result publication. Each milestone is started
+           by the owner, as every P17, P18 and P19 milestone was, and a
+           predecessor's PASS is not permission to start the one after
+           it.
 
 P19 objective, as planned:
            authoritative CAD / fluid / mesh state
@@ -3850,23 +3948,23 @@ SIMPLE
 
 for steady incompressible flow.
 
-* [ ] Define predictor
-* [ ] Define pressure correction
-* [ ] Define velocity correction
-* [ ] Define face-flux correction
-* [ ] Define pressure reference
-* [ ] Define under-relaxation policy
-* [ ] Define residual evaluation
-* [ ] Define continuity closure
-* [ ] Define stopping criteria
-* [ ] Define maximum iterations
-* [ ] Reject divergence
-* [ ] Reject NaN / Inf
-* [ ] Structured solver diagnostics
-* [ ] Deterministic iteration behaviour
-* [ ] Independent simple benchmark
-* [ ] Regression PASS
-* [ ] Evidence recorded
+* [x] Define predictor
+* [x] Define pressure correction
+* [x] Define velocity correction
+* [x] Define face-flux correction
+* [x] Define pressure reference
+* [x] Define under-relaxation policy
+* [x] Define residual evaluation
+* [x] Define continuity closure
+* [x] Define stopping criteria
+* [x] Define maximum iterations
+* [x] Reject divergence
+* [x] Reject NaN / Inf
+* [x] Structured solver diagnostics
+* [x] Deterministic iteration behaviour
+* [x] Independent simple benchmark
+* [x] Regression PASS
+* [x] Evidence recorded
 
 Do not silently copy OpenFOAM implementation.
 

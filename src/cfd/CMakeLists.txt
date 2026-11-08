@@ -61,6 +61,7 @@ bettercad_add_library(bettercad_cfd
         CfdAnalysisObject.cpp
         CfdBoundary.cpp
         CfdContinuity.cpp
+        CfdCoupling.cpp
         CfdConvection.cpp
         CfdData.cpp
         CfdDiffusion.cpp

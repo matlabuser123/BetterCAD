@@ -106,7 +106,8 @@ P19-ARCH-001": P19-ARCH-001 and P19-DATA-001 (2026-10-27), P19-FLUID-001
 (2026-10-28), P19-MESH-001, P19-TOPO-001 and P19-GEOM-001 (all 2026-10-31) and
 P19-DOF-001 and P19-BC-001 (both 2026-11-05) and P19-IC-001 and P19-DIFF-001
 (both 2026-11-06) and P19-GRAD-001 and P19-DIV-001 (both 2026-11-07) and
-P19-CONV-001, P19-MOM-001 and P19-CONT-001 (all 2026-11-08) have PASSED.
+P19-CONV-001, P19-MOM-001 and P19-CONT-001 (all 2026-11-08) and
+P19-PVCOUPLE-001 (2026-11-09) have PASSED.
 P19-MESH-001 was qualified by a second attempt on a replacement machine: its
 first attempt, on 2026-10-28, failed 5 of 17 stages when the previous machine's
 temp volume filled and no test suite ran, and that machine was then permanently
@@ -181,9 +182,10 @@ reported two failed stages, the second time in two milestones. Its logs and the
 freeze it was launched under are kept under qualification-attempt-1/, including
 the claim that freeze got wrong, and all three places where the tree carried the
 false argument were CORRECTED IN PLACE rather than deleted, because the error is
-the finding. The harness has now run SIXTY-FOUR milestones unchanged, and is
+the finding. The harness has now run SIXTY-FIVE milestones unchanged, and is
 self-checked before each run, because an unchanged harness is not the same as a
-working one. No milestone is open, and nothing after P19-CONT-001 is authorized;
+working one. No milestone is open, and nothing after P19-PVCOUPLE-001 is
+authorized;
 see TODO.md.
 
 The phases before it, and how each was qualified:
@@ -1553,6 +1555,119 @@ Internal` has never been observed. The patch-order associativity measurement
 models a round-robin order while the real CSR is contiguous, and says so. And
 there is still no performance baseline, for the fourth milestone running, because
 nothing solves yet.
+
+`P19-PVCOUPLE-001` (PASS 2026-11-09) CLOSES THE LOOP THE THREE OPERATORS BEFORE
+IT EACH LEFT OPEN. `P19-MOM-001` takes a pressure gradient from its caller and
+`P19-CONT-001` only measures whether `phi` conserves mass, so until now nothing
+made the pressure and the velocity agree. SIMPLE is what makes them agree: a
+predictor, a pressure-correction system, a velocity correction, a face-flux
+correction, a pressure datum, under-relaxation, residuals, a verdict and an
+iteration budget.
+
+**IT DOES NOT SOLVE, AND THAT IS THE MILESTONE'S CENTRAL DECISION.** SIMPLE has
+two linear solves inside it, and both belong to `P19-LINSOLVE-001` BY NAME in
+three independent committed records; `cfd` neither links nor includes
+`BetterCAD::linalg`. Ten of the seventeen checklist items begin with the word
+"Define" and the next milestone's begin with the solvers, so the boundary is the
+checklists' own. `ADR-075` therefore has the coupling CONSUME a caller-supplied
+`CfdLinearSolve` port, exactly as `P19-MOM-001` consumes a caller-supplied
+pressure gradient, and the decision `ADR-069` Decision 3 deliberately deferred
+stays deferred. The same UNDERSTAND phase found that `ADR-058` had already
+declared five of the seventeen items' answers — the under-relaxation pair 0.7
+and 0.3, the stopping criteria, the divergence factor, the iteration budget and
+the pressure datum, which `P19-BC-001` already resolves to a cell — so
+"Define X" meant bind to and compute a definition that existed. This is the
+`P19-CONT-001` lesson recurring exactly one milestone later.
+
+**THE CLOSURE BOUND IS DERIVED RATHER THAN ASSERTED, AND THE DERIVATION IS THE
+MILESTONE'S CENTRE.** The corrected flux's divergence in a cell is identically
+the pressure system's own row residual, `div(phi')_P == (A p')_P - b_P`, which
+is the number the supplied solve already reports. So continuity closure after
+correction is EXACTLY as good as the pressure solve and no better, and a
+hard-coded bound of 1e-14 would have been a claim about someone else's solver.
+What the operator reports is the measured system residual relative to the
+PREDICTED interior flux — predicted, not corrected, because the correction's
+whole purpose is to drive the corrected flux toward zero, and scaling a
+noise-floor residual by a noise-floor scale reported 0.375 on the first run.
+
+**A flag that no input could falsify was DELETED rather than documented.** An
+earlier version reported `continuityClosed` against a bound of
+`systemResidual + floor`, and the identity above says the quantity and the bound
+are the same number: the comparison held by construction, for every possible
+input, and a mutation probe replacing it with a literal `true` SURVIVED because
+no test could have killed it. `CfdBoundary.hpp` already states this project's
+rule for the same shape of problem — "An enumerator no input can produce is
+worse than no enumerator" — so the rule was applied to a boolean and both fields
+were removed. What they claimed is now reported by a measured number, and a test
+that had asserted the bound SHOULD move with the solver's report was replaced by
+its opposite: nothing this operator measures may depend on what a port chooses
+to say about a solution it has already returned.
+
+**The identity cannot pin the coefficient it is built from, and a review found
+that where the gate could not.** It compares two PRODUCTION outputs, so it is
+satisfied by any face coefficient whatever: the correction is a projection, and
+the corrected flux is invariant under a uniform rescaling of `a_f`, because `A`
+scales while `p'` scales inversely. The coefficient's VALUE is therefore pinned
+directly, against a momentum diagonal that varies per cell AND per component. It
+is computed once per face and written to both diagonals and both off-diagonals
+in ONE visit, because a two-visit assembly was measured bit-identical on only
+57.3703% of faces — `1 - w` round-trips exactly just 68.2728% of the time — and
+`solveSymmetricSparse` requires symmetry. The measurement written to answer that
+question had first answered 100.0000%, because it drew the weight from a uniform
+`[0,1)` sample, where `1 - w` is exact BY CONSTRUCTION; a real weight is a
+quotient of two distances. The decision was right either way, which is why the
+near miss is published: a correct decision resting on a broken measurement.
+
+**Two independent reviews, both READ-ONLY, produced thirty-three findings.** Ten
+production defects were fixed; one finding was credible and WRONG, refuted by
+measurement — the identity does hold at a pinned cell, because compatibility
+forces it — and one SUSPECTED finding was CONFIRMED by this milestone's own
+tests: a non-positive assembled momentum diagonal is REACHABLE from a correct
+assembly, measured at `-8.085e-04` kg/s on a ten-cell chain at 5 mm/s in water.
+The reviews were read-only by design, because `P19-CONT-001`'s reviewer left a
+live backup file inside the frozen surface. Round one of the mutation probes then
+caught nineteen of the twenty-two survivors a test-adequacy review had PREDICTED
+and left three — a premise satisfied by floating-point noise, the unfalsifiable
+flag above, and a factor of two that changed no verdict — each a real weakness,
+each fixed and re-probed to KILLED. Twenty-three of twenty-three behavioural
+probes are now caught, two by the COMPILER, one documented-unreachable state
+survived, and the NO-OP CONTROL SURVIVED in both rounds. That control earned its
+place twice over: before either round produced a result, `cmd.exe /c` launched
+from Git Bash had its `/c` path-converted into a drive root, started an
+interactive shell, wrote nothing and EXITED 0, twice. See
+[P19-PVCOUPLE-001](docs/verification/P19-PVCOUPLE-001/README.md).
+
+**It qualified from clean ON THE FIRST ATTEMPT** — 6802/6802 in three presets,
+3434 x 5 executions in two repeat stages with 17,170 counted `Start` markers
+each, 0 `error:` and 0 `warning:` diagnostics under `-Werror`, 17 of 17 stages
+exit 0, 3h32m37s — and the cache check `P19-CONT-001` added caught something on
+its first outing. It gained `CMAKE_COMMAND`, which showed that every local build
+of the session had run MSYS2's cmake 4.4.3 rather than the pinned WinLibs 4.4.1:
+in Git Bash a `PATH` entry must be a POSIX path, so prepending a `C:/...`
+directory puts NOTHING on the path. The affected tree was deleted and
+reconfigured, and the harness was again left byte-identical. The eight frozen
+subtree identities were read FOUR times — the freeze record, the harness before
+its first build, the harness after its last test, and a recomputation after the
+run — and agree in all four, which is what says the qualified tree is the
+committed tree even though three frozen files' modification times moved before
+the launch.
+
+Recorded as less than a reader might assume: **this couples, and it neither
+solves nor orchestrates.** The two linear solves are the caller's,
+`P19-STEADY-001` owns the outer loop and the atomic result publication, and the
+operator is confined to LOW CELL PECLET NUMBER by the confirmed finding above —
+the independent channel benchmark derives its inlet speed from
+`Pe = rho*u*dx/mu = 0.199` for exactly that reason, so a reader must not take it
+as a validated high-Peclet result. `M23`, the disconnected-region flag, is
+reported as a documented-unreachable state rather than as covered, because no
+fixture builds a mesh that produces it. Three further measurement-tool defects of
+the author's own are published rather than quietly fixed, and the third nearly
+accused three earlier milestones' committed figures of being false: a `grep`
+whose answer was the SAME number for three different test counts, which cannot
+be a property of three different runs. And there is still no performance
+baseline, for the fifth milestone running, now for a sharper reason than before —
+the solve is the caller's, so the cost of an outer iteration is not this
+milestone's to measure.
 
 ```text
 incompressible laminar

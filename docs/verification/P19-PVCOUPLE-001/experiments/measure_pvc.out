@@ -1,0 +1,35 @@
+P19-PVCOUPLE-001 pre-design measurements, seed 20261108
+
+mesh model: Box(4, 4, 4) cells=64 internal=144 boundary=96
+  A STRUCTURED BOX, NOT A TET MESH. See this file's docstring: the
+  quantities measured are owner/neighbour pairs, areas, distances,
+  volumes and ACCUMULATION ORDER, none of which needs cell shape.
+
+Q1  one face visit vs two, the interpolated face coefficient
+      samples                       2000000
+      `1 - w` round-trips exactly   1365457 / 2000000   = 68.2728%
+      w + w' == 1 exactly           1740752 / 2000000   = 87.0376%
+      two visits bit-identical      1147406 / 2000000   = 57.3703%
+      worst relative difference     1.241051e-14
+      CONTROL one value written to both rows is symmetric by
+      construction; the asymmetry above is the RECOMPUTED WEIGHT.
+
+Q2  the compatibility condition, sum of the right-hand side
+      balanced   worst |sum|       6.217249e-15
+      unbalanced worst |sum|       5.327555e+00
+
+Q3  the corrected flux against discrete continuity
+      matrix asymmetry after pinning  0.000000e+00
+      worst |sum_f phi| BEFORE        7.485727e+00
+      worst |sum_f phi| AFTER         2.220446e-14
+      AFTER, relative to throughput   4.373296e-14
+
+Q4  d_P from the relaxed diagonal versus the unrelaxed one
+      alpha_u                       0.7
+      d_wrong / d_right  min        1.428571
+      d_wrong / d_right  max        1.428571
+      exactly 1/alpha?              yes
+
+Q5  face-visit order and the accumulated divergence
+      bit-identical under a shuffle  0 / 200
+      worst relative difference      1.918002e-12

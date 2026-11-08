@@ -1,0 +1,10 @@
+Q6  div(phi_corrected) == A p' - rhs ?
+      trials                              50
+      gap/throughput, exact solve        1.686762e-14
+      gap/scale, WRONG p'               3.810534e-16
+
+      where the residual lands
+      worst |div| over cells != ref       1.199041e-14
+      worst |div| AT the reference cell   2.020606e-14
+      worst |compatibility sum|           5.329071e-15
+      boundary throughput for scale       2.540954e+00
