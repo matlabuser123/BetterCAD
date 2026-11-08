@@ -1,7 +1,7 @@
 # P19-MOM-001 — Momentum Equation
 
-RESULT: PENDING — qualification not yet run
-COMMIT: pending
+RESULT: PASS — 2026-11-08, on the second qualification attempt
+COMMIT: b9842f21a6df97d8eb10562da357a482a5b28d9b
 
 ## TASK
 
