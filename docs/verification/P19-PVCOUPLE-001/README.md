@@ -1,7 +1,7 @@
 # P19-PVCOUPLE-001 — Pressure–Velocity Coupling
 
 RESULT: PASS — 17 of 17 qualification stages exit 0, 0 stage(s) failed
-COMMIT: pending
+COMMIT: 79a802d
 
 ## TASK
 
@@ -730,9 +730,23 @@ repeat debug-ext                 19m 02.5s
 
 ### The qualified tree is the committed tree
 
-The eight frozen paths were read **four** times by two independent methods — the
-freeze record before the launch, the harness before its first build, the harness
-after its last test, and a recomputation after the run — and all four agree:
+The eight frozen paths were read **six** times, and all six agree:
+
+```text
+#  when                                  method
+1  FREEZE.md, before the launch          scratch index, write-tree --prefix
+2  harness, before its first build       the same, inside qualify.cmd
+3  harness, after its last test          the same, inside qualify.cmd
+4  after the run, before any doc edit    the same, by hand
+5  the staged index, before committing   write-tree --prefix on the real index
+6  the commit object 79a802d             git rev-parse <commit>:<path>
+```
+
+Readings 1 to 5 all use `write-tree` over an index, because `git rev-parse
+HEAD:<path>` would read the PREVIOUS milestone's tree while four of this
+milestone's files were still untracked — the trap this project has recorded
+since `P19-IC-001`. Reading 6 is the one place that form is legitimate, and it
+is the decisive one: it asks the commit itself.
 
 ```text
 apps               fc398a3d2e524178cf38e8b667236379d8381086
