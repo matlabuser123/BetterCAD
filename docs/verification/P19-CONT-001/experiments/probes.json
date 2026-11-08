@@ -1,0 +1,198 @@
+[
+ {
+  "id": "M1  maxCellContinuity becomes the GLOBAL measure",
+  "target": "S",
+  "old": "balance.maxCellContinuity = report.largestCellResidualSi_ / report.throughputSi_;",
+  "new": "balance.maxCellContinuity = std::abs(report.netBoundarySi_) / report.throughputSi_;",
+  "expect": "KILL"
+ },
+ {
+  "id": "M2  globalImbalance stops coming from the qualified operator",
+  "target": "S",
+  "old": "balance.globalImbalance = std::abs(report.netBoundarySi_) / report.throughputSi_;",
+  "new": "balance.globalImbalance = std::abs(report.outflowSi_ - report.inflowSi_) / report.throughputSi_;",
+  "expect": "KILL"
+ },
+ {
+  "id": "M3  THE NAME COLLISION: the artifact as the mass balance",
+  "target": "S",
+  "old": "balance.globalImbalance = std::abs(report.netBoundarySi_) / report.throughputSi_;",
+  "new": "balance.globalImbalance = std::abs(report.divergence_.globalImbalance().si()) / report.throughputSi_;",
+  "expect": "KILL"
+ },
+ {
+  "id": "M4  accumulationResidual re-derived, BOUNDARY-ONLY denominator",
+  "target": "S",
+  "old": "report.summary_.accumulationResidual = divergenceSummary.relativeImbalance;",
+  "new": "report.summary_.accumulationResidual = relativeDeparture(report.divergence_.globalNetFlux().si(), report.netBoundarySi_, absoluteSum);",
+  "expect": "KILL"
+ },
+ {
+  "id": "M5  accumulationResidual carries the WRONG summary member",
+  "target": "S",
+  "old": "report.summary_.accumulationResidual = divergenceSummary.relativeImbalance;",
+  "new": "report.summary_.accumulationResidual = divergenceSummary.worstSkewness;",
+  "expect": "KILL"
+ },
+ {
+  "id": "M6  closedDomain from wallFaces > 0",
+  "target": "S",
+  "old": "report.summary_.closedDomain = report.summary_.openFaces == 0;",
+  "new": "report.summary_.closedDomain = report.summary_.wallFaces > 0;",
+  "expect": "KILL"
+ },
+ {
+  "id": "M7  isWallKind calls a velocity inlet a wall",
+  "target": "S",
+  "old": "    case CfdBoundaryConditionKind::VelocityInlet:\n    case CfdBoundaryConditionKind::PressureInlet:\n    case CfdBoundaryConditionKind::PressureOutlet:\n        return false;",
+  "new": "    case CfdBoundaryConditionKind::VelocityInlet:\n        return true;\n    case CfdBoundaryConditionKind::PressureInlet:\n    case CfdBoundaryConditionKind::PressureOutlet:\n        return false;",
+  "expect": "KILL"
+ },
+ {
+  "id": "M8  the patch table is rotated by one",
+  "target": "S",
+  "old": "CfdPatchMassFlow& record = report.patches_[patch.value()];",
+  "new": "CfdPatchMassFlow& record = report.patches_[(patch.value() + 1) % patchCount];",
+  "expect": "KILL"
+ },
+ {
+  "id": "M9  a mixed patch keeps the first kind seen",
+  "target": "S",
+  "old": "            } else if (record.kind.has_value() && *record.kind != boundaryRecord->kind) {\n                record.kind.reset();\n            }",
+  "new": "            }",
+  "expect": "KILL"
+ },
+ {
+  "id": "M10 the non-finite scan only looks at face 0",
+  "target": "S",
+  "old": "    for (std::size_t f = 0; f < input.faceFlux.size(); ++f) {\n        if (!std::isfinite(input.faceFlux[f])) {",
+  "new": "    for (std::size_t f = 0; f < (input.faceFlux.empty() ? 0u : 1u); ++f) {\n        if (!std::isfinite(input.faceFlux[f])) {",
+  "expect": "KILL"
+ },
+ {
+  "id": "M11 the worst cell is always cell 0",
+  "target": "S",
+  "old": "                report.worstCell_ = cell;",
+  "new": "                report.worstCell_ = CellIndex::fromValue(0);",
+  "expect": "KILL"
+ },
+ {
+  "id": "M12 worstCell empty on an exactly-conservative mesh",
+  "target": "S",
+  "old": "if (!report.worstCell_.has_value() || magnitude > report.largestCellResidualSi_) {",
+  "new": "if (magnitude > report.largestCellResidualSi_) {",
+  "expect": "KILL"
+ },
+ {
+  "id": "M13 the tie-break takes the LAST cell",
+  "target": "S",
+  "old": "if (!report.worstCell_.has_value() || magnitude > report.largestCellResidualSi_) {",
+  "new": "if (!report.worstCell_.has_value() || magnitude >= report.largestCellResidualSi_) {",
+  "expect": "KILL"
+ },
+ {
+  "id": "M14 worstClosure carries any value",
+  "target": "S",
+  "old": "report.summary_.worstClosure = divergenceSummary.worstClosure;",
+  "new": "report.summary_.worstClosure = divergenceSummary.worstClosure + 1.0;",
+  "expect": "KILL"
+ },
+ {
+  "id": "M15 inflow and outflow are swapped",
+  "target": "S",
+  "old": "            if (phi > 0.0) {",
+  "new": "            if (phi < 0.0) {",
+  "expect": "KILL"
+ },
+ {
+  "id": "M16 the throughput loses its 0.5",
+  "target": "S",
+  "old": "report.throughputSi_ = 0.5 * absoluteSum;",
+  "new": "report.throughputSi_ = absoluteSum;",
+  "expect": "KILL"
+ },
+ {
+  "id": "M17 the magnitude sum becomes a signed sum",
+  "target": "S",
+  "old": "            absoluteSum += std::abs(phi);",
+  "new": "            absoluteSum += phi;",
+  "expect": "KILL"
+ },
+ {
+  "id": "M18 the headline net comes from this file's own sum",
+  "target": "S",
+  "old": "report.netBoundarySi_ = report.divergence_.netBoundaryFlux().si();",
+  "new": "report.netBoundarySi_ = report.outflowSi_ - report.inflowSi_;",
+  "expect": "KILL"
+ },
+ {
+  "id": "M19 relativeDeparture drops its abs",
+  "target": "S",
+  "old": "    return std::abs(a - b) / scale;",
+  "new": "    return (a - b) / scale;",
+  "expect": "KILL"
+ },
+ {
+  "id": "M20 the mass balance is produced with no throughput",
+  "target": "S",
+  "old": "        if (report.throughputSi_ > 0.0) {",
+  "new": "        if (report.throughputSi_ >= 0.0) {",
+  "expect": "KILL"
+ },
+ {
+  "id": "M21 the CELL tolerance tightened past any measurement",
+  "target": "H",
+  "old": "inline constexpr double kCfdContinuityCellTolerance = 1.0e-13;",
+  "new": "inline constexpr double kCfdContinuityCellTolerance = 1.0e-30;",
+  "expect": "KILL"
+ },
+ {
+  "id": "M22 the AGGREGATION tolerance tightened past any measurement",
+  "target": "H",
+  "old": "inline constexpr double kCfdContinuityAggregationTolerance = 1.0e-14;",
+  "new": "inline constexpr double kCfdContinuityAggregationTolerance = 1.0e-30;",
+  "expect": "KILL"
+ },
+ {
+  "id": "M23 the owner range guard        (L9: UNREACHABLE)",
+  "target": "S",
+  "old": "        if (!owner.isValid() || owner.value() >= cells) {",
+  "new": "        if (false) {",
+  "expect": "SURVIVE"
+ },
+ {
+  "id": "M24 the patch range guard        (L9: UNREACHABLE)",
+  "target": "S",
+  "old": "        if (!patch.isValid() || patch.value() >= patches) {",
+  "new": "        if (false) {",
+  "expect": "SURVIVE"
+ },
+ {
+  "id": "M25 the internal-face neighbour guard (UNREACHABLE)",
+  "target": "S",
+  "old": "        if (!neighbour.has_value() && topology.isInternal(face)) {",
+  "new": "        if (false) {",
+  "expect": "SURVIVE"
+ },
+ {
+  "id": "M26 the cell volume guard        (UNREACHABLE)",
+  "target": "S",
+  "old": "        if (!(geometry.cellVolume(cell).si() > 0.0)) {",
+  "new": "        if (false) {",
+  "expect": "SURVIVE"
+ },
+ {
+  "id": "M27 the phase-2 boundary source arm  (UNREACHABLE)",
+  "target": "S",
+  "old": "    if (!(source == CfdBoundarySource{}) &&",
+  "new": "    if (false &&",
+  "expect": "SURVIVE"
+ },
+ {
+  "id": "M28 NO-OP CONTROL: two statements reordered",
+  "target": "S",
+  "old": "        report.summary_.cells = cells;\n        report.summary_.internalFaces = topology.internalFaces();",
+  "new": "        report.summary_.internalFaces = topology.internalFaces();\n        report.summary_.cells = cells;",
+  "expect": "SURVIVE"
+ }
+]

@@ -2092,3 +2092,69 @@ foreach(_case
         "could not convert|cannot convert|no matching function|no match for|invalid conversion|conversion from|invalid initialization"
         BetterCAD::cfd)
 endforeach()
+
+# P19-CONT-001 — continuity misuse. ADR-074.
+#
+# THE REGEXES LIST EVERY DIAGNOSTIC GCC CAN EMIT FOR THE CASE, not the one a
+# reader expects. P19-GRAD-001 had three gates fail because its regex omitted
+# `invalid initialization`, which is what GCC emits for a reference bound to the
+# wrong type -- the gates were right and the expectation was incomplete.
+set(_cfdcont "${CMAKE_CURRENT_SOURCE_DIR}/CfdContinuityMisuse.cpp")
+bettercad_compile_fail_group(cfdcont "${_cfdcont}" BetterCAD::cfd)
+foreach(_case
+        A_SUMMARY_HOLDS_A_GLOBAL_IMBALANCE
+        A_SUMMARY_HOLDS_A_MAX_CELL_CONTINUITY
+        A_MASS_BALANCE_HOLDS_AN_ACCUMULATION_RESIDUAL
+        A_MASS_BALANCE_HOLDS_A_CLOSED_DOMAIN
+        A_PATCH_HOLDS_A_THROUGHPUT)
+    bettercad_compile_fail_case(cfdcont "${_cfdcont}" ${_case}
+        "no member named|has no member"
+        BetterCAD::cfd)
+endforeach()
+foreach(_case
+        DEFAULT_CONSTRUCT_A_CONTINUITY_REPORT
+        CONSTRUCT_A_REPORT_FROM_A_DIVERGENCE
+        DEFAULT_CONSTRUCT_A_DIVERGENCE_FIELD)
+    bettercad_compile_fail_case(cfdcont "${_cfdcont}" ${_case}
+        "is private within this context|private|no matching function|use of deleted"
+        BetterCAD::cfd)
+endforeach()
+foreach(_case
+        THE_THROUGHPUT_TAKES_A_BARE_DOUBLE
+        A_PATCH_INDEX_IS_A_BARE_SIZE
+        A_CONTINUITY_PROBLEM_IS_AN_INTEGER)
+    bettercad_compile_fail_case(cfdcont "${_cfdcont}" ${_case}
+        "no match for|no matching function|cannot convert|could not convert|invalid conversion|conversion from"
+        BetterCAD::cfd)
+endforeach()
+foreach(_case
+        THE_MASS_BALANCE_TAKES_A_DIVERGENCE_IMBALANCE
+        THE_MASS_BALANCE_TAKES_A_NET_BOUNDARY_FLUX
+        A_MASS_BALANCE_IS_A_SUMMARY
+        A_SUMMARY_IS_A_MASS_BALANCE
+        THE_INFLOW_IS_A_BARE_DOUBLE
+        THE_OUTFLOW_IS_A_BARE_DOUBLE
+        THE_THROUGHPUT_IS_A_BARE_DOUBLE
+        THE_NET_BOUNDARY_FLUX_IS_A_BARE_DOUBLE
+        A_PATCH_INFLOW_IS_A_BARE_DOUBLE
+        A_MASS_FLOW_RATE_IS_A_VOLUMETRIC_FLOW_RATE
+        THE_EVALUATION_RETURNS_A_PLAIN_RESULT
+        A_FAILURE_IS_AN_ERROR
+        A_FAILURE_IS_ITS_PROBLEM
+        THE_MASS_BALANCE_IS_NOT_OPTIONAL
+        THE_CELL_RESIDUAL_IS_NOT_OPTIONAL
+        THE_PATCH_KIND_IS_NOT_OPTIONAL
+        A_CONTINUITY_PROBLEM_IS_A_DIVERGENCE_PROBLEM
+        A_DIVERGENCE_PROBLEM_IS_A_CONTINUITY_PROBLEM
+        A_CONTINUITY_INPUT_IS_A_DIVERGENCE_INPUT
+        A_DIVERGENCE_INPUT_IS_A_CONTINUITY_INPUT
+        A_REPORT_IS_A_DIVERGENCE_FIELD
+        A_PATCH_INDEX_IS_A_CELL_INDEX
+        A_PATCH_INDEX_IS_A_FACE_INDEX
+        A_PATCH_INDEX_IS_A_BOUNDARY_FACE_INDEX
+        A_CELL_INDEX_IS_A_PATCH_INDEX
+        THE_CELL_RESIDUAL_TAKES_A_PATCH_INDEX)
+    bettercad_compile_fail_case(cfdcont "${_cfdcont}" ${_case}
+        "could not convert|cannot convert|no matching function|no match for|invalid conversion|conversion from|invalid initialization|no member named|has no member"
+        BetterCAD::cfd)
+endforeach()

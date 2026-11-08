@@ -106,7 +106,7 @@ P19-ARCH-001": P19-ARCH-001 and P19-DATA-001 (2026-10-27), P19-FLUID-001
 (2026-10-28), P19-MESH-001, P19-TOPO-001 and P19-GEOM-001 (all 2026-10-31) and
 P19-DOF-001 and P19-BC-001 (both 2026-11-05) and P19-IC-001 and P19-DIFF-001
 (both 2026-11-06) and P19-GRAD-001 and P19-DIV-001 (both 2026-11-07) and
-P19-CONV-001 and P19-MOM-001 (both 2026-11-08) have PASSED.
+P19-CONV-001, P19-MOM-001 and P19-CONT-001 (all 2026-11-08) have PASSED.
 P19-MESH-001 was qualified by a second attempt on a replacement machine: its
 first attempt, on 2026-10-28, failed 5 of 17 stages when the previous machine's
 temp volume filled and no test suite ran, and that machine was then permanently
@@ -181,9 +181,9 @@ reported two failed stages, the second time in two milestones. Its logs and the
 freeze it was launched under are kept under qualification-attempt-1/, including
 the claim that freeze got wrong, and all three places where the tree carried the
 false argument were CORRECTED IN PLACE rather than deleted, because the error is
-the finding. The harness has now run SIXTY-THREE milestones unchanged, and is
+the finding. The harness has now run SIXTY-FOUR milestones unchanged, and is
 self-checked before each run, because an unchanged harness is not the same as a
-working one. No milestone is open, and nothing after P19-MOM-001 is authorized;
+working one. No milestone is open, and nothing after P19-CONT-001 is authorized;
 see TODO.md.
 
 The phases before it, and how each was qualified:
@@ -1467,6 +1467,92 @@ ADR documents as unreachable, which the probe confirms rather than refutes. And
 there is still no performance baseline, for the third milestone running, because
 nothing solves yet and a baseline for an assembly with no solver behind it would
 be a number with no meaning.
+
+`P19-CONT-001` (PASS 2026-11-08) IS THE FIRST MILESTONE OF THIS PHASE THAT ASKS
+WHETHER `phi` IS CORRECT rather than using it. Continuity is a MEASUREMENT, not
+an assembly: it produces no matrix and no solve, and reports the two measures
+`ADR-058` had already fixed — the worst per-cell continuity residual and the
+global boundary imbalance, each relative to the boundary throughput
+`0.5 * sum |phi|` — plus inlet and outlet flow rates, a per-patch table and an
+exact closed-domain verdict.
+
+**IT DEFINES NO NEW TYPE, AND THAT IS THE MILESTONE'S CENTRAL DECISION.** The
+UNDERSTAND phase found that `CfdData.hpp` already DECLARED this checklist's
+answer as `CfdMassBalance`, so the work changed from "define and compute a
+continuity report" to "compute two measures already fixed, and define none".
+Without that phase this milestone would have built the second parameter system
+`ARCHITECTURE.md` rejects. `ADR-074` then has it CONSUME the qualified
+divergence operator for the per-cell residuals and the global sums, walking
+boundary faces only for the attribution that operator cannot do, because
+re-deriving the owner/neighbour sign is precisely the error `ADR-072` says a
+scatter cannot express — and it would leave nothing independent to check
+against. The same phase found `ADR-058`'s own heading, "Mass balance means a
+discrete measure, **not a sum of inlets and outlets**", which constrains
+checklist item 7 against that item's own wording; the invariant won, and the
+inlet/outlet rates are reported while the CHECK is the discrete imbalance. Flow
+direction comes from the SIGN of `phi` and never from the condition kind, since
+a pressure inlet's rate is an outcome rather than a setting.
+
+**A name collision was found before any code existed, and it would have made
+every mass balance pass.** `CfdDivergenceField::globalImbalance()` is a
+floating-point artifact near 1e-16; `CfdMassBalance::globalImbalance` is a
+physical measure. Identical names, different meanings. It is defended by a
+different internal name, a test spanning ten orders of magnitude, and a mutation
+probe — and the compile-fail group's header states plainly that the type system
+catches the naive assignment but not the `.si()` form, rather than implying a
+whole guard. Both tolerances were MEASURED before any C++ was written, each one
+decade above its worst observed value, and the two literal bounds now sit inside
+`static_assert` failure messages, so tightening one below its measurement breaks
+the BUILD rather than a test.
+
+**Two independent reviews found a production defect that 49 passing tests had
+not.** The relative accumulation residual was built from an all-cells numerator
+over a boundary-only denominator: at 1e12 against 1e-12 it reads exactly `1.0`
+for CORRECT arithmetic, and in a closed domain it is identically `0.0`, which
+had made an assertion over eight reference bodies vacuous. A third,
+independently written model confirmed it before the fix, which was to consume the
+qualified operator's own value. Twenty-two of twenty-two behavioural mutations
+were then caught — three by the COMPILER — five documented-unreachable guards
+survived, and the NO-OP CONTROL SURVIVED. That control is why the table can be
+read at all: three earlier harnesses reported every probe as compiler-rejected,
+the control included, which is impossible. See
+[P19-CONT-001](docs/verification/P19-CONT-001/README.md).
+
+**It qualified from clean ON THE FIRST ATTEMPT** — 6687/6687 in three presets,
+3355 x 5 executions in two repeat stages with 16,775 counted `Start` markers each
+at a markers-to-results ratio of exactly 5.000, 0 `error:` and 0 `warning:`
+diagnostics under `-Werror`, 17 of 17 stages exit 0, 3h12m42s — and it added a
+check the harness had never had. `run-qualification.cmd` pins the toolchain by
+`PATH` ORDER, while `find_package(CONFIG)` derives candidate prefixes from `PATH`
+MEMBERSHIP, so dependency resolution was never pinned at all: a stray regenerate
+resolved Open CASCADE to MSYS2's 7.9.3 and wrote it into a build cache, where a
+cached value short-circuits `find_package` and `ninja -t clean` does not remove
+it. All three caches are now verified before and after the run, and **the
+harness itself was left byte-identical** — a check was added rather than a
+variable, because the previous milestone passed this only by luck and altering a
+gate would have hidden that.
+
+Six measurement-tool defects of the author's own were found and published rather
+than quietly fixed. The sixth belongs to the passing run itself: the freshness
+check's first form reported `STALE FAIL` on all three presets of a correct tree,
+because "the oldest compiled output in the build tree" matches a runtime DLL
+copied out of the toolchain, and CMake's copy carries the origin's modification
+time. It was proven by hash against its origin rather than explained away, and
+the first form is recorded because it would have read as a qualification failure.
+
+Recorded as less than a reader might assume: **this measures and refuses, and
+decides nothing.** `ADR-058` assigns the throughput floor and the PASS/FAIL
+acceptance thresholds to `P19-MASSBAL-001` BY NAME, so this milestone reports
+both measures against measured floating-point bounds and does not judge whether a
+mesh is good enough. Seven of that unauthorized milestone's fifteen items restate
+items of this checklist, which is the checklists' duplication and not this
+implementation's; it is recorded so the later milestone inherits a known boundary
+instead of rediscovering it. Five refusal guards are unreachable through the
+public API and are recorded as unreached rather than as tested; `ErrorCode::
+Internal` has never been observed. The patch-order associativity measurement
+models a round-robin order while the real CSR is contiguous, and says so. And
+there is still no performance baseline, for the fourth milestone running, because
+nothing solves yet.
 
 ```text
 incompressible laminar

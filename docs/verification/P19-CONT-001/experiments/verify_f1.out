@@ -1,0 +1,37 @@
+VERIFYING REVIEW FINDING 1
+kCfdContinuityAggregationTolerance = 1e-14, and the suite asserts
+accumulationResidual < that bound.
+
+balanced scales (what every fixture uses) 
+    artifact                  0.000000e+00
+    mine  (boundary denom)    0.000000e+00   within bound
+    ADR-071 (all-faces denom) 0.000000e+00   within bound
+
+interior 1e6, boundary 1e-6               
+    artifact                  4.568696e-11
+    mine  (boundary denom)    7.614493e-06   FAILS the 1e-14 bound
+    ADR-071 (all-faces denom) 4.568696e-17   within bound
+
+interior 1e12, boundary 1e-12             
+    artifact                  6.000000e-12
+    mine  (boundary denom)    1.000000e+00   FAILS the 1e-14 bound
+    ADR-071 (all-faces denom) 6.000000e-24   within bound
+
+interior 1e200, boundary 1e-200           
+    artifact                  6.000000e-200
+    mine  (boundary denom)    1.000000e+00   FAILS the 1e-14 bound
+    ADR-071 (all-faces denom) 0.000000e+00   within bound
+
+interior 1e300, boundary 1e-300           
+    artifact                  6.000000e-300
+    mine  (boundary denom)    1.000000e+00   FAILS the 1e-14 bound
+    ADR-071 (all-faces denom) 0.000000e+00   within bound
+
+AND THE CLOSED-DOMAIN CASE (finding 2): a wall boundary gives bit-zero
+boundary phi, so the boundary-only denominator is EXACTLY ZERO and
+relativeDeparture returns 0.0 by its scale<=0 arm, whatever the interior
+flux or the scatter did.
+    interior 1e6, boundary 0.0
+    artifact                  0.000000e+00   (NON-ZERO: the real artifact)
+    mine  (boundary denom)    0.000000e+00   <- reported, and it cannot read false
+    ADR-071 (all-faces denom) 0.000000e+00   <- what it should be

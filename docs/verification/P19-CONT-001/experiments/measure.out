@@ -1,0 +1,34 @@
+P19-CONT-001 pre-design measurements, seed 20261108
+
+Q1  per-cell residual of a conservative field, metre-scale tets
+      worst |sum phi| / sum|phi|   3.2789e-15
+      bit-zero                     3971 / 20000  = 19.86%
+      worst closure |sum S|/sum|S| 4.2666e-16
+      skipped (zero denominator)   0
+
+Q1  per-cell residual of a conservative field, millimetre-scale tets
+      worst |sum phi| / sum|phi|   7.4598e-15
+      bit-zero                     3745 / 20000  = 18.73%
+      worst closure |sum S|/sum|S| 7.0816e-16
+      skipped (zero denominator)   0
+
+Q2  (outflow - inflow) vs single-pass net, balanced
+      worst departure / sum|phi|   5.8386e-16
+      bit-exact                    204 / 20000  = 1.02%
+Q3  sum of patch subtotals vs single-pass net, balanced
+      worst departure / sum|phi|   3.1237e-16
+      bit-exact                    385 / 20000  = 1.93%
+
+Q2  (outflow - inflow) vs single-pass net, unbalanced
+      worst departure / sum|phi|   9.0866e-16
+      bit-exact                    2536 / 20000  = 12.68%
+Q3  sum of patch subtotals vs single-pass net, unbalanced
+      worst departure / sum|phi|   9.6334e-16
+      bit-exact                    3728 / 20000  = 18.64%
+
+Q4  closed domain (every facet a wall, phi = 0.0 exactly)
+      non-zero boundary nets        0 / 5000
+
+Q5  the relative measure's discrimination, denominator 0.5*sum|phi|
+      worst for a BALANCED field    5.6167e-16
+      worst for an UNBALANCED field 1.9590e+00

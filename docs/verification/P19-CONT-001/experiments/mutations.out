@@ -1,0 +1,88 @@
+P19-CONT-001 mutation probes, run against the repaired tree
+
+Driver: docs/verification/P19-CONT-001/experiments/probe.cmd + subst.py.
+Each probe replaces ONE piece of text in CfdContinuity.cpp or .hpp, rebuilds
+debug-ext, runs the continuity suite, reverts, and re-hashes both files. The run
+stops dead if a revert does not restore a file exactly.
+
+  KILLED    the suite failed -- what a behavioural probe must do
+  COMPILER  rejected at compile time -- STRONGER than a test kill
+  SURVIVED  the suite passed -- correct ONLY for a documented-unreachable
+            guard and for the no-op control
+
+pristine  src/cfd/CfdContinuity.cpp              5ef858b60b001479603e3a6007e5fb792c4f6850fd4635c522b37f469bfe1b2c
+pristine  include/bettercad/cfd/CfdContinuity.hpp 982311866b207ced94eacd4ecc3b9d6f767dc982d87c949d6dab03ebbc8a946b
+
+BASELINE All tests passed (7435 assertions in 49 test cases)
+
+KILL KILLED   M1  maxCellContinuity becomes the GLOBAL measure
+KILL KILLED   M2  globalImbalance stops coming from the qualified operator
+KILL KILLED   M3  THE NAME COLLISION: the artifact as the mass balance
+KILL KILLED   M4  accumulationResidual re-derived, BOUNDARY-ONLY denominator
+KILL KILLED   M5  accumulationResidual carries the WRONG summary member
+KILL KILLED   M6  closedDomain from wallFaces > 0
+KILL KILLED   M7  isWallKind calls a velocity inlet a wall
+KILL KILLED   M8  the patch table is rotated by one
+KILL KILLED   M9  a mixed patch keeps the first kind seen
+KILL KILLED   M10 the non-finite scan only looks at face 0
+KILL KILLED   M11 the worst cell is always cell 0
+KILL KILLED   M12 worstCell empty on an exactly-conservative mesh
+KILL KILLED   M13 the tie-break takes the LAST cell
+KILL KILLED   M14 worstClosure carries any value
+KILL COMPILER M15 inflow and outflow are swapped
+KILL KILLED   M16 the throughput loses its 0.5
+KILL KILLED   M17 the magnitude sum becomes a signed sum
+KILL KILLED   M18 the headline net comes from this file's own sum
+KILL KILLED   M19 relativeDeparture drops its abs
+KILL KILLED   M20 the mass balance is produced with no throughput
+KILL COMPILER M21 the CELL tolerance tightened past any measurement
+KILL COMPILER M22 the AGGREGATION tolerance tightened past any measurement
+SURVIVE SURVIVED M23 the owner range guard             (L9: UNREACHABLE)
+SURVIVE SURVIVED M24 the patch range guard             (L9: UNREACHABLE)
+SURVIVE SURVIVED M25 the internal-face neighbour guard (UNREACHABLE)
+SURVIVE COMPILER M26 the cell volume guard             INCONCLUSIVE -- see M26b
+SURVIVE SURVIVED M27 the phase-2 boundary source arm   (L11: UNREACHABLE)
+SURVIVE SURVIVED M28 NO-OP CONTROL: two statements reordered
+
+FINAL All tests passed (7435 assertions in 49 test cases)
+FINAL src/cfd/CfdContinuity.cpp               5ef858b60b001479603e3a6007e5fb792c4f6850fd4635c522b37f469bfe1b2c   MATCHES
+FINAL include/bettercad/cfd/CfdContinuity.hpp 982311866b207ced94eacd4ecc3b9d6f767dc982d87c949d6dab03ebbc8a946b   MATCHES
+
+------------------------------------------------------------------------------
+M26 WAS INCONCLUSIVE AS WRITTEN AND IS NOT COUNTED. Disabling the cell-volume
+guard with `if (false)` leaves `cell` unused, and `-Wunused-variable` inside
+`-Werror` rejects the translation unit -- so the probe never ran and said
+nothing about reachability. Re-run in a form that still USES `cell`:
+`volume > 0.0` becomes `volume >= 0.0`, which can never fire for a geometry that
+describes the topology, so it is the same disabling expressed legally.
+
+BASELINE All tests passed (7435 assertions in 49 test cases)
+SURVIVE SURVIVED M26b the cell volume guard, disabled as >= 0.0 (UNREACHABLE)
+FINAL All tests passed (7435 assertions in 49 test cases)
+FINAL both files MATCH pristine
+
+------------------------------------------------------------------------------
+TOTALS
+
+  behavioural probes caught     22 of 22   (19 by tests, 3 by the compiler)
+  unreachable guards survived    5 of 5    (M23, M24, M25, M26b, M27)
+  no-op control                 SURVIVED   as a control must
+  reverts verified by hash      every probe; both files match pristine
+
+THE THREE COMPILER KILLS ARE STRONGER THAN TEST KILLS, and two of them exist
+only because of the hygiene pass:
+
+  M15  swapping the direction test gives `if (phi < 0.0) ... else if (phi < 0.0)`
+       and -Wduplicated-cond rejects it
+  M21  the four literal-vs-literal CHECKs that a review called "assertions about
+  M22  nothing" were moved into the static_asserts' own failure messages, so a
+       tolerance tightened below its measurement now breaks the BUILD rather
+       than a test
+
+THE NO-OP CONTROL IS WHY THIS TABLE CAN BE READ AT ALL. Three earlier harnesses
+reported "rejected by the compiler" for every probe INCLUDING the control, which
+is impossible for a reorder of two independent assignments. Each time the cause
+was environmental rather than a code change -- an MSYS2 PATH making MSYS2 a
+find_package prefix candidate, then a POSIX-converted LOCALAPPDATA producing a
+prefix Windows could not resolve. A probe table without a control would have
+looked like strong evidence on all three occasions.

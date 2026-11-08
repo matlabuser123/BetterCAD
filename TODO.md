@@ -23,6 +23,81 @@ Prerequisite:
            may set). P17's F1-F3 stand unchanged beneath them.
 
 Current milestone:
+           P19-CONT-001 - Continuity Equation. AUTHORIZED 2026-11-08 by the
+           owner's "implement and fully verify" over the twelve-item
+           checklist, which arrived pasted into the instruction as
+           P19-BC-001's, P19-IC-001's, P19-DIFF-001's, P19-GRAD-001's,
+           P19-CONV-001's and P19-MOM-001's did. PASS 2026-11-08, twelve of
+           twelve, ON THE FIRST QUALIFICATION ATTEMPT: 6687/6687 x 3 presets,
+           3355 x 5 executions x 2 presets, 17 of 17 stages exit 0, and the
+           eight subtree identities after the last test run identical to the
+           eight before the first build. Evidence
+           docs/verification/P19-CONT-001/. NO MILESTONE IS NOW OPEN.
+           THE PASTED TEXT WAS DIFFED AGAINST
+           THIS FILE'S OWN SECTION FIRST and is byte-for-byte identical across
+           all 31 lines, with 12 unticked items and 0 ticked -- counted, not
+           assumed -- so the scope is this file's checklist unaltered, and
+           sha256 2c7e8a70c635f48b over both after CR normalization. This
+           authorization was written here BEFORE any implementation, as the
+           six before it were.
+           Three scope notes recorded at authorization time, not discovered
+           later:
+           (1) "DEFINE MASS-FLUX CONVENTION" DOES NOT AUTHORIZE A SECOND MASS
+           FLUX. P19-CONV-001 already defines `phi`, and ADR-072 fixes its
+           sign and its scatter. This milestone BINDS to that definition and
+           states it; a second definition would be the "second parameter
+           system" ARCHITECTURE.md rejects. That three earlier milestones each
+           invented `phi` privately, until P19-CONV-001 made one, is exactly
+           why this is written down before the work starts.
+           (2) THE TWELVE ITEMS CONTAIN NO MATRIX AND NO SOLVE. Every one is a
+           residual, an aggregate, a balance, a tolerance or a determinism
+           claim, so the deliverable is a continuity EVALUATOR and not an
+           operator that assembles into CfdSparseMatrix. A pressure-Poisson
+           matrix belongs to P19-PVCOUPLE-001 and P19-LINSOLVE-001, and
+           NEITHER IS AUTHORIZED.
+           (3) THE GLOBAL IMBALANCE IS REPORTED AND NEVER ASSERTED TO BE ZERO.
+           P19-DIV-001 measured a bit-exact global sum at 40.34% and recorded
+           the consequence as its L3. "Relative/absolute tolerance" is
+           therefore an item about justifying a bound BY MEASUREMENT, and a
+           tolerance chosen to make a test pass would fail this milestone
+           rather than complete it.
+           (4) A SCOPE COLLISION WITH P19-MASSBAL-001 WAS FOUND DURING THE
+           UNDERSTAND PHASE AND IS RECORDED HERE RATHER THAN RESOLVED
+           SILENTLY. That milestone ("Mass Conservation / Flow Balance", NOT
+           authorized) carries fifteen items of which seven restate items of
+           this checklist in the same or nearly the same words: Cell
+           continuity residual and Deterministic aggregation are identical;
+           Relative tolerance / Absolute tolerance and Multiple inlets /
+           Multiple outlets are this checklist's items split in two; Net mass
+           imbalance, Global mass residual, Inlet mass flow and Outlet mass
+           flow cover Global mass imbalance, Boundary mass flow and the
+           Inlet/outlet mass-balance check. MORE IMPORTANTLY, CfdData.hpp
+           already DECLARES the answer: `CfdMassBalance` fixes the two
+           measures ADR-058 chose -- `maxCellContinuity` and
+           `globalImbalance`, each relative to the boundary throughput
+           `0.5 * sum |phi|` -- and its comment assigns THE FLOOR AND THE
+           ACCEPTANCE THRESHOLDS TO P19-MASSBAL-001 BY NAME.
+           The boundary this milestone therefore works to, decided before any
+           code and not after a convenient discovery: P19-CONT-001 COMPUTES
+           the two declared measures and fills the declared type; it does NOT
+           set the throughput floor, and it does NOT judge a solution against
+           an acceptance threshold. Its own "Relative/absolute tolerance"
+           item is the FLOATING-POINT bound on its own identities, the kind
+           `kCfdConvectionRowSumTolerance` already is, and not a policy
+           threshold -- ADR-053's rule and CfdData.hpp's "CONVERGENCE IS NOT
+           ACCEPTANCE" both put policy elsewhere. Where the boundary
+           throughput is zero there is nothing to normalise against, which is
+           why "Closed-domain check" is a SEPARATE item and not a degenerate
+           case of the relative one: a closed domain's boundary flux is
+           bit-zero because ADR-067's table prescribes `phi = 0` at all three
+           wall kinds, so it is checked exactly rather than to a tolerance.
+           A consequence worth stating plainly: P19-MASSBAL-001 will later
+           re-tick items this milestone ticks. That duplication is the
+           checklists', not this implementation's, and the overlap is
+           recorded here so the later milestone inherits a known boundary
+           instead of rediscovering it.
+
+Previous milestone:
            P19-MOM-001 - Momentum Equation. AUTHORIZED 2026-11-08 by the
            owner's "implement and fully verify" over the thirteen-item
            checklist, which arrived pasted into the instruction as
@@ -48,7 +123,7 @@ Current milestone:
            boundary; that is a property of the equation and not a defect, and
            the implementation must not pretend otherwise.
 
-Previous milestone:
+Before that:
            P19-CONV-001 — Convective Flux. AUTHORIZED 2026-11-07 by the
            owner's "Implement nd fully verify" over the fifteen-item
            checklist, which arrived pasted into the instruction as
@@ -86,7 +161,7 @@ Previous milestone:
            defects and wrote three of the false claims. Nothing after this
            milestone was started.
 
-Before that:
+And before that:
            P19-DIV-001 — Divergence / Flux Operator. AUTHORIZED 2026-11-07 by
            the owner's "Authorize DIV-001", in answer to a question that named
            this milestone and no other. PASS 2026-11-07. All twelve items are
@@ -527,17 +602,17 @@ Qualified:
            P18 — Thermal Analysis
 
 Next:
-           NOTHING IS AUTHORIZED AND NO MILESTONE IS OPEN. P19-MOM-001 PASSED
-           on 2026-11-08 and was the last authorized work; see Current
-           milestone. It was the first milestone of this phase to CONSUME its
-           predecessors rather than add an operator beside them, which answers
-           the limitation P19-GRAD-001, P19-DIV-001 and P19-CONV-001 each
-           recorded against themselves -- that nothing consumed them.
-           P19-CONT-001 - Continuity Equation is next in the phase plan and is
-           NOT authorized. Each milestone is started by the owner, as every
-           P17, P18 and P19 milestone was, and a predecessor's PASS is not
-           permission to start the one after it. **The next milestone is a
-           scope decision for the owner, not Claude's to make.**
+           P19-CONT-001 - Continuity Equation, AUTHORIZED by the owner on
+           2026-11-08 and PASS 2026-11-08; see Current milestone. It MEASURES
+           rather than assembles: where P19-MOM-001 consumed two qualified
+           operators into a matrix, this one asks whether the mass flux those
+           operators are built on actually conserves mass, which is the first
+           time this phase checks a property of `phi` instead of using it.
+           NOTHING BEYOND P19-CONT-001 IS AUTHORIZED. Each milestone is
+           started by the owner, as every P17, P18 and P19 milestone was, and
+           a predecessor's PASS is not permission to start the one after it:
+           P19-PVCOUPLE-001 is next in the phase plan and is NOT authorized,
+           and neither is P19-LINSOLVE-001.
 
 P19 objective, as planned:
            authoritative CAD / fluid / mesh state
@@ -3747,18 +3822,18 @@ or finite-volume mass conservation:
 Σ_f rho Uf · Sf = 0
 ```
 
-* [ ] Define mass-flux convention
-* [ ] Cell continuity residual
-* [ ] Global mass imbalance
-* [ ] Boundary mass flow
-* [ ] Internal-face cancellation
-* [ ] Closed-domain check
-* [ ] Inlet/outlet mass-balance check
-* [ ] Relative/absolute tolerance
-* [ ] Multiple inlets / outlets
-* [ ] Deterministic aggregation
-* [ ] Regression PASS
-* [ ] Evidence recorded
+* [x] Define mass-flux convention
+* [x] Cell continuity residual
+* [x] Global mass imbalance
+* [x] Boundary mass flow
+* [x] Internal-face cancellation
+* [x] Closed-domain check
+* [x] Inlet/outlet mass-balance check
+* [x] Relative/absolute tolerance
+* [x] Multiple inlets / outlets
+* [x] Deterministic aggregation
+* [x] Regression PASS
+* [x] Evidence recorded
 
 ---
 # P19-PVCOUPLE-001
