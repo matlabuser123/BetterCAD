@@ -1029,10 +1029,19 @@ stages       17 of 17 exited 0
                + 2 repeat presets
 ```
 
-**THE QUALIFIED TREE IS THE FROZEN TREE.** `qualify.cmd` records the eight
-subtree identities from a scratch index before the first build and again after
-the last test, and all sixteen readings agree with each other and with
-`FREEZE.md`:
+**THE QUALIFIED TREE IS THE COMMITTED TREE, ACROSS FOUR INDEPENDENT READINGS.**
+
+```text
+1  FREEZE.md          recorded BEFORE the run, so it is a prediction
+2  harness            from a scratch index, before the first build
+3  harness            from a scratch index, after the last test
+4  the commit object  git rev-parse HEAD:<path> at b9842f21a6df97d8eb10562da357a482a5b28d9b
+```
+
+Reading 4 is the only one that may use `git rev-parse HEAD:<path>`, and only
+because the commit now exists; before it, that command reads the previous
+committed tree and would have missed all four untracked new files. Readings 1
+to 3 therefore use a scratch `GIT_INDEX_FILE` instead. All four agree:
 
 ```text
 apps               fc398a3d2e524178cf38e8b667236379d8381086

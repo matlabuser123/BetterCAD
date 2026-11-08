@@ -1431,7 +1431,8 @@ Qualified at 6601/6601 in each of three presets, 3306 x 5 in two repeats with
 16,530 executions each at a ratio of exactly 5.000, 0 warnings under `-Werror`,
 17 of 17 stages exit 0, 3h43m06s, 52,863 test executions, and 14,230 assertions
 in 48 cases identically in Debug, Release and Debug-shared, with the eight
-qualified subtrees identical across four readings including the committed tree;
+qualified subtrees identical across four readings, the committed tree
+(`b9842f2`) among them, and equal to the eight its freeze recorded in advance;
 the `cfd` subsystem's 716,417 assertions in 495 cases are 702,187 + 14,230 and
 447 + 48 EXACTLY, so no pre-existing assertion moved. 24 mutation probes were
 applied to the real tree and 22 killed — TWO OF THEM BY THE COMPILER, which is

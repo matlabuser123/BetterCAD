@@ -218,3 +218,21 @@ ATTEMPT 1'S LESSON   build the second preset BEFORE freezing
 ATTEMPT 2 ADDS       and build it AFTER THE LAST EDIT to anything it compiles,
                      then prove it with a no-op build rather than a timestamp
 ```
+
+## Outcome
+
+Attempt 2 **PASSED**: `Qualification passed: every stage exited 0.`, 17 of 17
+stages, 3h43m06s, and `0 stage(s) failed`. The three figures predicted above
+came back exactly — 6601, 3306 and 16530.
+
+The eight subtree identities above were then read a fourth time, out of the
+commit object rather than out of a scratch index:
+
+```text
+committed as  b9842f21a6df97d8eb10562da357a482a5b28d9b
+all eight     identical to this freeze, to the harness's before-build reading
+              and to its after-last-test reading
+```
+
+**THE TREE THAT WAS QUALIFIED IS THE TREE THAT WAS COMMITTED.** Full
+reconciliation in [`README.md`](README.md) under REGRESSION and QUALIFICATION.

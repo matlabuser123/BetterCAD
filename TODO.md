@@ -5251,7 +5251,9 @@ P19-MOM-001      PASS 2026-11-08, ON THE SECOND ATTEMPT. Thirteen of
                  all three configurations, and 28 compile-fail cases; the cfd
                  subsystem's 716,417 assertions in 495 cases are 702,187 +
                  14,230 and 447 + 48 EXACTLY, so no pre-existing cfd
-                 assertion moved. Qualified tree == committed tree.
+                 assertion moved. Qualified tree == committed tree across four
+                 readings, b9842f2 among them, and equal to the eight its
+                 freeze recorded in advance.
                  ATTEMPT 1 FAILED AND THE FAILURE WAS A PROCESS FAILURE, NOT
                  A DEFECT THE GATES MISSED. A -Werror=array-bounds rejection
                  at -O3 on a pop_back() the optimizer cannot prove safe was
