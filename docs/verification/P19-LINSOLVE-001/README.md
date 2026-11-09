@@ -1,7 +1,31 @@
 # P19-LINSOLVE-001 — CFD Linear Solver Infrastructure
 
 RESULT: PASS — three presets built from clean and two repeated five times, 17 stages all exit 0, the qualified tree unmoved; four defects in this milestone's own evidence found afterwards and corrected
-COMMIT: pending
+COMMIT: e63b19db2d4f48c3e73812eeb66784d71a7ce805
+
+**The eight frozen identities were read back OUT OF THAT COMMIT OBJECT**, with
+`git rev-parse e63b19d:<path>`, which is a check that cannot be run before the
+commit exists and is the reason it is recorded in a second commit rather than
+predicted in the first:
+
+```text
+apps               fc398a3d2e524178cf38e8b667236379d8381086   MATCH
+include            d52820c56a1ae388f2a4f12b126b45c103308bca   MATCH
+src                56358d8c8c6c97f55ded83b74e5d36e0759281ed   MATCH
+tests              ba7cf940350cf23c61563eb51aef65f379f75b98   MATCH
+examples           4da234ebf4779f7c16d5df0075f106f7e3d4c958   MATCH
+cmake              5a382115d7ed7775189d40b55e40f318eaae6cc7   MATCH
+CMakeLists.txt     3ec3c10f2a4c522f36c60b1ce1a58e99c4db1ecd   MATCH
+CMakePresets.json  3229f0f89b236744d7d5c082bed47c28b718288e   MATCH
+```
+
+So the tree that was qualified is the tree that is committed, by four readings:
+the harness before its first build, the harness after its last test, a
+recomputation from the working tree after the gate, and this one from the commit
+itself. 66 files: 8 new and 6 modified across the frozen surface, `TODO.md` and
+`ROADMAP.md`, `ADR-076`, and the 49 files of this evidence directory.
+
+NOT PUSHED. The owner pushes.
 
 ## TASK
 
