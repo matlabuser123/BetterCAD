@@ -1,0 +1,20 @@
+P19-STEADY-001 mutation probes
+
+src/cfd/CfdSteady.cpp                        bff1867a094b537ca1292eac5acec152ef6a7fa616c6405d5d968acd5c8ec5d1
+src/cfd/CfdResult.cpp                        3b243065ad454155a8f340c5fd887164286d9cd6db41e95b53cafd79a115c717
+include/bettercad/cfd/CfdSteady.hpp          4e4ab5ae91d07c41b2649c4a0571c47043533a93c280ef49e05d9a4dc44ad84d
+include/bettercad/cfd/CfdResult.hpp          fd15a92df8a725883d59b6e0ead3e7f765448f4f04d503ab3712ce0f685947be
+
+BASELINE all filters pass
+
+KILL     KILLED   M2 report.outerIterations is off by one                                 60s
+SURVIVE  SURVIVED M15 NO-OP CONTROL: the published result is copied instead of moved      59s
+
+rebuilt from pristine: ok
+FINAL all filters pass: True
+src/cfd/CfdSteady.cpp                        bff1867a094b537ca1292eac5acec152ef6a7fa616c6405d5d968acd5c8ec5d1 MATCH
+src/cfd/CfdResult.cpp                        3b243065ad454155a8f340c5fd887164286d9cd6db41e95b53cafd79a115c717 MATCH
+include/bettercad/cfd/CfdSteady.hpp          4e4ab5ae91d07c41b2649c4a0571c47043533a93c280ef49e05d9a4dc44ad84d MATCH
+include/bettercad/cfd/CfdResult.hpp          fd15a92df8a725883d59b6e0ead3e7f765448f4f04d503ab3712ce0f685947be MATCH
+
+killed 1, compiler 0, survived 1, of 2 probes

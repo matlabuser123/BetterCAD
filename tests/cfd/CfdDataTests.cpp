@@ -70,6 +70,7 @@ using cfd::CfdBoundaryConditionKind;
 using cfd::CfdConvergenceSettings;
 using cfd::CfdDefinitionFingerprint;
 using cfd::CfdFailureStage;
+using cfd::CfdResultFields;
 using cfd::CfdFluidProperties;
 using cfd::CfdGravity;
 using cfd::CfdInitialCondition;
@@ -215,6 +216,41 @@ struct FlowStudy {
         return *held;
     }
 
+    /// The field layout, reached through the SAME gates `solveCfdSteady`
+    /// walks. Four calls rather than a shortcut, because a layout built any
+    /// other way would not be the one a real solve publishes against.
+    [[nodiscard]] cfd::CfdFieldMap layout() const {
+        const Result<cfd::CfdModel> model = cfd::requireCfdModel(document, regenerator, mesher, control);
+        INFO((model.has_value() ? std::string{} : model.error().message));
+        REQUIRE(model.has_value());
+        const Result<cfd::CfdMeshContract> contract = cfd::requireCfdMesh(*model);
+        REQUIRE(contract.has_value());
+        const Result<cfd::CfdTopology> topology = cfd::requireCfdTopology(*model, *contract);
+        REQUIRE(topology.has_value());
+        Result<cfd::CfdFieldMap> map = cfd::requireCfdFieldMap(*model, *topology);
+        INFO((map.has_value() ? std::string{} : map.error().message));
+        REQUIRE(map.has_value());
+        return std::move(*map);
+    }
+
+    /// A zero field set of the right three lengths.
+    ///
+    /// ZERO IS NOT A SOLUTION OF ANYTHING, AND THESE TESTS ARE NOT ABOUT
+    /// VALUES. Every case in this file is about provenance, metadata or the
+    /// lifecycle; `P19-STEADY-001`'s own suite is where a published field is
+    /// checked against a field that was computed. What matters here is that the
+    /// LENGTHS come from the layout, so a result cannot be built with arrays
+    /// that do not fit the mesh it names.
+    [[nodiscard]] static cfd::CfdResultFields zeroFields(const cfd::CfdFieldMap& map) {
+        Result<cfd::CfdResultFields> fields =
+            cfd::CfdResultFields::create(map, std::vector<double>(map.size(cfd::CfdVariable::Pressure), 0.0),
+                                         std::vector<double>(map.size(cfd::CfdVariable::Velocity), 0.0),
+                                         std::vector<double>(map.size(cfd::CfdVariable::MassFlux), 0.0));
+        INFO((fields.has_value() ? std::string{} : fields.error().message));
+        REQUIRE(fields.has_value());
+        return std::move(*fields);
+    }
+
     [[nodiscard]] CfdResultSource currentSource() const {
         const Result<CfdResultSource> source = cfd::currentResultSource(document, regenerator, mesher, analysis);
         INFO((source.has_value() ? std::string{} : source.error().message));
@@ -239,7 +275,9 @@ struct FlowStudy {
     }
 
     [[nodiscard]] CfdResult resultFor(const CfdResultSource& source, std::uint32_t iterations = 12) const {
-        Result<CfdResult> result = CfdResult::create(source, mesh(), metadataFor(source.mode, iterations));
+        const cfd::CfdFieldMap map = layout();
+        Result<CfdResult> result =
+            CfdResult::create(source, mesh(), map, metadataFor(source.mode, iterations), zeroFields(map));
         INFO((result.has_value() ? std::string{} : result.error().message));
         REQUIRE(result.has_value());
         return std::move(*result);
@@ -1263,6 +1301,11 @@ TEST_CASE("CfdData_AResultMustMatchItsMeshAndItsMode", "[cfd][data][result]") {
     part.requireMesh();
     const CfdResultSource source = part.currentSource();
     const meshing::VolumeMesh& mesh = part.mesh();
+    const cfd::CfdFieldMap map = part.layout();
+    // Each call gets its own field set, because `create` takes it by value.
+    const auto make = [&](const CfdResultSource& named, const CfdResultMetadata& metadata) {
+        return CfdResult::create(named, mesh, map, metadata, FlowStudy::zeroFields(map));
+    };
 
     SECTION("well formed: accepted, and bound to its mesh") {
         const CfdResult result = part.resultFor(source);
@@ -1273,64 +1316,88 @@ TEST_CASE("CfdData_AResultMustMatchItsMeshAndItsMode", "[cfd][data][result]") {
     SECTION("a source naming another mesh is refused") {
         CfdResultSource other = source;
         other.mesh = meshing::MeshStamp{};
-        CHECK_THAT(CfdResult::create(other, mesh, FlowStudy::metadataFor(CfdAnalysisMode::Steady)).error().message,
+        CHECK_THAT(make(other, FlowStudy::metadataFor(CfdAnalysisMode::Steady)).error().message,
                    ContainsSubstring("does not name this mesh"));
     }
     SECTION("zero outer iterations is not an accepted result") {
-        CHECK_FALSE(CfdResult::create(source, mesh, FlowStudy::metadataFor(CfdAnalysisMode::Steady, 0)).has_value());
+        CHECK_FALSE(make(source, FlowStudy::metadataFor(CfdAnalysisMode::Steady, 0)).has_value());
     }
     SECTION("a residual or a mass-balance measure that is not a norm is refused") {
         for (const double bad : {kNaN, kInf, -1e-9}) {
             INFO(bad);
             CfdResultMetadata residual = FlowStudy::metadataFor(CfdAnalysisMode::Steady);
             residual.residuals.momentumY = bad;
-            CHECK_FALSE(CfdResult::create(source, mesh, residual).has_value());
+            CHECK_FALSE(make(source, residual).has_value());
             CfdResultMetadata balance = FlowStudy::metadataFor(CfdAnalysisMode::Steady);
             balance.massBalance.globalImbalance = bad;
-            CHECK_FALSE(CfdResult::create(source, mesh, balance).has_value());
+            CHECK_FALSE(make(source, balance).has_value());
         }
     }
     SECTION("a steady result has no time and no step") {
         CfdResultMetadata timed = FlowStudy::metadataFor(CfdAnalysisMode::Steady);
         timed.time = 0_s;
-        CHECK_THAT(CfdResult::create(source, mesh, timed).error().message, ContainsSubstring("no time and no step"));
+        CHECK_THAT(make(source, timed).error().message, ContainsSubstring("no time and no step"));
         CfdResultMetadata stepped = FlowStudy::metadataFor(CfdAnalysisMode::Steady);
         stepped.step = 1U;
-        CHECK_FALSE(CfdResult::create(source, mesh, stepped).has_value());
+        CHECK_FALSE(make(source, stepped).has_value());
     }
     SECTION("a transient sample needs a time after 0 and a step from 1") {
         CfdResultSource transient = source;
         transient.mode = CfdAnalysisMode::Transient;
-        CHECK(CfdResult::create(transient, mesh, FlowStudy::metadataFor(CfdAnalysisMode::Transient)).has_value());
+        CHECK(make(transient, FlowStudy::metadataFor(CfdAnalysisMode::Transient)).has_value());
         for (const std::optional<Time> badTime : {std::optional<Time>{}, std::optional<Time>{0_s},
                                                   std::optional<Time>{Time::fromSi(-1.0)},
                                                   std::optional<Time>{Time::fromSi(kNaN)}}) {
             CfdResultMetadata metadata = FlowStudy::metadataFor(CfdAnalysisMode::Transient);
             metadata.time = badTime;
-            CHECK_FALSE(CfdResult::create(transient, mesh, metadata).has_value());
+            CHECK_FALSE(make(transient, metadata).has_value());
         }
         CfdResultMetadata stepZero = FlowStudy::metadataFor(CfdAnalysisMode::Transient);
         stepZero.step = 0U;
-        CHECK_FALSE(CfdResult::create(transient, mesh, stepZero).has_value());
+        CHECK_FALSE(make(transient, stepZero).has_value());
         CfdResultMetadata noStep = FlowStudy::metadataFor(CfdAnalysisMode::Transient);
         noStep.step.reset();
-        CHECK_FALSE(CfdResult::create(transient, mesh, noStep).has_value());
+        CHECK_FALSE(make(transient, noStep).has_value());
     }
 }
 
-TEST_CASE("CfdData_AResultHoldsProvenanceAndMetadataOnly", "[cfd][data][result]") {
+TEST_CASE("CfdData_AResultHoldsProvenanceMetadataAndItsFields", "[cfd][data][result]") {
+    // RENAMED, AND THE OLD NAME'S DISAPPEARANCE IS THE STATEMENT. It was
+    // `CfdData_AResultHoldsProvenanceAndMetadataOnly` while that was true. The
+    // "Only" stopped being true at P19-STEADY-001 (ADR-077 Decision 2), and
+    // this mirror is what stopped the build until the change was stated --
+    // which is exactly the job P19-DATA-001 built it for.
     // ADR-061: the fields of the solution (p, U per cell; phi per face) arrive
     // with the first milestone that computes one, keyed by P19-DOF-001's index
     // space and extending this mirror (ADR-066, Decision 1, which records why
     // P19-DOF-001 defined the numbering and did not add the arrays). Until then
     // the container is a
     // source and a metadata record and nothing else -- in particular not a mesh,
-    // so its size does not depend on the mesh.
+    // and its size DOES now depend on the mesh, which is what this mirror
+    // records. (Two tenses fought in this sentence until an adversarial review
+    // read it: the container held "a source and a metadata record and nothing
+    // else" until P19-STEADY-001, and holds its fields as well since.)
     struct PermittedResult {
         CfdResultSource source;
         CfdResultMetadata metadata;
+        CfdResultFields fields;
     };
     static_assert(sizeof(CfdResult) == sizeof(PermittedResult));
+    // THE FIELDS ARE THREE VECTORS AND NOTHING ELSE, so the container's growth
+    // is exactly accounted for and a fourth array could not be added here
+    // without this line failing too.
+    struct PermittedFields {
+        std::vector<double> pressure;
+        std::vector<double> velocity;
+        std::vector<double> massFlux;
+    };
+    static_assert(sizeof(CfdResultFields) == sizeof(PermittedFields));
+    // A RESULT'S SIZE NOW DEPENDS ON THE MESH, which is what changed. It is no
+    // longer a fixed-size record, and `CfdResult.hpp` says so where it used to
+    // say the opposite.
+    static_assert(!std::is_default_constructible_v<CfdResultFields>,
+                  "possession is the evidence: a field set must come from the validating factory");
+    static_assert(!std::is_default_constructible_v<CfdResult>);
     struct PermittedSource {
         ObjectId body;
         MeshControlId control;
@@ -1367,7 +1434,7 @@ TEST_CASE("CfdData_AResultHoldsProvenanceAndMetadataOnly", "[cfd][data][result]"
     // And a failure is not a result.
     static_assert(!std::is_constructible_v<CfdResult, CfdSolveFailure>);
     static_assert(!std::is_convertible_v<CfdSolveFailure, CfdResult>);
-    SUCCEED("a result is its provenance and its metadata");
+    SUCCEED("a result is its provenance, its metadata and its three fields");
 }
 
 TEST_CASE("CfdData_ResultsAreImmutableAndReadOnly", "[cfd][data][result]") {

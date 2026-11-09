@@ -1,0 +1,156 @@
+[
+  {
+    "id": "M1 report.firstResiduals publishes the LAST iteration's residuals",
+    "file": "src/cfd/CfdSteady.cpp",
+    "expect": "SURVIVE",
+    "old": "        report.firstResiduals = *firstResiduals;",
+    "new": "        report.firstResiduals = iteration->residuals;"
+  },
+  {
+    "id": "M2 report.outerIterations is off by one",
+    "file": "src/cfd/CfdSteady.cpp",
+    "expect": "SURVIVE",
+    "old": "        report.outerIterations = completed;",
+    "new": "        report.outerIterations = completed + 1;"
+  },
+  {
+    "id": "M3 the published mass balance is the default, not the evaluator's",
+    "file": "src/cfd/CfdSteady.cpp",
+    "expect": "SURVIVE",
+    "old": "        balance = iteration->balance;",
+    "new": "        balance = CfdMassBalance{};"
+  },
+  {
+    "id": "M4 largestPressureCorrection reports the continuity scale instead",
+    "file": "src/cfd/CfdSteady.cpp",
+    "expect": "SURVIVE",
+    "old": "        report.largestPressureCorrection = iteration->summary.largestPressureCorrection;",
+    "new": "        report.largestPressureCorrection = iteration->summary.continuityScale;"
+  },
+  {
+    "id": "M5 massBalanceDefined is hardcoded true",
+    "file": "src/cfd/CfdSteady.cpp",
+    "expect": "SURVIVE",
+    "old": "        report.massBalanceDefined = iteration->summary.massBalanceDefined;",
+    "new": "        report.massBalanceDefined = true;"
+  },
+  {
+    "id": "M6 closedDomain reports massBalanceDefined, its negation",
+    "file": "src/cfd/CfdSteady.cpp",
+    "expect": "KILL",
+    "old": "        report.closedDomain = iteration->summary.closedDomain;",
+    "new": "        report.closedDomain = iteration->summary.massBalanceDefined;"
+  },
+  {
+    "id": "M7 the convection scheme becomes Central instead of Upwind",
+    "file": "src/cfd/CfdSteady.cpp",
+    "expect": "SURVIVE",
+    "old": "            momentum.scheme = CfdConvectionScheme::Upwind;",
+    "new": "            momentum.scheme = CfdConvectionScheme::Central;"
+  },
+  {
+    "id": "M8 the pressure gradient is not passed to momentum",
+    "file": "src/cfd/CfdSteady.cpp",
+    "expect": "SURVIVE",
+    "old": "            momentum.pressureGradient = *gradient;",
+    "new": "            momentum.pressureGradient = {};"
+  },
+  {
+    "id": "M9 the gradient is reconstructed by GreenGauss instead of LeastSquares",
+    "file": "src/cfd/CfdSteady.cpp",
+    "expect": "SURVIVE",
+    "old": "    const CfdGradientInput input{.method = CfdGradientMethod::LeastSquares, .cellValue = pressure};",
+    "new": "    const CfdGradientInput input{.method = CfdGradientMethod::GreenGauss, .cellValue = pressure};"
+  },
+  {
+    "id": "M10 a field-map refusal is reported as IllPosed rather than MeshRefused",
+    "file": "src/cfd/CfdSteady.cpp",
+    "expect": "SURVIVE",
+    "old": "        return refuse(CfdFailureStage::MeshRefused, layout.error());",
+    "new": "        return refuse(CfdFailureStage::IllPosed, layout.error());"
+  },
+  {
+    "id": "M12 the published mass flux is the PRE-correction flux",
+    "file": "src/cfd/CfdSteady.cpp",
+    "expect": "SURVIVE",
+    "old": "        massFlux = iteration->corrected.faceFlux;",
+    "new": "        massFlux = *flux;"
+  },
+  {
+    "id": "M13 the budget is tested one iteration early",
+    "file": "src/cfd/CfdSteady.cpp",
+    "expect": "KILL",
+    "old": "    for (std::uint32_t completed = 0; !cfdCouplingBudgetExhausted(completed, steadySettings);) {",
+    "new": "    for (std::uint32_t completed = 0; !cfdCouplingBudgetExhausted(completed + 1, steadySettings);) {"
+  },
+  {
+    "id": "M14 the divergence baseline becomes the current iteration's own residuals",
+    "file": "src/cfd/CfdSteady.cpp",
+    "expect": "KILL",
+    "old": "            cfdCouplingVerdict(iteration->residuals, *firstResiduals, convergenceSettings);",
+    "new": "            cfdCouplingVerdict(iteration->residuals, iteration->residuals, convergenceSettings);"
+  },
+  {
+    "id": "M15 NO-OP CONTROL: the published result is copied instead of moved",
+    "file": "src/cfd/CfdSteady.cpp",
+    "expect": "SURVIVE",
+    "old": "    slot.recordSuccess(std::move(*result));",
+    "new": "    slot.recordSuccess(*result);"
+  },
+  {
+    "id": "M16 the mass-flux array is never scanned for non-finite values",
+    "file": "src/cfd/CfdResult.cpp",
+    "expect": "SURVIVE",
+    "old": "        std::pair<const char*, std::span<const double>>{\"mass flux\", massFlux},",
+    "new": "        std::pair<const char*, std::span<const double>>{\"mass flux\", pressure},"
+  },
+  {
+    "id": "M17 the finiteness scan starts at index 1",
+    "file": "src/cfd/CfdResult.cpp",
+    "expect": "KILL",
+    "old": "        for (std::size_t i = 0; i < values.size(); ++i) {",
+    "new": "        for (std::size_t i = 1; i < values.size(); ++i) {"
+  },
+  {
+    "id": "M18 the face-count half of the fields-fit-this-layout guard is dropped",
+    "file": "src/cfd/CfdResult.cpp",
+    "expect": "SURVIVE",
+    "old": "    if (fields.cells() != layout.cells() || fields.faces() != layout.faces()) {",
+    "new": "    if (fields.cells() != layout.cells()) {"
+  },
+  {
+    "id": "M19 two failure-stage names are swapped",
+    "file": "src/cfd/CfdResult.cpp",
+    "expect": "SURVIVE",
+    "old": "    case CfdFailureStage::ContinuityNotClosed:\n        return \"continuity_not_closed\";\n    case CfdFailureStage::MassBalanceFailed:\n        return \"mass_balance_failed\";",
+    "new": "    case CfdFailureStage::ContinuityNotClosed:\n        return \"mass_balance_failed\";\n    case CfdFailureStage::MassBalanceFailed:\n        return \"continuity_not_closed\";"
+  },
+  {
+    "id": "M20 analysisState checks SolveFailed BEFORE the analysis exists",
+    "file": "src/cfd/CfdResult.cpp",
+    "expect": "SURVIVE",
+    "old": "    if (findCfdAnalysis(document, analysis) == nullptr) {\n        return AnalysisState::NoAnalysis;\n    }\n    if (lastFailure != nullptr) {\n        // A FAILED ATTEMPT IS ITS OWN STATE, and never a current one.\n        return AnalysisState::SolveFailed;\n    }",
+    "new": "    if (lastFailure != nullptr) {\n        // A FAILED ATTEMPT IS ITS OWN STATE, and never a current one.\n        return AnalysisState::SolveFailed;\n    }\n    if (findCfdAnalysis(document, analysis) == nullptr) {\n        return AnalysisState::NoAnalysis;\n    }"
+  },
+  {
+    "id": "M21 NO-OP CONTROL: the three arrays are copied instead of moved",
+    "file": "src/cfd/CfdResult.cpp",
+    "expect": "SURVIVE",
+    "old": "    return CfdResultFields(std::move(pressure), std::move(velocity), std::move(massFlux));",
+    "new": "    return CfdResultFields(pressure, velocity, massFlux);"
+  },
+  {
+    "id": "M22 the failure-stage roster is no longer in declaration order",
+    "file": "include/bettercad/cfd/CfdResult.hpp",
+    "expect": "SURVIVE",
+    "old": "    CfdFailureStage::NonFiniteField,    CfdFailureStage::ContinuityNotClosed,",
+    "new": "    CfdFailureStage::ContinuityNotClosed,    CfdFailureStage::NonFiniteField,"
+  },
+  {
+    "id": "M23 gravity is not passed to momentum -- the DEFECT, now expected to be KILLED",
+    "file": "src/cfd/CfdSteady.cpp",
+    "expect": "KILL",
+    "old": "            momentum.gravity = definition.gravity;",
+    "new": "            momentum.gravity = {};"
+  }
+]

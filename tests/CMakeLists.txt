@@ -371,6 +371,10 @@ if(TARGET bettercad_reference_models)
         cfd/CfdLinearSolveTests.cpp
         cfd/CfdMeshTests.cpp
         cfd/CfdMomentumTests.cpp
+        # P19-STEADY-001: the steady solve, end to end from a Document. It is in
+        # this mapped group because it drives a REAL meshed reference body
+        # through every gate, not a hand fixture.
+        cfd/CfdSteadyTests.cpp
         cfd/CfdTopologyTests.cpp
         qualification/P15MaterialsQualificationTests.cpp
         qualification/P16MeshingQualificationTests.cpp

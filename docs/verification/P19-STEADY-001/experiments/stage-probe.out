@@ -1,0 +1,29 @@
+P19-STEADY-001 -- which failure stage each driving port actually produces
+generated 2026-11-09 13:32:49
+
+WHY THIS WAS MEASURED. The first draft of CfdSteadyTests.cpp asserted that
+a NaN-returning solve port yields CfdFailureStage::NonFiniteField, and that
+an amplifying port yields Diverged. Both were predictions. The first was
+wrong and the second was right only for a narrow band of gains, so the
+table below replaces the prediction with a measurement.
+
+=== port = production solve, solution scaled by gain (all systems) ===
+gain 1.05 -> iteration_limit_reached after 400 : CFD steady: 400 outer
+gain 1.2 -> iteration_limit_reached after 400 : CFD steady: 400 outer
+gain 1.5 -> diverged after 13 : CFD steady: a residual grew past 1000 times
+gain 2 -> ill_posed after 5 : the x momentum diagonal at cell 7 is -0.
+gain 4 -> ill_posed after 2 : the x momentum diagonal at cell 7 is -0.
+gain 1e+06 -> ill_posed after 1 : the x momentum diagonal at cell 7 is -
+gain 1e+150 -> ill_posed after 1 : the x momentum diagonal at cell 7 is -3.
+gain 1e+300 -> linear_solve_failed after 0 : the supplied solve refused the
+
+=== port = production solve, scaled on the SYMMETRIC (pressure) system only ===
+    so the momentum diagonals are untouched and the ill-posed guard
+    cannot be what fires first
+pgain 1e+08 -> ill_posed : the x momentum diagonal at cell 7 is -312399443.
+pgain 1e+80 -> ill_posed : the x momentum diagonal at cell 7 is -3.
+pgain 1e+150 -> ill_posed : the x momentum diagonal at cell 7 is -3.
+pgain 1e+200 -> linear_solve_failed : the supplied solve refused the
+pgain 1e+250 -> linear_solve_failed : the supplied solve refused the
+pgain 1e+300 -> linear_solve_failed : the supplied solve refused the
+pgain 1e+308 -> linear_solve_failed : the supplied solve refused the

@@ -46,7 +46,23 @@ void takesCount(std::uint64_t /*unused*/) {}
 #elif defined(BETTERCAD_CF_A_RESULT_CANNOT_BE_BUILT_WITHOUT_ITS_FACTORY)
     // The constructor is private: the only way to a CfdResult is `create`, which
     // checks the mesh stamp and the mode.
-    [[maybe_unused]] const CfdResult conjured{CfdResultSource{}, CfdResultMetadata{}};
+    //
+    // THE THIRD ARGUMENT IS LOAD-BEARING, AND P19-STEADY-001 IS WHY. This case
+    // read `{CfdResultSource{}, CfdResultMetadata{}}` while the constructor took
+    // two arguments. `ADR-077` Decision 2 gave it a third, so the two-argument
+    // form stopped matching ANY candidate and GCC reported arity -- "candidate
+    // expects 3 arguments, 2 provided" -- instead of access. The compile still
+    // failed, the gate still exited 1, and the claim it is here to make had
+    // quietly stopped being tested: an arity error says nothing about whether
+    // the constructor is reachable. P19-STEADY-001's qualification run is what
+    // found that, and the repair is to pass the right arity rather than to widen
+    // the regex, which would have retired the gate while leaving it green.
+    //
+    // The field set comes from a real result because `CfdResultFields` cannot be
+    // conjured either, so this now says something stronger than it did before: a
+    // consumer holding a LEGITIMATE field set, taken from a published result,
+    // still cannot assemble a CfdResult around it.
+    [[maybe_unused]] const CfdResult conjured{CfdResultSource{}, CfdResultMetadata{}, result.fields()};
 #elif defined(BETTERCAD_CF_A_FAILURE_IS_NOT_A_RESULT)
     // A failed attempt cannot be recorded as a success.
     slot.recordSuccess(failure);

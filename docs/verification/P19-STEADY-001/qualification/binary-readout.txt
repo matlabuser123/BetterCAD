@@ -1,0 +1,54 @@
+P19-STEADY-001 -- assertion identity read from the three qualified binaries
+
+Read after the gate passed and WITHOUT RUNNING ANY BUILD: a relink would
+move the binaries' mtimes and destroy the freshness evidence.
+
+==============================================================
+preset   debug-ext
+binary   C:/bettercad/bc-build/debug-ext/bin/bettercad_tests.exe
+mtime    2026-11-09 19:16:03.730413800 +1000
+size     1577967160 bytes
+==============================================================
+  [cfd]            753230 assertions in 663 test cases
+  [linalg]         2560 assertions in 29 test cases
+  [structural]     271414 assertions in 415 test cases
+  [thermal]        595622 assertions in 1168 test cases
+  [cfd][steady]    1263 assertions in 19 test cases
+
+==============================================================
+preset   release-ext
+binary   C:/bettercad/bc-build/release-ext/bin/bettercad_tests.exe
+mtime    2026-11-09 20:12:54.208081500 +1000
+size     68494767 bytes
+==============================================================
+  [cfd]            753230 assertions in 663 test cases
+  [linalg]         2560 assertions in 29 test cases
+  [structural]     271414 assertions in 415 test cases
+  [thermal]        595622 assertions in 1168 test cases
+  [cfd][steady]    1263 assertions in 19 test cases
+
+==============================================================
+preset   debug-shared-ext
+binary   C:/bettercad/bc-build/debug-shared-ext/bin/bettercad_tests.exe
+mtime    2026-11-09 21:07:13.943108000 +1000
+size     1152991387 bytes
+==============================================================
+  [cfd]            753230 assertions in 663 test cases
+  [linalg]         2560 assertions in 29 test cases
+  [structural]     271414 assertions in 415 test cases
+  [thermal]        595622 assertions in 1168 test cases
+  [cfd][steady]    1263 assertions in 19 test cases
+
+Expected, from FREEZE.md, written BEFORE the gate ran:
+  [cfd]           753230 assertions in 663 test cases
+  [linalg]          2560 assertions in  29 test cases   = baseline
+  [structural]    271414 assertions in 415 test cases   = baseline
+  [thermal]       595622 assertions in 1168 test cases   = baseline
+  [cfd][steady]     1263 assertions in  19 test cases
+
+  [cfd] arithmetic: 751771 + 1459 = 753230   and   644 + 19 = 663
+  the 1459 is this suite's 1263 plus 196 in CfdDataTests.cpp and
+  CfdFluidTests.cpp, whose fixtures gained a layout() helper when
+  CfdResult::create's signature changed.
+
+captured 2026-11-09 23:12:11

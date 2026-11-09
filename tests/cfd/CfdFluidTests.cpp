@@ -123,9 +123,27 @@ struct Channel {
     }
 
     [[nodiscard]] cfd::CfdResult result() const {
+        // The layout, through the same gates a real solve walks (ADR-077).
+        const Result<cfd::CfdModel> model = cfd::requireCfdModel(document, regenerator, mesher, control);
+        INFO((model.has_value() ? std::string{} : model.error().message));
+        REQUIRE(model.has_value());
+        const Result<cfd::CfdMeshContract> contract = cfd::requireCfdMesh(*model);
+        REQUIRE(contract.has_value());
+        const Result<cfd::CfdTopology> topology = cfd::requireCfdTopology(*model, *contract);
+        REQUIRE(topology.has_value());
+        const Result<cfd::CfdFieldMap> map = cfd::requireCfdFieldMap(*model, *topology);
+        INFO((map.has_value() ? std::string{} : map.error().message));
+        REQUIRE(map.has_value());
+        Result<cfd::CfdResultFields> fields = cfd::CfdResultFields::create(
+            *map, std::vector<double>(map->size(cfd::CfdVariable::Pressure), 0.0),
+            std::vector<double>(map->size(cfd::CfdVariable::Velocity), 0.0),
+            std::vector<double>(map->size(cfd::CfdVariable::MassFlux), 0.0));
+        REQUIRE(fields.has_value());
         Result<cfd::CfdResult> made = cfd::CfdResult::create(
-            source(), *mesher.mesh(control),
-            cfd::CfdResultMetadata{.outerIterations = 10, .residuals = {}, .massBalance = {}});
+            source(), *mesher.mesh(control), *map,
+            cfd::CfdResultMetadata{.outerIterations = 10, .residuals = {}, .massBalance = {}},
+            std::move(*fields));
+        INFO((made.has_value() ? std::string{} : made.error().message));
         REQUIRE(made.has_value());
         return std::move(*made);
     }

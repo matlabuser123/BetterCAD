@@ -1,0 +1,40 @@
+P19-STEADY-001 mutation probes
+
+src/cfd/CfdSteady.cpp                        bff1867a094b537ca1292eac5acec152ef6a7fa616c6405d5d968acd5c8ec5d1
+src/cfd/CfdResult.cpp                        3b243065ad454155a8f340c5fd887164286d9cd6db41e95b53cafd79a115c717
+include/bettercad/cfd/CfdSteady.hpp          4e4ab5ae91d07c41b2649c4a0571c47043533a93c280ef49e05d9a4dc44ad84d
+include/bettercad/cfd/CfdResult.hpp          fd15a92df8a725883d59b6e0ead3e7f765448f4f04d503ab3712ce0f685947be
+
+BASELINE all filters pass
+
+SURVIVE  SURVIVED M1 report.firstResiduals publishes the LAST iteration's residuals       59s
+SURVIVE  SURVIVED M2 report.outerIterations is off by one                                 53s
+SURVIVE  SURVIVED M3 the published mass balance is the default, not the evaluator's       54s
+SURVIVE  SURVIVED M4 largestPressureCorrection reports the continuity scale instead       54s
+SURVIVE  KILLED   M5 massBalanceDefined is hardcoded true                                 54s
+KILL     KILLED   M6 closedDomain reports massBalanceDefined, its negation                54s
+SURVIVE  KILLED   M7 the convection scheme becomes Central instead of Upwind              53s
+SURVIVE  KILLED   M8 the pressure gradient is not passed to momentum                      54s
+SURVIVE  SURVIVED M9 the gradient is reconstructed by GreenGauss instead of LeastSquares    55s
+SURVIVE  SURVIVED M10 a field-map refusal is reported as IllPosed rather than MeshRefused    54s
+SURVIVE  SURVIVED M12 the published mass flux is the PRE-correction flux                  53s
+KILL     KILLED   M13 the budget is tested one iteration early                            53s
+KILL     KILLED   M14 the divergence baseline becomes the current iteration's own residuals    51s
+SURVIVE  SURVIVED M15 NO-OP CONTROL: the published result is copied instead of moved      53s
+SURVIVE  SURVIVED M16 the mass-flux array is never scanned for non-finite values          53s
+KILL     KILLED   M17 the finiteness scan starts at index 1                               52s
+SURVIVE  SURVIVED M18 the face-count half of the fields-fit-this-layout guard is dropped    53s
+SURVIVE  SURVIVED M19 two failure-stage names are swapped                                 54s
+SURVIVE  SURVIVED M20 analysisState checks SolveFailed BEFORE the analysis exists         53s
+SURVIVE  SURVIVED M21 NO-OP CONTROL: the three arrays are copied instead of moved         53s
+SURVIVE  SURVIVED M22 the failure-stage roster is no longer in declaration order          63s
+KILL     KILLED   M23 gravity is not passed to momentum -- the DEFECT, now expected to be KILLED    62s
+
+rebuilt from pristine: ok
+FINAL all filters pass: True
+src/cfd/CfdSteady.cpp                        bff1867a094b537ca1292eac5acec152ef6a7fa616c6405d5d968acd5c8ec5d1 MATCH
+src/cfd/CfdResult.cpp                        3b243065ad454155a8f340c5fd887164286d9cd6db41e95b53cafd79a115c717 MATCH
+include/bettercad/cfd/CfdSteady.hpp          4e4ab5ae91d07c41b2649c4a0571c47043533a93c280ef49e05d9a4dc44ad84d MATCH
+include/bettercad/cfd/CfdResult.hpp          fd15a92df8a725883d59b6e0ead3e7f765448f4f04d503ab3712ce0f685947be MATCH
+
+killed 8, compiler 0, survived 14, of 22 probes

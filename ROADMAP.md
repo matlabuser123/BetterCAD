@@ -107,7 +107,8 @@ P19-ARCH-001": P19-ARCH-001 and P19-DATA-001 (2026-10-27), P19-FLUID-001
 P19-DOF-001 and P19-BC-001 (both 2026-11-05) and P19-IC-001 and P19-DIFF-001
 (both 2026-11-06) and P19-GRAD-001 and P19-DIV-001 (both 2026-11-07) and
 P19-CONV-001, P19-MOM-001 and P19-CONT-001 (all 2026-11-08) and
-P19-PVCOUPLE-001 and P19-LINSOLVE-001 (both 2026-11-09) have PASSED.
+P19-PVCOUPLE-001, P19-LINSOLVE-001 and P19-STEADY-001 (all 2026-11-09)
+have PASSED.
 P19-MESH-001 was qualified by a second attempt on a replacement machine: its
 first attempt, on 2026-10-28, failed 5 of 17 stages when the previous machine's
 temp volume filled and no test suite ran, and that machine was then permanently
@@ -182,7 +183,7 @@ reported two failed stages, the second time in two milestones. Its logs and the
 freeze it was launched under are kept under qualification-attempt-1/, including
 the claim that freeze got wrong, and all three places where the tree carried the
 false argument were CORRECTED IN PLACE rather than deleted, because the error is
-the finding. The harness has now run SIXTY-SIX milestones with its executable
+the finding. The harness has now run SIXTY-SEVEN milestones with its executable
 content unchanged, and is self-checked before each run, because an unchanged
 harness is not the same as a working one. `P19-LINSOLVE-001` is the first of
 those sixty-six whose copy of `run-qualification.cmd` was edited AFTER its gate
@@ -192,7 +193,7 @@ body from the inverse replacements and hashing it back to
 `f80acaa80552617393a8501cb86213abb7169aab`, the hash the freeze recorded. What
 changed is the comment body, which asserted that no existing source file was
 modified four lines above its own correction, and counted six new files where
-there are eight. No milestone is open, and nothing after `P19-LINSOLVE-001` is
+there are eight. No milestone is open, and nothing after `P19-STEADY-001` is
 authorized;
 see TODO.md.
 
@@ -1793,6 +1794,129 @@ asked about file extensions instead of asking the build tool, which reported a
 FAIL on 24 zero-byte stubs written by the deployment tests; and a progress-line
 count that returned 999 in a 6870-test log, which is `1..999` and not a
 measurement of anything.
+
+`P19-STEADY-001` (PASS 2026-11-09) IS THE MILESTONE THE TEN BEFORE IT WERE BUILT
+FOR, AND IT WROTE NO NUMERICS. `solveCfdSteady` orchestrates fifteen operators
+that were already qualified, which is why ten of its nineteen checklist items
+were orchestration rather than implementation — and the tree had said so by name
+before any code was written. `CfdCoupling.hpp`: "NO LOOP. One iteration, and the
+criteria a loop would consult are `cfdCouplingVerdict`. 'Convergence loop' is
+`P19-STEADY-001`'s item", and "A PURE FUNCTION OF ITS ARGUMENTS, so that
+`P19-STEADY-001`'s loop and this operator's own tests agree by construction".
+`ADR-075`'s scope table: "THE DATA MODEL IS FIXED" and "THE ORCHESTRATION IS NOT
+OURS". Reading those is what kept this milestone from inventing a second
+settings type or a second residual record.
+
+**THE SETTINGS ARE READ FROM THE ANALYSIS DEFINITION AND NOT TAKEN AS A
+PARAMETER, AND THAT IS A PROVENANCE DECISION RATHER THAN A STYLE ONE.** An
+earlier draft had a `CfdSteadySolveInput` carrying `ADR-058`'s four settings
+records. `canonicalText` writes seven settings lines into the definition
+fingerprint that `CfdResultSource::definition` carries, so caller-supplied
+settings would have let a run publish provenance it did not have, with
+`resultCurrency` reporting the result `Current`. It was removed before any test
+was written, found by reading `CfdAnalysisDefinition` rather than by testing, and
+no test of the numerics could have caught it. `ADR-077` Decision 7, and a
+compile-fail gate now forbids the type's return.
+
+**ONE DEFECT CAME OUT OF THE REVIEWS AND IT WAS A DROPPED PHYSICAL TERM.**
+`momentum.gravity` was never set, so `assembleCfdMomentum` silently assembled the
+gravity-free equation while `prepareCfdBoundary` still applied the hydrostatic
+boundary field — the two halves `ADR-073` Decision 6 calls one treatment, with
+only the first reached. Nothing refused it: the operator validates gravity only
+WHEN PRESENT, and the fingerprint would have published the wrong field under
+provenance naming gravity. Fixed in one line, with a regression test VERIFIED TO
+FAIL WITHOUT THE FIX. Writing that test corrected two of the author's own
+predictions — neither the sign of `dp/dy` nor the transverse flow discriminates;
+only the MAGNITUDE of a least-squares `dp/dy` does, 1.158 of `rho*g` against
+0.160 — and it found that Earth gravity is unusable in the fixture, because
+`rho*g = 9790 Pa/m` drives the flow out of the low-Péclet regime
+`P19-PVCOUPLE-001` is qualified in and the operator correctly refuses the run.
+
+**THE INDEPENDENT VALIDATION OF THE SOLUTION CAME FROM A MUTATION PROBE, NOT
+FROM THE TEST PLAN.** `M12` replaced the published mass flux with the
+pre-correction flux and survived the whole suite: a non-conservative field
+published as a solution, with nothing anywhere looking at conservation. Closing
+it measures the published flux through `divergeCfdMassFlux`, `P19-DIV-001`'s
+qualified operator, at 7.07e-17 worst per-cell against 7.26e-05 for the
+pre-correction flux — twelve orders of magnitude, so the bound is set by the
+defect's signature rather than fitted to the passing number. That is a property
+of the published field alone, which the dense-reference comparison is not: a
+wrong loop would be wrong identically in both runs. The dense LU reference
+agrees to 1.485e-15 on pressure, and the two runs' iteration counts are asserted
+EQUAL, because the agreement silently depended on it.
+
+Three guards were written and then found unable to fire, in one milestone, and
+all three were removed rather than kept as defence in depth: a non-finite field
+loop that `applyCfdCouplingCorrection` already made unreachable, its
+documentation, and four `validate` calls that `create` and `setDefinition` had
+already run. The fifth guard was KEPT, because what follows it dereferences an
+optional and that is undefined behaviour rather than a wrong diagnostic.
+
+**ITS FIRST QUALIFICATION ATTEMPT FAILED, AND THE FAILURE WAS A WEAKENED PROOF
+RATHER THAN A WEAKENED PRODUCT.** `QUALIFICATION FAILED: 3 stage(s) failed`, one
+test in 6903, the same one in all three presets, while the launcher reported exit
+code 0 — the second milestone in a row to turn on that distinction. Giving
+`CfdResult`'s private constructor a third parameter turned
+`compile_fail.cfdids.a-result-cannot-be-built-without-its-factory`, inherited
+from `P19-DATA-001`, from an ACCESS test into an ARITY test: GCC resolves arity
+before access, so the case still failed to compile and still exited 1 while the
+claim it exists to make had stopped being tested. The production code was never
+wrong — the constructor is private and `create` is still the only route to a
+`CfdResult`. Widening the regex was REFUSED, because it would have produced a
+pass by retiring the gate; the repair passes the right arity so the private
+constructor is selected again, and because the field set cannot be conjured
+either, the third argument comes from a real result and the gate now proves more
+than it did before. The blast radius had been drawn around the FACTORY and missed
+a file that calls it nowhere and names the CONSTRUCTOR instead — a deliberate
+non-caller, invisible to a search for `create`. That line is now in the evidence,
+in `TODO.md` and in `ADR-077` Decision 2, whose heading promises costs stated
+rather than discovered later and now admits that this one was discovered later.
+
+**It qualified from clean on the SECOND attempt** — 6903/6903 in three presets
+counted four ways per log, 3493 x 5 = 17,465 executions in two repeat stages
+against 3,493 progress-prefixed lines for a ratio of exactly 5.000, 0 `error:`
+and 0 `warning:` under `-Werror`, 17 of 17 stages exit 0, 3h23m55s. The eight
+frozen subtree identities were read four times — the harness before its first
+build, the harness after its last test, a recomputation from the working tree,
+and a fourth read out of the commit object — and agree in all four; `include` and
+`src` are bit-identical to the voided first freeze, which is the check that the
+repair touched no production code. `[cfd]` reads 753,230 assertions in 663 cases
+from each of the three qualified binaries, which is 751,771 + 1,459 and 644 + 19
+exactly, while `[linalg]`, `[structural]` and `[thermal]` are identical to
+baseline.
+
+The post-gate reconciliation found two defects in its own measuring scripts
+before it found any in the tree, and both are published rather than quietly
+fixed: a check for `0 tests failed out of 6903`, a string `ctest` cannot print in
+a passing run, and an identity comparison that reported the two readings EQUAL
+having parsed one path out of each block instead of eight — two one-element
+dicts compare equal just as well as two eight-element ones. The second is the
+dangerous shape, because it reported a pass. The script now asserts that both
+readings hold eight paths before it reports them equal.
+
+Recorded as less than a reader might assume: **a converged run is not a
+validated one.** `CfdResult.hpp` says "CONVERGENCE IS RECORDED, NOT RE-JUDGED
+HERE", and whether the numbers are good enough belongs to `P19-VALID-001`. Three
+of `CfdFailureStage`'s nine values are unreachable from here, measured over
+fifteen driving ports rather than argued. Three of twenty behavioural probes
+survive BY DESIGN, each with the reason a test cannot reach it, and both no-op
+controls survived every round — which is what makes the probe table a
+measurement rather than a story about a driver that may never have run. Nine
+limitations are recorded rather than fixed. There is still no performance
+baseline, for the seventh milestone running.
+
+**One scope decision is open and was reported rather than taken:** `ADR-077`
+`L12`. The convection scheme and the gradient method are hard-coded in the
+orchestrator, outside the analysis definition and outside the definition
+fingerprint, which contradicts `ADR-073` Decision 5 — "which of `ADR-070`'s two
+methods made it is the analysis's decision and not this operator's". Of the two,
+one is pinned only INCIDENTALLY, by a side effect of the gravity test's `dp/dy`
+check, and the other is not pinned at all, because telling the two gradient
+methods apart needs an analytic reference this subsystem does not have. Putting
+them in the definition means changing `CfdAnalysisDefinition` and
+`canonicalText`, both qualified under `P19-DATA-001`, and no item on the
+checklist asked for a selector. Evidence
+[P19-STEADY-001](docs/verification/P19-STEADY-001/README.md).
 
 ```text
 incompressible laminar

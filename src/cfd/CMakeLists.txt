@@ -91,6 +91,7 @@ bettercad_add_library(bettercad_cfd
         CfdMesh.cpp
         CfdMomentum.cpp
         CfdSparse.cpp
+        CfdSteady.cpp
         CfdTarget.cpp
         CfdTopology.cpp
         CfdResult.cpp

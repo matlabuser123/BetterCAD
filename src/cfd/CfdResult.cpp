@@ -9,16 +9,71 @@
 #include <bettercad/features/Materials.hpp>
 #include <bettercad/features/Regenerator.hpp>
 
+#include <cmath>
 #include <format>
 #include <utility>
 
 namespace bettercad::cfd {
 
-CfdResult::CfdResult(CfdResultSource source, CfdResultMetadata metadata) noexcept
-    : source_(std::move(source)), metadata_(std::move(metadata)) {}
+CfdResultFields::CfdResultFields(std::vector<double> pressure, std::vector<double> velocity,
+                                 std::vector<double> massFlux) noexcept
+    : pressure_(std::move(pressure)), velocity_(std::move(velocity)), massFlux_(std::move(massFlux)) {}
+
+Result<CfdResultFields> CfdResultFields::create(const CfdFieldMap& layout, std::vector<double> pressure,
+                                                std::vector<double> velocity, std::vector<double> massFlux) {
+    if (layout.cells() == 0) {
+        return makeError(ErrorCode::FailedPrecondition,
+                         "CFD result fields: a layout with no cells cannot carry a solution");
+    }
+
+    // EACH LENGTH NAMED INDIVIDUALLY. One message saying "a length is wrong"
+    // would make a caller guess which of three arrays it built badly.
+    struct Expected {
+        const char* name;
+        CfdVariable variable;
+        std::size_t actual;
+    };
+    const std::array<Expected, 3> expected{
+        Expected{"pressure", CfdVariable::Pressure, pressure.size()},
+        Expected{"velocity", CfdVariable::Velocity, velocity.size()},
+        Expected{"mass flux", CfdVariable::MassFlux, massFlux.size()},
+    };
+    for (const Expected& one : expected) {
+        const std::size_t want = layout.size(one.variable);
+        if (one.actual != want) {
+            return makeError(ErrorCode::InvalidArgument,
+                             std::format("CFD result fields: the {} array holds {} values and this layout wants {}",
+                                         one.name, one.actual, want));
+        }
+    }
+
+    // EVERY VALUE FINITE, in CellIndex then FaceIndex order so the index a
+    // diagnostic names is the one a reader can look up. See the header on why
+    // this is an invariant rather than a guard `solveCfdSteady` makes redundant.
+    const std::array<std::pair<const char*, std::span<const double>>, 3> arrays{
+        std::pair<const char*, std::span<const double>>{"pressure", pressure},
+        std::pair<const char*, std::span<const double>>{"velocity", velocity},
+        std::pair<const char*, std::span<const double>>{"mass flux", massFlux},
+    };
+    for (const auto& [name, values] : arrays) {
+        for (std::size_t i = 0; i < values.size(); ++i) {
+            if (!std::isfinite(values[i])) {
+                return makeError(ErrorCode::InvalidArgument,
+                                 std::format("CFD result fields: {}[{}] is not finite, so this is not a solution",
+                                             name, i));
+            }
+        }
+    }
+
+    return CfdResultFields(std::move(pressure), std::move(velocity), std::move(massFlux));
+}
+
+CfdResult::CfdResult(CfdResultSource source, CfdResultMetadata metadata, CfdResultFields fields) noexcept
+    : source_(std::move(source)), metadata_(std::move(metadata)), fields_(std::move(fields)) {}
 
 Result<CfdResult> CfdResult::create(CfdResultSource source, const meshing::VolumeMesh& mesh,
-                                    CfdResultMetadata metadata) {
+                                    const CfdFieldMap& layout, CfdResultMetadata metadata,
+                                    CfdResultFields fields) {
     // THE SOURCE MUST NAME THIS MESH, checked first: every later field will be
     // validated against `mesh`, and a result must not be checked against a mesh
     // it does not claim to belong to.
@@ -28,6 +83,17 @@ Result<CfdResult> CfdResult::create(CfdResultSource source, const meshing::Volum
     if (mesh.nodeCount() == 0 || mesh.tetrahedronCount() == 0) {
         return makeError(ErrorCode::FailedPrecondition,
                          "CFD result: a mesh with no cells cannot carry a solution");
+    }
+    // THE LAYOUT MUST NAME THE SAME MESH. `CfdResultFields` proves its lengths
+    // match SOME layout; only this says it is the layout this result claims.
+    if (!(layout.mesh() == mesh.mesh().stamp())) {
+        return makeError(ErrorCode::InvalidArgument,
+                         "CFD result: the field layout does not describe the mesh this result names");
+    }
+    if (fields.cells() != layout.cells() || fields.faces() != layout.faces()) {
+        return makeError(ErrorCode::InvalidArgument,
+                         std::format("CFD result: the fields hold {} cells and {} faces and this layout has {} and {}",
+                                     fields.cells(), fields.faces(), layout.cells(), layout.faces()));
     }
     if (metadata.outerIterations == 0) {
         return makeError(ErrorCode::InvalidArgument,
@@ -64,7 +130,7 @@ Result<CfdResult> CfdResult::create(CfdResultSource source, const meshing::Volum
         return makeError(ErrorCode::InvalidArgument, "CFD result: the mode is not one this build recognises");
     }
 
-    return CfdResult(std::move(source), std::move(metadata));
+    return CfdResult(std::move(source), std::move(metadata), std::move(fields));
 }
 
 bool CfdResult::describes(const meshing::VolumeMesh& mesh) const noexcept {

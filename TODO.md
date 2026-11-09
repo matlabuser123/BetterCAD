@@ -23,184 +23,81 @@ Prerequisite:
            may set). P17's F1-F3 stand unchanged beneath them.
 
 Current milestone:
-           P19-LINSOLVE-001 - CFD Linear Solver Infrastructure. AUTHORIZED
-           2026-11-09 by the owner's "implement and fully verify" over the
-           fourteen-item checklist, which arrived pasted into the instruction
-           as P19-BC-001's, P19-IC-001's, P19-DIFF-001's, P19-GRAD-001's,
-           P19-CONV-001's, P19-MOM-001's, P19-CONT-001's and
-           P19-PVCOUPLE-001's did. PASS 2026-11-09 - all fourteen items
-           ticked, qualified from clean on the first attempt, evidence in
-           docs/verification/P19-LINSOLVE-001/ and ADR-076. The four defects
-           the post-gate reconciliation found were in this milestone's own
-           EVIDENCE, not in the frozen surface, and are corrected in place
-           rather than rewritten away. THE PASTED TEXT WAS DIFFED AGAINST THIS FILE'S OWN
-           SECTION FIRST and is byte-for-byte identical across all 23 lines,
-           with 14 unticked items and 0 ticked -- counted, not assumed -- so
-           the scope is this file's checklist unaltered, and sha256
-           86a54ddba6c61ce2 over both after CR normalization. This
-           authorization was written here BEFORE any implementation, as the
-           eight before it were.
-           Six scope notes recorded at authorization time, not discovered
-           later:
-           (1) THE KERNEL ALREADY EXISTS, AND cfd IS ALREADY ALLOWED TO
-           INCLUDE IT. tests/architecture/CheckLayering.cmake sets
-           layer_linalg 5 and layer_cfd 42, and the rule is strictly-lower, so
-           this needs no renumbering and no new permission. That file's own
-           comment says why linalg sits at 5: "the kernel P17 qualified inside
-           structural (50) had to move BELOW thermal (45) to be reachable from
-           it", and "linalg holds the GENERIC numerical kernels more than one
-           physics needs". src/cfd/CMakeLists.txt then names this milestone's
-           plan outright: "the SOLVE -- still P19-LINSOLVE-001's decision,
-           unchanged. The generic kernel it would reuse is BetterCAD::linalg
-           (layer 5, ADR-052), linked PRIVATE, never an include of structural
-           or thermal and never a hand copy." So items 1-3 are satisfied by
-           auditing that kernel, linking it PRIVATE and calling it -- NOT by
-           writing a solver. A second symmetric factorisation in cfd would be
-           the duplication ADR-052 chose extraction to avoid.
-           (2) THIS MILESTONE WAS LEFT A SPECIFIC static_assert BY NAME.
-           src/cfd/CMakeLists.txt: "CfdSparseIndex is cfd's own uint64_t alias
-           rather than linalg::SparseIndex, same width and signedness by
-           construction so a later solve consumes these spans without
-           translation, and the static_assert that turns 'same by
-           construction' into 'same, enforced' belongs to the milestone that
-           may legitimately include that header. ADR-069 Decision 3 records
-           why buying the assert today would cost a decision that is not this
-           milestone's to spend." This is that milestone, so the assert is
-           owed here and the CMake comment it contradicts is corrected rather
-           than left standing.
-           (3) ADR-058 HAS ALREADY DEFINED THE TOLERANCE, SO "Define
-           tolerances" MEANS BIND THE DECLARED ONE. CfdData.hpp declares
-           CfdLinearSolverSettings with relativeResidualTolerance = 1e-9 and
-           says "ONE RATIO: the normalised residual of the solved system,
-           computed independently of the solver... Which solver is used is
-           P19-LINSOLVE-001's decision and not a field." The kernel's own
-           SymmetricSolveSettings carries a second ratio, pivotFloor = 1e-12,
-           which cfd does not own; where that value comes from for a cfd solve
-           is a decision this milestone must make and record, not a new
-           settings type to invent. Inventing one would be the "second
-           parameter system" ARCHITECTURE.md rejects -- the P19-CONT-001 and
-           P19-PVCOUPLE-001 lesson a third time.
-           (4) THE TWO SYSTEMS NEED TWO DIFFERENT KERNELS, AND BOTH FACTS ARE
-           ALREADY COMMITTED. CfdCoupling.hpp: "THE PRESSURE-CORRECTION MATRIX
-           IS SYMMETRIC BY CONSTRUCTION... That the momentum system is NOT
-           symmetric is equally deliberate: convection makes it asymmetric
-           (ADR-072 Decision 3), so a port must accept both and a port that
-           assumes symmetry everywhere is wrong." CfdConvection.hpp: "THE
-           MATRIX IS ASYMMETRIC, AND THAT IS CORRECT... Demanding symmetry of
-           a convection operator would be wrong rather than merely slack." The
-           existing kernel is an LDLT and symmetric-only, so item 4 reuses it
-           and item 5 cannot. Where the non-symmetric kernel belongs is this
-           milestone's architecturally significant decision and gets an ADR
-           with candidates; ADR-052's own Rationale anticipated the case --
-           "What would have made Option B right: if the thermal system needed
-           a different algorithm (an iterative method, a non-symmetric
-           factorisation). It does not" -- and CFD's momentum system does.
-           (5) THE EXISTING KERNEL DOES NOT CHECK SYMMETRY, WHICH THE AUDIT
-           FOUND AND WHICH IS MEASURED BEFORE IT IS RELIED ON.
-           src/linalg/SymmetricSolve.cpp builds the FULL CSR into Eigen and
-           hands it to SimplicialLDLT; the word "symmetric" appears in that
-           file only in comments and type names, never in a check. What stands
-           between a wrong input and a wrong answer is the independent
-           residual, computed from the ORIGINAL arrays after the solve, so a
-           mis-routed asymmetric system should be refused as ResidualTooLarge
-           rather than solved. "Should" is a prediction about a library, and
-           this project measures those: it is an open question to be answered
-           by experiment before any code depends on it.
-           (6) WHAT IS NOT THIS MILESTONE'S. P19-STEADY-001 owns the outer
-           loop and the atomic result publication, so nothing here iterates to
-           convergence or publishes a result. P19-PVCOUPLE-001 owns the
-           coupling and is QUALIFIED: its CfdLinearSolve port is the shape
-           this milestone must satisfy, and changing that port would requalify
-           a passed milestone. Adding a function to linalg changes a module
-           structural and thermal both depend on (ADR-052's own stated
-           consequence), so both are requalified by the full unfiltered run.
+           NONE AUTHORIZED. P19-STEADY-001 passed its gate and finishing a
+           milestone is itself a stop condition: the next one is a scope
+           decision and not Claude's to make. Nothing below this line is
+           authorized by being next, by being small, or by being the obvious
+           continuation.
 
 Previous milestone:
-           P19-PVCOUPLE-001 - Pressure-Velocity Coupling. AUTHORIZED
-           2026-11-08 by the owner's "implement and fully veify" over the
-           seventeen-item checklist, which arrived pasted into the instruction
-           as P19-BC-001's, P19-IC-001's, P19-DIFF-001's, P19-GRAD-001's,
-           P19-CONV-001's, P19-MOM-001's and P19-CONT-001's did. PASS 2026-11-09,
-           seventeen of seventeen, ON THE FIRST QUALIFICATION ATTEMPT:
-           6802/6802 x 3 presets, 3434 x 5 executions x 2 presets, 17 of
-           17 stages exit 0, 0 stage(s) failed, and the eight subtree
-           identities read FOUR times -- the freeze record, the harness
-           before its first build, the harness after its last test, and a
-           recomputation after the run -- all eight identical in all four.
-           The three qualified binaries each read 4,950 assertions in 79
-           cases for the coupling suite and 728,802 in 623 for cfd, so no
-           pre-existing cfd assertion moved. Evidence
-           docs/verification/P19-PVCOUPLE-001/ and ADR-075. THE PASTED TEXT WAS
-           DIFFED AGAINST THIS FILE'S OWN SECTION FIRST and is byte-for-byte
-           identical across all 36 lines, with 17 unticked items and 0 ticked
-           -- counted, not assumed -- so the scope is this file's checklist
-           unaltered, and sha256 43a305f28e5dd8f0 over both after CR
-           normalization. This authorization was written here BEFORE any
-           implementation, as the seven before it were.
-           Five scope notes recorded at authorization time, not discovered
-           later:
-           (1) THE LINEAR SOLVERS ARE NOT THIS MILESTONE'S, AND THREE
-           COMMITTED RECORDS SAY SO. src/cfd/CMakeLists.txt states "the SOLVE
-           -- still P19-LINSOLVE-001's decision, unchanged", CfdSparse.hpp
-           repeats it ("no factorisation, no solve, no iteration"), and
-           P19-LINSOLVE-001's own checklist owns "Pressure-system solver" and
-           "Momentum-system solver" BY NAME. BetterCAD::linalg is not linked
-           by cfd and no linalg header is included anywhere in it.
-           P19-LINSOLVE-001 IS NOT AUTHORIZED. So this milestone defines the
-           coupling and CONSUMES A CALLER-SUPPLIED LINEAR SOLVE, exactly as
-           P19-MOM-001 consumes a caller-supplied pressure gradient. It does
-           not link linalg, does not write a factorisation or an iterative
-           kernel, and does not spend the decision ADR-069 Decision 3
-           deliberately deferred. Ten of the seventeen items begin with the
-           word "Define", and P19-LINSOLVE-001's begin with the solvers: that
-           is the boundary, and it is the file's own.
-           (2) ADR-058 HAS ALREADY DEFINED FIVE OF THE SEVENTEEN ITEMS, AND
-           "DEFINE X" THEREFORE MEANS BIND TO AND COMPUTE THE DECLARED
-           DEFINITION. CfdIterationSettings fixes the under-relaxation policy
-           -- 0.7 and 0.3, "the classic SIMPLE pair", both in (0, 1], with a
-           validate(); CfdConvergenceSettings fixes the stopping criteria and
-           the divergence factor; CfdSteadySettings fixes the iteration budget
-           and states that reaching it "is a FAILURE ... never a result";
-           CfdReferencePressure plus CfdBoundaryCondition::fixesPressure() fix
-           the pressure reference; CfdResiduals fixes the residual vector's
-           shape and CfdMassBalance the continuity closure's two measures.
-           Inventing a second settings type, a second residual record or a
-           second relaxation policy would be the "second parameter system"
-           ARCHITECTURE.md rejects. This is the P19-CONT-001 lesson exactly
-           one milestone later: that milestone would have built one if its
-           UNDERSTAND phase had not read CfdData.hpp first.
-           (3) THE ORCHESTRATION AND THE PUBLICATION ARE P19-STEADY-001's, AND
-           IT IS NOT AUTHORIZED EITHER. That checklist owns "Validate inputs",
-           "Prepare mesh topology", "Prepare BCs", "Initialize fields",
-           "Convergence loop", "Atomic result publication" and the mapping
-           onto CfdFailureStage, which lives in CfdResult.hpp and belongs to
-           the result rather than to the coupling. This milestone therefore
-           works on SUPPLIED fields, a supplied mesh and a supplied solve, and
-           RETURNS a report; it does not read a Document, drive a solve from
-           one, or publish a CfdResult.
-           (4) "DO NOT SILENTLY COPY OPENFOAM IMPLEMENTATION" IS PART OF THE
-           AUTHORIZATION AND IS TREATED AS A CONSTRAINT, NOT A PREFERENCE.
-           SIMPLE is a published algorithm (Caretto, Gosman, Patankar and
-           Spalding 1972; Patankar, Numerical Heat Transfer and Fluid Flow,
-           1980) and is implemented here from the mathematics: every discrete
-           formula is written out in the ADR and derived against THIS
-           project's own topology, sign and scatter conventions (ADR-067,
-           ADR-072), whose owner/neighbour sign convention is not a
-           transcription of anyone else's. No OpenFOAM source is consulted or
-           transcribed, and where this implementation differs from the common
-           textbook formulation the difference is RECORDED rather than
-           smoothed over.
-           (5) ITEM 4'S CLAIM IS CHECKED BY P19-CONT-001 AND NOT BY THIS
-           MILESTONE'S OWN ARITHMETIC. The face-flux correction exists so that
-           the corrected face fluxes satisfy discrete continuity, and the
-           instrument that measures exactly that was qualified on 2026-11-08
-           as an independent operator -- written before this one existed and
-           without knowledge of it. So the central claim is validated against
-           a qualified EXTERNAL measure rather than against a restatement of
-           its own formula. That trap is not hypothetical here: P19-GRAD-001's
-           r5 and P19-CONV-001's second review both recorded an "independent"
-           oracle that turned out to be a character-for-character
-           transcription of production.
+           P19-STEADY-001 - Steady Incompressible Solver. AUTHORIZED 2026-11-09
+           by the owner's "implement and verify" over the nineteen-item
+           checklist, which arrived pasted into the instruction as the nine P19
+           checklists before it did, and was diffed against this file's own
+           section before any implementation: byte-for-byte identical across all
+           28 lines, 19 unticked and 0 ticked, sha256 209e080f2110e3d0 after CR
+           normalization. Seven scope notes were recorded at authorization time;
+           they are in docs/verification/P19-STEADY-001/README.md's SCOPE
+           section, which CLAUDE.md makes the authority for a completed
+           milestone.
+           PASS 2026-11-09, nineteen of nineteen, ON THE SECOND QUALIFICATION
+           ATTEMPT: 6903/6903 x 3 presets, 3493 x 5 = 17465 executions x 2
+           presets with the marker-to-progress ratio exactly 5.000, 17 of 17
+           stages exit 0, 0 stage(s) failed, 3h23m55s, and the eight subtree
+           identities read four times -- the harness before its first build, the
+           harness after its last test, a recomputation from the working tree,
+           and a fourth read OUT OF the commit object -- all eight identical in
+           all four.
+           THE FIRST ATTEMPT FAILED AND THE FAILURE WAS THIS MILESTONE'S.
+           QUALIFICATION FAILED: 3 stage(s) failed, one test in 6903, the same
+           one in all three presets, while the launcher reported "completed
+           (exit code 0)" -- the second milestone running where the launcher's
+           exit code and the harness's verdict disagreed. The failing gate was
+           compile_fail.cfdids.a-result-cannot-be-built-without-its-factory,
+           inherited from P19-DATA-001: giving CfdResult's private constructor a
+           third parameter (ADR-077 Decision 2) turned an ACCESS test into an
+           ARITY test, because GCC resolves arity before access. It still
+           compile-failed and still exited 1, so nothing looked wrong, while the
+           claim it exists to make had stopped being tested. The production code
+           was never wrong; the PROOF was. Widening the regex was refused -- it
+           would have produced a PASS by retiring the gate -- and the repair
+           passes the right arity so the private constructor is selected again,
+           measured afterwards as "is private within this context". The blast
+           radius had been drawn around the factory and missed a file that calls
+           it nowhere and names the constructor instead; TODO and the evidence
+           both now carry that line. Only `tests` moved for the repair, so
+           `include` and `src` are bit-identical to the voided freeze.
+           It added no numerics: solveCfdSteady orchestrates fifteen operators
+           that were already qualified, which is why ten of the nineteen items
+           were orchestration rather than implementation. CfdResult gained its
+           field arrays in a nested validating record, and the settings are read
+           from the analysis definition rather than taken as a parameter --
+           canonicalText fingerprints all seven settings lines, so a parameter
+           would have let a run publish provenance it did not have, a defect no
+           test of the numerics could have found. Independent validation came
+           from a dense LU reference agreeing to 1.485e-15 and from the
+           published flux's conservation measured through P19-DIV-001's
+           divergeCfdMassFlux at 7.07e-17 against 7.26e-05 for the
+           pre-correction flux. Three of twenty behavioural probes survive by
+           design, each with the reason a test cannot reach it; nine
+           limitations are recorded rather than fixed. Evidence
+           docs/verification/P19-STEADY-001/ and ADR-077.
+           ONE SCOPE DECISION IS OPEN AND REPORTED RATHER THAN TAKEN: ADR-077
+           L12. The convection scheme and the gradient method are hard-coded in
+           the orchestrator, outside the analysis definition and outside the
+           definition fingerprint, which contradicts ADR-073 Decision 5 -- "which
+           of ADR-070's two methods made it is the analysis's decision and not
+           this operator's". Of the two, one is pinned only incidentally by the
+           gravity test's dp/dy check and the other is not pinned at all.
+           Putting them in the definition means changing CfdAnalysisDefinition
+           and canonicalText, both qualified under P19-DATA-001, and no item on
+           this checklist asked for a selector.
+           P19-LINSOLVE-001 (PASS 2026-11-09, commit
+           e63b19db2d4f48c3e73812eeb66784d71a7ce805) came before it and held
+           this section until now; its full record is ROADMAP.md's capability
+           entry and docs/verification/P19-LINSOLVE-001/. The sections below
+           hold the milestones before that, from P19-CONT-001 backwards.
+
 Before that:
            P19-CONT-001 - Continuity Equation. AUTHORIZED 2026-11-08 by the
            owner's "implement and fully verify" over the twelve-item
@@ -782,29 +679,39 @@ Qualified:
            P18 — Thermal Analysis
 
 Next:
-           NO MILESTONE IS OPEN. P19-LINSOLVE-001 PASSED on 2026-11-09, and
-           finishing a milestone is itself a stop condition. The next
-           milestone is a scope decision for the owner and not Claude's to
-           make.
-           P19-STEADY-001 - Steady Incompressible Solver is next in the
-           dependency order and is NOT AUTHORIZED. It is named here so that
-           the drift is visible rather than available: it owns the outer
-           loop, the convergence verdict, divergence detection and the
-           atomic result publication, and now that both the coupling and the
-           solvers exist it is the milestone it would be easiest to begin by
-           momentum. Being next in the dependency order is not permission.
-           Each milestone is started by the owner, as every P17, P18 and P19
-           milestone was, and a predecessor's PASS is not permission to start
-           the one after it.
-           One finding is OPEN AND UNAUTHORIZED, reported rather than fixed:
-           docs/verification/*/qualification/verify-harness.cmd carries a
-           literal 0x08 byte where \bc-build was meant, in 72 of 96
-           committed copies, entered 2026-09-30 with the P15 materials work.
-           It fires only when BETTERCAD_BUILD_ROOT is undefined, which
-           run-qualification.cmd always defines, so no gate in any milestone
-           ever evaluated it. Repairing it across the lineage needs the
-           owner's scope decision.
-
+           NOTHING IS AUTHORIZED. P19-STEADY-001 is PASS and no milestone is
+           open, so the next one is a scope decision for the owner. A
+           predecessor's PASS has never been permission to start the one after
+           it, and the two it would be easiest to drift into are named so that
+           the drift stays visible:
+           P19-TRANSIENT-001 owns time stepping. P19-VALID-001 owns whether the
+           numbers are good enough -- CfdResult.hpp already says "CONVERGENCE IS
+           RECORDED, NOT RE-JUDGED HERE", so the converged channel run this
+           milestone publishes is not a validated one, and nothing in
+           docs/verification/P19-STEADY-001/ claims it is.
+           TWO FINDINGS ARE OPEN AND UNAUTHORIZED, both reported rather than
+           fixed, and both needing the owner's scope decision:
+           (1) ADR-077 L12 - the convection scheme and the gradient method are
+           hard-coded in solveCfdSteady, outside the analysis definition and
+           outside the definition fingerprint, which contradicts ADR-073
+           Decision 5. One of the two is pinned only incidentally, by a side
+           effect of the gravity test's dp/dy check; the other is not pinned at
+           all, because telling ADR-070's two gradient methods apart needs an
+           analytic reference this subsystem does not have. Moving them into the
+           definition means changing CfdAnalysisDefinition and canonicalText,
+           both qualified under P19-DATA-001.
+           (2) docs/verification/*/qualification/verify-harness.cmd carries a
+           literal 0x08 byte where c-build was meant, in 72 of 96 committed
+           copies, entered 2026-09-30 with the P15 materials work. It fires only
+           when BETTERCAD_BUILD_ROOT is undefined, which run-qualification.cmd
+           always defines, so no gate in any milestone ever evaluated it.
+           Repairing it across the lineage needs the owner's scope decision.
+           ONE LESSON IS WORTH CARRYING INTO THE NEXT MILESTONE, because it cost
+           this one a three-and-a-half-hour re-run: a change to a CONSTRUCTOR's
+           parameter list reaches every compile-fail case that names that
+           constructor, and a search for the factory's callers cannot find them,
+           because they are deliberate NON-callers. A private constructor has one
+           intended caller and one intended refusal, and the refusal is a test.
 P19 objective, as planned:
            authoritative CAD / fluid / mesh state
            → CFD analysis definition
@@ -4090,25 +3997,25 @@ Audit and qualify reusable sparse linear algebra.
 
 Implement full steady incompressible CFD orchestration.
 
-* [ ] Validate inputs
-* [ ] Prepare mesh topology
-* [ ] Prepare BCs
-* [ ] Initialize fields
-* [ ] Momentum predictor
-* [ ] Pressure correction
-* [ ] Velocity correction
-* [ ] Flux correction
-* [ ] Residual computation
-* [ ] Mass-balance computation
-* [ ] Convergence loop
-* [ ] Maximum-iteration failure
-* [ ] Divergence detection
-* [ ] NaN / Inf rejection
-* [ ] Deterministic solve behavior
-* [ ] Atomic result publication
-* [ ] Structured diagnostics
-* [ ] Regression PASS
-* [ ] Evidence recorded
+* [x] Validate inputs
+* [x] Prepare mesh topology
+* [x] Prepare BCs
+* [x] Initialize fields
+* [x] Momentum predictor
+* [x] Pressure correction
+* [x] Velocity correction
+* [x] Flux correction
+* [x] Residual computation
+* [x] Mass-balance computation
+* [x] Convergence loop
+* [x] Maximum-iteration failure
+* [x] Divergence detection
+* [x] NaN / Inf rejection
+* [x] Deterministic solve behavior
+* [x] Atomic result publication
+* [x] Structured diagnostics
+* [x] Regression PASS
+* [x] Evidence recorded
 
 ---
 # P19-TRANSIENT-001

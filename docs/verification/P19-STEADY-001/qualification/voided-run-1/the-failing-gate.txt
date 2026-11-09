@@ -1,0 +1,81 @@
+########## debug-ext ##########
+          Start 6149: compile_fail.cfdids.a-result-cannot-be-built-without-its-factory
+6660/6903 Test #6149: compile_fail.cfdids.a-result-cannot-be-built-without-its-factory ............................................***Failed    2.04 sec
+-- command  : C:/Users/Hasib/AppData/Local/Microsoft/WinGet/Packages/BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe/mingw64/bin/cmake.exe --build;C:/bettercad/bc-build/debug-ext;--config;Debug;--target;bettercad_cf_cfdids_a-result-cannot-be-built-without-its-factory
+-- exit code: 1 (expected 1)
+-- stdout:
+[1/2] Checking git revision
+[2/2] Building CXX object tests/compile_fail/CMakeFiles/bettercad_cf_cfdids_a-result-cannot-be-built-without-its-factory.dir/CfdIdMisuse.cpp.obj
+FAILED: [code=1] tests/compile_fail/CMakeFiles/bettercad_cf_cfdids_a-result-cannot-be-built-without-its-factory.dir/CfdIdMisuse.cpp.obj 
+C:/Users/Hasib/Desktop/CAD/tests/compile_fail/CfdIdMisuse.cpp: In function 'void {anonymous}::reads(const bettercad::cfd::CfdResult&, const bettercad::cfd::CfdAnalysisDefinition&, bettercad::cfd::CfdResultSlot&, const bettercad::cfd::CfdSolveFailure&)':
+C:/Users/Hasib/Desktop/CAD/tests/compile_fail/CfdIdMisuse.cpp:49:85: error: no matching function for call to 'bettercad::cfd::CfdResult::CfdResult(<brace-enclosed initializer list>)'
+C:/Users/Hasib/Desktop/CAD/tests/compile_fail/CfdIdMisuse.cpp:49:85: note: there are 3 candidates
+In file included from C:/Users/Hasib/Desktop/CAD/tests/compile_fail/CfdIdMisuse.cpp:14:
+C:/Users/Hasib/Desktop/CAD/include/bettercad/cfd/CfdResult.hpp:227:5: note: candidate 1: 'bettercad::cfd::CfdResult::CfdResult(bettercad::cfd::CfdResultSource, bettercad::cfd::CfdResultMetadata, bettercad::cfd::CfdResultFields)'
+C:/Users/Hasib/Desktop/CAD/include/bettercad/cfd/CfdResult.hpp:227:5: note: candidate expects 3 arguments, 2 provided
+C:/Users/Hasib/Desktop/CAD/include/bettercad/cfd/CfdResult.hpp:188:28: note: candidate 2: 'constexpr bettercad::cfd::CfdResult::CfdResult(const bettercad::cfd::CfdResult&)'
+C:/Users/Hasib/Desktop/CAD/include/bettercad/cfd/CfdResult.hpp:188:28: note: candidate expects 1 argument, 2 provided
+C:/Users/Hasib/Desktop/CAD/include/bettercad/cfd/CfdResult.hpp:188:28: note: candidate 3: 'constexpr bettercad::cfd::CfdResult::CfdResult(bettercad::cfd::CfdResult&&)'
+C:/Users/Hasib/Desktop/CAD/include/bettercad/cfd/CfdResult.hpp:188:28: note: candidate expects 1 argument, 2 provided
+ninja: build stopped: subcommand failed.
+-- stderr:
+
+CMake Error at C:/Users/Hasib/Desktop/CAD/tests/cmake/RunAndCheck.cmake:84 (message):
+  Process check failed:
+
+    stdout does not match regex: is private within this context|private
+
+########## release-ext ##########
+          Start 6149: compile_fail.cfdids.a-result-cannot-be-built-without-its-factory
+6724/6903 Test #6149: compile_fail.cfdids.a-result-cannot-be-built-without-its-factory ............................................***Failed    2.09 sec
+-- command  : C:/Users/Hasib/AppData/Local/Microsoft/WinGet/Packages/BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe/mingw64/bin/cmake.exe --build;C:/bettercad/bc-build/release-ext;--config;Release;--target;bettercad_cf_cfdids_a-result-cannot-be-built-without-its-factory
+-- exit code: 1 (expected 1)
+-- stdout:
+[1/2] Checking git revision
+[2/2] Building CXX object tests/compile_fail/CMakeFiles/bettercad_cf_cfdids_a-result-cannot-be-built-without-its-factory.dir/CfdIdMisuse.cpp.obj
+FAILED: [code=1] tests/compile_fail/CMakeFiles/bettercad_cf_cfdids_a-result-cannot-be-built-without-its-factory.dir/CfdIdMisuse.cpp.obj 
+C:/Users/Hasib/Desktop/CAD/tests/compile_fail/CfdIdMisuse.cpp: In function 'void {anonymous}::reads(const bettercad::cfd::CfdResult&, const bettercad::cfd::CfdAnalysisDefinition&, bettercad::cfd::CfdResultSlot&, const bettercad::cfd::CfdSolveFailure&)':
+C:/Users/Hasib/Desktop/CAD/tests/compile_fail/CfdIdMisuse.cpp:49:85: error: no matching function for call to 'bettercad::cfd::CfdResult::CfdResult(<brace-enclosed initializer list>)'
+C:/Users/Hasib/Desktop/CAD/tests/compile_fail/CfdIdMisuse.cpp:49:85: note: there are 3 candidates
+In file included from C:/Users/Hasib/Desktop/CAD/tests/compile_fail/CfdIdMisuse.cpp:14:
+C:/Users/Hasib/Desktop/CAD/include/bettercad/cfd/CfdResult.hpp:227:5: note: candidate 1: 'bettercad::cfd::CfdResult::CfdResult(bettercad::cfd::CfdResultSource, bettercad::cfd::CfdResultMetadata, bettercad::cfd::CfdResultFields)'
+C:/Users/Hasib/Desktop/CAD/include/bettercad/cfd/CfdResult.hpp:227:5: note: candidate expects 3 arguments, 2 provided
+C:/Users/Hasib/Desktop/CAD/include/bettercad/cfd/CfdResult.hpp:188:28: note: candidate 2: 'constexpr bettercad::cfd::CfdResult::CfdResult(const bettercad::cfd::CfdResult&)'
+C:/Users/Hasib/Desktop/CAD/include/bettercad/cfd/CfdResult.hpp:188:28: note: candidate expects 1 argument, 2 provided
+C:/Users/Hasib/Desktop/CAD/include/bettercad/cfd/CfdResult.hpp:188:28: note: candidate 3: 'constexpr bettercad::cfd::CfdResult::CfdResult(bettercad::cfd::CfdResult&&)'
+C:/Users/Hasib/Desktop/CAD/include/bettercad/cfd/CfdResult.hpp:188:28: note: candidate expects 1 argument, 2 provided
+ninja: build stopped: subcommand failed.
+-- stderr:
+
+CMake Error at C:/Users/Hasib/Desktop/CAD/tests/cmake/RunAndCheck.cmake:84 (message):
+  Process check failed:
+
+    stdout does not match regex: is private within this context|private
+
+########## debug-shared-ext ##########
+          Start 6149: compile_fail.cfdids.a-result-cannot-be-built-without-its-factory
+6620/6903 Test #6149: compile_fail.cfdids.a-result-cannot-be-built-without-its-factory ............................................***Failed    2.12 sec
+-- command  : C:/Users/Hasib/AppData/Local/Microsoft/WinGet/Packages/BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe/mingw64/bin/cmake.exe --build;C:/bettercad/bc-build/debug-shared-ext;--config;Debug;--target;bettercad_cf_cfdids_a-result-cannot-be-built-without-its-factory
+-- exit code: 1 (expected 1)
+-- stdout:
+[1/2] Checking git revision
+[2/2] Building CXX object tests/compile_fail/CMakeFiles/bettercad_cf_cfdids_a-result-cannot-be-built-without-its-factory.dir/CfdIdMisuse.cpp.obj
+FAILED: [code=1] tests/compile_fail/CMakeFiles/bettercad_cf_cfdids_a-result-cannot-be-built-without-its-factory.dir/CfdIdMisuse.cpp.obj 
+C:/Users/Hasib/Desktop/CAD/tests/compile_fail/CfdIdMisuse.cpp: In function 'void {anonymous}::reads(const bettercad::cfd::CfdResult&, const bettercad::cfd::CfdAnalysisDefinition&, bettercad::cfd::CfdResultSlot&, const bettercad::cfd::CfdSolveFailure&)':
+C:/Users/Hasib/Desktop/CAD/tests/compile_fail/CfdIdMisuse.cpp:49:85: error: no matching function for call to 'bettercad::cfd::CfdResult::CfdResult(<brace-enclosed initializer list>)'
+C:/Users/Hasib/Desktop/CAD/tests/compile_fail/CfdIdMisuse.cpp:49:85: note: there are 3 candidates
+In file included from C:/Users/Hasib/Desktop/CAD/tests/compile_fail/CfdIdMisuse.cpp:14:
+C:/Users/Hasib/Desktop/CAD/include/bettercad/cfd/CfdResult.hpp:227:5: note: candidate 1: 'bettercad::cfd::CfdResult::CfdResult(bettercad::cfd::CfdResultSource, bettercad::cfd::CfdResultMetadata, bettercad::cfd::CfdResultFields)'
+C:/Users/Hasib/Desktop/CAD/include/bettercad/cfd/CfdResult.hpp:227:5: note: candidate expects 3 arguments, 2 provided
+C:/Users/Hasib/Desktop/CAD/include/bettercad/cfd/CfdResult.hpp:188:28: note: candidate 2: 'constexpr bettercad::cfd::CfdResult::CfdResult(const bettercad::cfd::CfdResult&)'
+C:/Users/Hasib/Desktop/CAD/include/bettercad/cfd/CfdResult.hpp:188:28: note: candidate expects 1 argument, 2 provided
+C:/Users/Hasib/Desktop/CAD/include/bettercad/cfd/CfdResult.hpp:188:28: note: candidate 3: 'constexpr bettercad::cfd::CfdResult::CfdResult(bettercad::cfd::CfdResult&&)'
+C:/Users/Hasib/Desktop/CAD/include/bettercad/cfd/CfdResult.hpp:188:28: note: candidate expects 1 argument, 2 provided
+ninja: build stopped: subcommand failed.
+-- stderr:
+
+CMake Error at C:/Users/Hasib/Desktop/CAD/tests/cmake/RunAndCheck.cmake:84 (message):
+  Process check failed:
+
+    stdout does not match regex: is private within this context|private
+

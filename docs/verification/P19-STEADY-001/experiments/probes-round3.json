@@ -1,0 +1,16 @@
+[
+  {
+    "id": "M2 report.outerIterations is off by one",
+    "file": "src/cfd/CfdSteady.cpp",
+    "expect": "KILL",
+    "old": "        report.outerIterations = completed;",
+    "new": "        report.outerIterations = completed + 1;"
+  },
+  {
+    "id": "M15 NO-OP CONTROL: the published result is copied instead of moved",
+    "file": "src/cfd/CfdSteady.cpp",
+    "expect": "SURVIVE",
+    "old": "    slot.recordSuccess(std::move(*result));",
+    "new": "    slot.recordSuccess(*result);"
+  }
+]

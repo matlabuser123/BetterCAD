@@ -1,0 +1,28 @@
+---
+# P19-STEADY-001
+
+## Steady Incompressible Solver
+
+Implement full steady incompressible CFD orchestration.
+
+* [ ] Validate inputs
+* [ ] Prepare mesh topology
+* [ ] Prepare BCs
+* [ ] Initialize fields
+* [ ] Momentum predictor
+* [ ] Pressure correction
+* [ ] Velocity correction
+* [ ] Flux correction
+* [ ] Residual computation
+* [ ] Mass-balance computation
+* [ ] Convergence loop
+* [ ] Maximum-iteration failure
+* [ ] Divergence detection
+* [ ] NaN / Inf rejection
+* [ ] Deterministic solve behavior
+* [ ] Atomic result publication
+* [ ] Structured diagnostics
+* [ ] Regression PASS
+* [ ] Evidence recorded
+
+---

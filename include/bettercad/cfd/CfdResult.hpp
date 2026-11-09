@@ -17,7 +17,7 @@
 // a viewer that compared cell counts and a CLI that compared an analysis id
 // would be two answers that drift.
 //
-// WHAT A RESULT HOLDS IN THIS MILESTONE: ITS PROVENANCE AND ITS METADATA, AND
+// WHAT A RESULT HELD UNTIL P19-STEADY-001: ITS PROVENANCE AND ITS METADATA, AND
 // NOT YET ITS FIELDS (ADR-061). The fields of a finite-volume solution are p and
 // U per cell and phi per face, keyed by CellIndex and FaceIndex -- types
 // P19-TOPO-001 and P19-DOF-001 define from a face enumeration that does not exist
@@ -35,9 +35,25 @@
 // with the first milestone that computes a field, keyed by `CfdFieldMap`'s index
 // space, and `CfdData_AResultHoldsProvenanceAndMetadataOnly`'s mirror is where the
 // addition is stated.
+//
+// THE ARRAYS ARE HERE NOW, AND THE TWO PARAGRAPHS ABOVE ARE KEPT RATHER THAN
+// DELETED BECAUSE THE DEFERRAL IS PART OF THE RECORD (P19-STEADY-001, ADR-077
+// Decision 2). `solveCfdSteady` is that producer, `CfdResultSlot`'s first in the
+// tree, so the cost ADR-066 declined to pay for a caller that did not exist is now
+// paid for one that does: `create` takes a `CfdFieldMap` and `CfdResultFields`, and
+// the mirror that asserted this container's size -- which is what stopped the build
+// and forced this paragraph to be written -- is extended and renamed.
+//
+// WHAT CHANGED THAT THE DEFERRAL DID NOT FORESEE: nothing. Both reasons it gave
+// have expired together, which is why the arrays arrive in one step rather than
+// by halves. The alternative was a result that publishes provenance while no code
+// anywhere can read `p`, so `analysisState` would report SolvedCurrent with no
+// solution in the tree -- the limit of this file's own "a partially populated
+// result is not a worse result, it is a claim that is false".
 
 #include <bettercad/cfd/CfdAnalysisObject.hpp>
 #include <bettercad/cfd/CfdData.hpp>
+#include <bettercad/cfd/CfdFields.hpp>
 #include <bettercad/cfd/Export.hpp>
 #include <bettercad/core/Error.hpp>
 #include <bettercad/core/Id.hpp>
@@ -48,8 +64,10 @@
 #include <array>
 #include <cstdint>
 #include <optional>
+#include <span>
 #include <string_view>
 #include <utility>
+#include <vector>
 
 namespace bettercad::features {
 class Regenerator;
@@ -83,6 +101,74 @@ struct CfdResultMetadata {
     friend bool operator==(const CfdResultMetadata&, const CfdResultMetadata&) = default;
 };
 
+/// The three fields of a finite-volume solution, keyed by `ADR-066`'s index
+/// space and no other.
+///
+/// ```text
+/// pressure   p,   one per cell,            Pa,   size(CfdVariable::Pressure)
+/// velocity   U,   component-blocked,       m/s,  size(CfdVariable::Velocity)
+/// massFlux   phi, one per face, signed
+///                 out of the owner,        kg/s, size(CfdVariable::MassFlux)
+/// ```
+///
+/// POSSESSION IS THE EVIDENCE (`ADR-036`). There is no default constructor and
+/// no setter, so holding one of these proves its three lengths were checked
+/// against a `CfdFieldMap` and that every value in it is finite. That is the
+/// same reason `CfdSparseMatrix` keeps its default constructor private, and it
+/// is why `CfdResult` can take these by value without re-validating them.
+///
+/// ALL THREE OR NONE. `CfdResult.hpp`'s own long-standing reason: "A container
+/// with p and U but no phi would claim to be a solution and not be one (its
+/// mass balance could not be checked)." The factory takes all three and there
+/// is no way to supply two.
+class BETTERCAD_CFD_EXPORT CfdResultFields {
+public:
+    /// Builds the field set, or fails saying which length or value broke:
+    ///
+    /// ```text
+    /// the layout describes at least one cell
+    /// each array's length == layout.size(variable), named individually
+    /// every value finite -- the first offending index is in the diagnostic
+    /// ```
+    ///
+    /// THE FINITENESS CHECK IS A TYPE INVARIANT AND NOT A REDUNDANT GUARD.
+    /// A published result must not be able to carry a NaN whatever produced it,
+    /// and that stands on its own without reference to any particular caller.
+    ///
+    /// THIS PARAGRAPH PREVIOUSLY GAVE A FALSE REASON, and an adversarial review
+    /// found it: it said "`solveCfdSteady` rejects a non-finite field as
+    /// `CfdFailureStage::NonFiniteField` before it ever reaches here". That
+    /// check was removed as unreachable (`ADR-077` Decision 4) and the sentence
+    /// outlived it, so a reader auditing this guard was sent to code that does
+    /// not exist. What actually makes it unreachable from `solveCfdSteady` is
+    /// one layer further down: `applyCfdCouplingCorrection` refuses non-finite
+    /// corrected fields as `CfdCouplingProblem::ResultIsNotFinite`, so
+    /// `advanceCfdCoupling` never hands one back. Every other caller can still
+    /// fire it, which is why it is here.
+    [[nodiscard]] static Result<CfdResultFields> create(const CfdFieldMap& layout, std::vector<double> pressure,
+                                                       std::vector<double> velocity, std::vector<double> massFlux);
+
+    [[nodiscard]] std::span<const double> pressure() const noexcept { return pressure_; }
+    [[nodiscard]] std::span<const double> velocity() const noexcept { return velocity_; }
+    [[nodiscard]] std::span<const double> massFlux() const noexcept { return massFlux_; }
+
+    /// The counts the arrays were validated against, read back off the arrays
+    /// rather than stored twice.
+    [[nodiscard]] std::size_t cells() const noexcept { return pressure_.size(); }
+    [[nodiscard]] std::size_t faces() const noexcept { return massFlux_.size(); }
+
+    /// Value equality over the bits, for the determinism tests. Compares the
+    /// arrays, which is exactly what a determinism claim is about.
+    friend bool operator==(const CfdResultFields&, const CfdResultFields&) = default;
+
+private:
+    CfdResultFields(std::vector<double> pressure, std::vector<double> velocity, std::vector<double> massFlux) noexcept;
+
+    std::vector<double> pressure_{};
+    std::vector<double> velocity_{};
+    std::vector<double> massFlux_{};
+};
+
 /// The accepted solution of one CFD analysis on one mesh, at one time level.
 ///
 /// IMMUTABLE, AND CONSTRUCTED ONLY BY A VALIDATING FACTORY. Every accessor is
@@ -91,38 +177,58 @@ struct CfdResultMetadata {
 /// look current without recomputing anything.
 ///
 /// THE MESH IS NOT COPIED IN: a result records the `MeshStamp` of the mesh it
-/// belongs to, and its size does not depend on the mesh.
+/// belongs to.
+///
+/// ITS SIZE DID NOT DEPEND ON THE MESH UNTIL P19-STEADY-001, AND NOW IT DOES.
+/// That sentence used to end "and its size does not depend on the mesh", which
+/// was true while the container held provenance and metadata only. It holds its
+/// fields since `ADR-077` Decision 2, so `pressure().size() == cells` by
+/// construction. The first clause is untouched: no mesh is copied in, and a
+/// result is still compared to one by stamp and never by count.
 class BETTERCAD_CFD_EXPORT CfdResult {
 public:
     /// Builds a result, or fails saying which invariant it broke:
     ///
     /// ```text
     /// the source names this exact mesh        source.mesh == mesh stamp
+    /// the layout describes this exact mesh    layout.mesh() == mesh stamp
     /// the mesh is not empty
+    /// the fields were built against THIS layout, by cell count
     /// at least one outer iteration
     /// residuals and mass balance finite and not negative
     /// steady:    no time, no step
     /// transient: a finite time > 0 s and a step >= 1
     /// ```
     ///
+    /// THE LAYOUT IS TAKEN AS WELL AS THE MESH, AND BOTH ARE CHECKED AGAINST
+    /// THE SOURCE. `CfdResultFields` already proves its lengths match SOME
+    /// layout; what this adds is that the layout is the one this result claims,
+    /// which no field set can prove about itself. Two stamps and one count is
+    /// cheaper than re-deriving a topology here.
+    ///
     /// Only an accepted solve calls this. A failed one records a
     /// `CfdSolveFailure` instead; a partially populated result is not a worse
     /// result, it is a claim that is false.
     [[nodiscard]] static Result<CfdResult> create(CfdResultSource source, const meshing::VolumeMesh& mesh,
-                                                  CfdResultMetadata metadata);
+                                                  const CfdFieldMap& layout, CfdResultMetadata metadata,
+                                                  CfdResultFields fields);
 
     /// What this was computed from. There is no non-const overload, by design.
     [[nodiscard]] const CfdResultSource& source() const noexcept { return source_; }
     [[nodiscard]] const CfdResultMetadata& metadata() const noexcept { return metadata_; }
 
+    /// The solution itself. `ADR-077` Decision 2.
+    [[nodiscard]] const CfdResultFields& fields() const noexcept { return fields_; }
+
     /// Whether this result belongs to @p mesh. Compares stamps, never counts.
     [[nodiscard]] bool describes(const meshing::VolumeMesh& mesh) const noexcept;
 
 private:
-    CfdResult(CfdResultSource source, CfdResultMetadata metadata) noexcept;
+    CfdResult(CfdResultSource source, CfdResultMetadata metadata, CfdResultFields fields) noexcept;
 
     CfdResultSource source_{};
     CfdResultMetadata metadata_{};
+    CfdResultFields fields_;
 };
 
 // ---------------------------------------------------------------------------

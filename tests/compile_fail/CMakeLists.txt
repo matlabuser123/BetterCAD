@@ -2299,3 +2299,61 @@ foreach(_case
         "read-only|assignment of read-only|cannot assign|lvalue required"
         BetterCAD::cfd)
 endforeach()
+
+# P19-STEADY-001 -- misuse of the steady solve and of the result's fields.
+# ADR-077.
+#
+# THE REGEXES LIST EVERY DIAGNOSTIC GCC CAN EMIT FOR THE CASE, not the one a
+# reader expects (the P19-GRAD-001 lesson, which cost six of twenty-eight gates
+# on P19-LINSOLVE-001's first run).
+set(_cfdsteady "${CMAKE_CURRENT_SOURCE_DIR}/CfdSteadyMisuse.cpp")
+bettercad_compile_fail_group(cfdsteady "${_cfdsteady}" BetterCAD::cfd)
+foreach(_case
+        A_FIELD_SET_CAN_BE_DEFAULT_CONSTRUCTED
+        A_RESULT_CAN_BE_DEFAULT_CONSTRUCTED)
+    bettercad_compile_fail_case(cfdsteady "${_cfdsteady}" ${_case}
+        "no matching function|no default constructor|use of deleted|is private|within this context|incomplete type|does not name a type|has no member|deleted function"
+        BetterCAD::cfd)
+endforeach()
+# A TYPE THAT NO LONGER EXISTS gets its own regex, because GCC says "is not a
+# member of" and nothing else in the list above matches that. The gate's
+# compilation failed correctly on the first run and only the ATTRIBUTION regex
+# missed, which is exactly the P19-GRAD-001 lesson this file's own comment
+# cites -- caught here by running the gates rather than by trusting the list.
+foreach(_case
+        THERE_IS_A_STEADY_SOLVE_INPUT_TYPE)
+    bettercad_compile_fail_case(cfdsteady "${_cfdsteady}" ${_case}
+        "is not a member of|has not been declared|no member named|does not name a type"
+        BetterCAD::cfd)
+endforeach()
+foreach(_case
+        A_FIELD_SET_CAN_BE_BUILT_FROM_ARRAYS_ALONE
+        CREATE_STILL_TAKES_ONLY_SOURCE_MESH_AND_METADATA
+        THE_STEADY_SOLVE_TAKES_SETTINGS
+        THE_STEADY_SOLVE_PUBLISHES_WITHOUT_A_SLOT
+        A_FAILURE_STAGE_IS_A_COUPLING_PROBLEM)
+    bettercad_compile_fail_case(cfdsteady "${_cfdsteady}" ${_case}
+        "no matching function|cannot convert|invalid conversion|no known conversion|too few arguments|too many arguments|could not convert|to non-scalar type|conversion from"
+        BetterCAD::cfd)
+endforeach()
+foreach(_case
+        A_COUPLING_PROBLEM_IS_A_FAILURE_STAGE
+        A_STEADY_REPORT_IS_RESULT_METADATA)
+    bettercad_compile_fail_case(cfdsteady "${_cfdsteady}" ${_case}
+        "cannot convert|invalid conversion|no known conversion|could not convert|to non-scalar type|conversion from|no match for"
+        BetterCAD::cfd)
+endforeach()
+foreach(_case
+        THE_REPORT_CARRIES_THE_MASS_BALANCE
+        THE_REPORT_CARRIES_THE_FIELDS)
+    bettercad_compile_fail_case(cfdsteady "${_cfdsteady}" ${_case}
+        "no member named|has no member"
+        BetterCAD::cfd)
+endforeach()
+foreach(_case
+        A_PUBLISHED_FIELD_IS_WRITABLE
+        A_RESULTS_FIELDS_ARE_MUTABLE)
+    bettercad_compile_fail_case(cfdsteady "${_cfdsteady}" ${_case}
+        "read-only|assignment of read-only|discards qualifiers|binding reference of type|cannot bind|invalid initialization"
+        BetterCAD::cfd)
+endforeach()
