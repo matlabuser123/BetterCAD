@@ -707,9 +707,23 @@ finished   Mon 2026-11-09 22:23:06      3 h 24 min
 
 ### The qualified tree is the committed tree
 
-The eight frozen paths were read FOUR times: by the harness before its first
-build, by the harness after its last test run, recomputed from the working tree
-during this reconciliation, and finally out of the commit object itself.
+The eight frozen paths were read FIVE times, and all five agree:
+
+```text
+1  by the harness, before its first build
+2  by the harness, after its last test run
+3  recomputed from the working tree during this reconciliation, by the
+   harness's own method -- scratch GIT_INDEX_FILE, read-tree HEAD, add -A,
+   write-tree --prefix
+4  off the STAGED tree, before the commit was made
+5  out of the commit object of 370b90da75de236e66d0ddfbda1fb9254e557133
+```
+
+**`git rev-parse HEAD:<path>` is used only at step 5.** Before the commit it
+would read the PREVIOUS commit's tree and agree with itself for the wrong
+reason, which is why steps 3 and 4 use a scratch index instead. This section
+first said FOUR readings and named four; the staged-tree read had been made and
+not counted.
 
 ```text
 apps               fc398a3d2e524178cf38e8b667236379d8381086
@@ -829,6 +843,9 @@ VALIDATION:      a dense LU reference agreeing to 1.485e-15 / 4.626e-16 /
 RESULT:          PASS
 EVIDENCE:        this directory; qualification/ holds the second run's logs and
                  voided-run-1/ the first run's verdict
+COMMIT:          370b90da75de236e66d0ddfbda1fb9254e557133 -- production code and evidence together, and the
+                 eight frozen identities read back OUT OF this commit object
+                 agree with the five readings before it
 TODO:            19 boxes ticked, 719 -> 738
 ```
 

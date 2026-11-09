@@ -44,10 +44,11 @@ Previous milestone:
            ATTEMPT: 6903/6903 x 3 presets, 3493 x 5 = 17465 executions x 2
            presets with the marker-to-progress ratio exactly 5.000, 17 of 17
            stages exit 0, 0 stage(s) failed, 3h23m55s, and the eight subtree
-           identities read four times -- the harness before its first build, the
+           identities read FIVE times -- the harness before its first build, the
            harness after its last test, a recomputation from the working tree,
-           and a fourth read OUT OF the commit object -- all eight identical in
-           all four.
+           the staged tree, and OUT OF the commit object -- all eight identical
+           in all five, so the qualified tree is the committed tree. Commit
+           370b90da75de236e66d0ddfbda1fb9254e557133.
            THE FIRST ATTEMPT FAILED AND THE FAILURE WAS THIS MILESTONE'S.
            QUALIFICATION FAILED: 3 stage(s) failed, one test in 6903, the same
            one in all three presets, while the launcher reported "completed

@@ -245,9 +245,12 @@ returned nothing because it assumed upper-case wording; the file is read whole.
                            ratio EXACTLY 5.000
 0 error: / 0 warning:      in all three build logs; the only substring hit is
                            the filename Error.cpp.obj
-the eight identities       read by the harness before its first build and after
-                           its last test, then recomputed from the working tree,
-                           then read a fourth time OUT OF the commit object
+the eight identities       read FIVE times and equal in all five: by the
+                           harness before its first build and after its last
+                           test, recomputed from the working tree, off the
+                           staged tree, and OUT OF the commit object of
+                           370b90da75de236e66d0ddfbda1fb9254e557133. git rev-parse HEAD:<path> is
+                           used only for the last one
 freshness                  no ninja-owned artifact newer than its build exit.
                            Asked of `ninja -t targets all`, not of file
                            extensions: P19-LINSOLVE-001's first attempt at this

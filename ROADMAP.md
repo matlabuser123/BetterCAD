@@ -1876,11 +1876,12 @@ rather than discovered later and now admits that this one was discovered later.
 counted four ways per log, 3493 x 5 = 17,465 executions in two repeat stages
 against 3,493 progress-prefixed lines for a ratio of exactly 5.000, 0 `error:`
 and 0 `warning:` under `-Werror`, 17 of 17 stages exit 0, 3h23m55s. The eight
-frozen subtree identities were read four times — the harness before its first
+frozen subtree identities were read five times — the harness before its first
 build, the harness after its last test, a recomputation from the working tree,
-and a fourth read out of the commit object — and agree in all four; `include` and
-`src` are bit-identical to the voided first freeze, which is the check that the
-repair touched no production code. `[cfd]` reads 753,230 assertions in 663 cases
+the staged tree, and out of the commit object of `370b90da75de236e66d0ddfbda1fb9254e557133` — and agree in all
+five, so the qualified tree is the committed tree. `include` and `src` are
+bit-identical to the voided first freeze, which is the check that the repair
+touched no production code. `[cfd]` reads 753,230 assertions in 663 cases
 from each of the three qualified binaries, which is 751,771 + 1,459 and 644 + 19
 exactly, while `[linalg]`, `[structural]` and `[thermal]` are identical to
 baseline.
