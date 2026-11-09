@@ -1,0 +1,23 @@
+P19-LINSOLVE-001 mutation probes
+
+src/linalg/SparseSolve.cpp                   2b712568a1ed27cbee14c67a3eded0d5089bf232e144af16e16f2d638527f659
+src/linalg/SymmetricSolve.cpp                b666966064d3eb604360c48534201dc8495d4d7176b958c0cf8d7bb45b01a1f1
+src/cfd/CfdLinearSolve.cpp                   dc8b72cc2899f7a0cadab63ee541edf4559c0093d460e33549d0964a5b6cc024
+include/bettercad/cfd/CfdLinearSolve.hpp     b435fc69457a5f4ebc319460e4c4ca5b2689d184f1dac7df241bd118d1d4a6ae
+
+BASELINE all filters pass
+
+KILL     KILLED   M4a the whole monotonicity guard is removed (general kernel)            56s
+KILL     KILLED   M4b the whole monotonicity guard is removed (SYMMETRIC kernel)          55s
+KILL     KILLED   M4d the back-equality clause the proof leans on is removed              51s
+KILL     KILLED   M4f monotonicity becomes strict, so a legitimate EMPTY row is refused    52s
+SURVIVE  SURVIVED M18 NO-OP CONTROL: two independent summary assignments reordered        54s
+
+rebuilt from pristine: ok
+FINAL all filters pass: True
+src/linalg/SparseSolve.cpp                   2b712568a1ed27cbee14c67a3eded0d5089bf232e144af16e16f2d638527f659 MATCH
+src/linalg/SymmetricSolve.cpp                b666966064d3eb604360c48534201dc8495d4d7176b958c0cf8d7bb45b01a1f1 MATCH
+src/cfd/CfdLinearSolve.cpp                   dc8b72cc2899f7a0cadab63ee541edf4559c0093d460e33549d0964a5b6cc024 MATCH
+include/bettercad/cfd/CfdLinearSolve.hpp     b435fc69457a5f4ebc319460e4c4ca5b2689d184f1dac7df241bd118d1d4a6ae MATCH
+
+killed 4, compiler 0, survived 1, of 5 probes

@@ -1,0 +1,31 @@
+Q5' THE PRESSURE SHAPE, BOTH PIN PATHS, CORRECTLY LABELLED
+    pivotFloor = 1e-12. n = 64 throughout.
+    a_f          pin keeps its own value      verdict            pivotRatio
+    1.000e-03    yes (THE RULE)               SOLVED             2.500000e-01
+    1.000e-03    no (1.0 fallback)            SOLVED             5.000000e-04
+    1.000e-09    yes (THE RULE)               SOLVED             2.500000e-01
+    1.000e-09    no (1.0 fallback)            SOLVED             5.000000e-10
+    1.000e-12    yes (THE RULE)               SOLVED             2.500000e-01
+    1.000e-12    no (1.0 fallback)            singular_system    5.000000e-13
+    1.000e-15    yes (THE RULE)               SOLVED             2.500000e-01
+    1.000e-15    no (1.0 fallback)            singular_system    5.000000e-16
+    1.000e-20    yes (THE RULE)               SOLVED             2.500000e-01
+    1.000e-20    no (1.0 fallback)            singular_system    5.000000e-21
+
+Q7  SPARSE QR: IS THE R DIAGONAL DIRECTLY READABLE, AND DOES IT SEPARATE?
+    well conditioned       R-diagonal ratio = 5.000000e-01   rank = 3 of 3
+    near-singular 1e-13    R-diagonal ratio = 0.000000e+00   rank = 2 of 3
+    near-singular 1e-9     R-diagonal ratio = 2.357023e-10   rank = 3 of 3
+    tiny but well cond.    R-diagonal ratio = 5.000000e-01   rank = 3 of 3
+    exactly singular       R-diagonal ratio = 0.000000e+00   rank = 2 of 3
+
+    AND THE COST, against SparseLU, on the momentum shape:
+    n        LU seconds     QR seconds     QR/LU        LU nnzU      QR nnzR
+    200      0.000127       0.000046       0.36         400          596
+             LU vs QR largest component gap 1.574122e+12
+    1000     0.000396       0.000274       0.69         2000         2996
+             LU vs QR largest component gap 1.574122e+12
+    4000     0.001299       0.002371       1.83         8000         11996
+             LU vs QR largest component gap 1.574122e+12
+
+done

@@ -98,6 +98,7 @@ bettercad_add_executable(bettercad_tests
         thermal/ThermalValidationMappedTests.cpp
         thermal/ThermalValidationTestSupport.hpp
         thermal/ThermalValidationTests.cpp
+        linalg/SparseSolveTests.cpp
         linalg/SymmetricSolveTests.cpp
         drawing/AnnotationTests.cpp
         drawing/AssemblyDrawingTests.cpp
@@ -367,6 +368,7 @@ if(TARGET bettercad_reference_models)
         cfd/CfdDivergenceTests.cpp
         cfd/CfdGradientTests.cpp
         cfd/CfdInitialFieldTests.cpp
+        cfd/CfdLinearSolveTests.cpp
         cfd/CfdMeshTests.cpp
         cfd/CfdMomentumTests.cpp
         cfd/CfdTopologyTests.cpp

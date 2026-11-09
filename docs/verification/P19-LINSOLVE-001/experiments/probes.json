@@ -1,0 +1,177 @@
+[
+  {
+    "id": "M1 non-square refused only when symmetry is required",
+    "file": "src/cfd/CfdLinearSolve.cpp",
+    "expect": "KILL",
+    "old": "    if (matrix.rows() != matrix.columns()) {",
+    "new": "    if (requireSymmetry && matrix.rows() != matrix.columns()) {"
+  },
+  {
+    "id": "M2 the empty-system early-out swallows a 1x1 system",
+    "file": "src/linalg/SparseSolve.cpp",
+    "expect": "KILL",
+    "old": "    if (rows == 0) {",
+    "new": "    if (rows <= 1) {"
+  },
+  {
+    "id": "M3 a singular general system is called a library fault",
+    "file": "src/cfd/CfdLinearSolve.cpp",
+    "expect": "KILL",
+    "old": "    case linalg::SparseSolveProblem::SingularSystem:\n        return CfdLinearSolveProblem::SystemIsSingular;",
+    "new": "    case linalg::SparseSolveProblem::SingularSystem:\n        return CfdLinearSolveProblem::FactorizationFailed;"
+  },
+  {
+    "id": "M4a the row-offset monotonicity check is removed",
+    "file": "src/linalg/SparseSolve.cpp",
+    "expect": "KILL",
+    "old": "        if (rowStart[row] > rowStart[row + 1] ||\n            static_cast<std::size_t>(rowStart[row + 1]) > inner.size()) {",
+    "new": "        if (false) {"
+  },
+  {
+    "id": "M4b the same check removed from the SYMMETRIC kernel",
+    "file": "src/linalg/SymmetricSolve.cpp",
+    "expect": "KILL",
+    "old": "        if (rowStart[row] > rowStart[row + 1] ||\n            static_cast<std::size_t>(rowStart[row + 1]) > inner.size()) {",
+    "new": "        if (false) {"
+  },
+  {
+    "id": "M4c only the monotonicity half is removed, the bound stays",
+    "file": "src/linalg/SparseSolve.cpp",
+    "expect": "KILL",
+    "old": "        if (rowStart[row] > rowStart[row + 1] ||\n            static_cast<std::size_t>(rowStart[row + 1]) > inner.size()) {",
+    "new": "        if (static_cast<std::size_t>(rowStart[row + 1]) > inner.size()) {"
+  },
+  {
+    "id": "M4d the last-offset clause is removed",
+    "file": "src/linalg/SparseSolve.cpp",
+    "expect": "KILL",
+    "old": "        (rows > 0 && rowStart.front() != 0) || rowStart.back() != static_cast<SparseIndex>(inner.size())) {",
+    "new": "        (rows > 0 && rowStart.front() != 0)) {"
+  },
+  {
+    "id": "M5 the pressure path reports a fabricated conditioning ratio",
+    "file": "src/cfd/CfdLinearSolve.cpp",
+    "expect": "KILL",
+    "old": "    out.conditioningRatio = solved->pivotRatio;",
+    "new": "    out.conditioningRatio = 1.0;"
+  },
+  {
+    "id": "M6 the reported residual is corrupted by one part in a thousand",
+    "file": "src/cfd/CfdLinearSolve.cpp",
+    "expect": "KILL",
+    "old": "    out.normalizedResidual = solved->residual.normalized;\n    out.conditioningRatio = solved->pivotRatio;",
+    "new": "    out.normalizedResidual = solved->residual.normalized * 1.001;\n    out.conditioningRatio = solved->pivotRatio;"
+  },
+  {
+    "id": "M7 CFD's own right-hand-side finiteness guard is removed",
+    "file": "src/cfd/CfdLinearSolve.cpp",
+    "expect": "KILL",
+    "old": "        if (!std::isfinite(rightHandSide[i])) {",
+    "new": "        if (false) {"
+  },
+  {
+    "id": "M8 an over-long right-hand side is accepted and truncated",
+    "file": "src/cfd/CfdLinearSolve.cpp",
+    "expect": "KILL",
+    "old": "    if (rightHandSide.size() != matrix.rows()) {",
+    "new": "    if (rightHandSide.size() < matrix.rows()) {"
+  },
+  {
+    "id": "M9a an infinite right-hand side entry slips past CFD's guard",
+    "file": "src/cfd/CfdLinearSolve.cpp",
+    "expect": "KILL",
+    "old": "        if (!std::isfinite(rightHandSide[i])) {",
+    "new": "        if (std::isnan(rightHandSide[i])) {"
+  },
+  {
+    "id": "M9b a NaN matrix entry slips past the kernel's guard",
+    "file": "src/linalg/SparseSolve.cpp",
+    "expect": "KILL",
+    "old": "        if (!std::isfinite(values[i])) {",
+    "new": "        if (std::isinf(values[i])) {"
+  },
+  {
+    "id": "M10 the port's exact routing becomes toleranced",
+    "file": "src/cfd/CfdLinearSolve.cpp",
+    "expect": "KILL",
+    "old": "        const bool symmetric = matrix.rows() == matrix.columns() && matrix.largestSymmetryError() == 0.0;",
+    "new": "        const bool symmetric = matrix.rows() == matrix.columns() && matrix.largestSymmetryError() < 1.0e-15;"
+  },
+  {
+    "id": "M11 a general-path failure claims the symmetric kernel ran",
+    "file": "src/cfd/CfdLinearSolve.cpp",
+    "expect": "KILL",
+    "old": "        out.index = solved.error().index;\n        out.symmetricKernel = false;\n        return std::unexpected(std::move(out));",
+    "new": "        out.index = solved.error().index;\n        out.symmetricKernel = true;\n        return std::unexpected(std::move(out));"
+  },
+  {
+    "id": "M12 the general path's failure carries no conditioning measure",
+    "file": "src/cfd/CfdLinearSolve.cpp",
+    "expect": "KILL",
+    "old": "        out.conditioningRatio = solved.error().rankRatio;",
+    "new": "        out.conditioningRatio = 0.0;"
+  },
+  {
+    "id": "M13 two enumerators swap places in the declared order",
+    "file": "include/bettercad/cfd/CfdLinearSolve.hpp",
+    "expect": "KILL",
+    "old": "    CfdLinearSolveProblem::SystemIsSingular,\n    CfdLinearSolveProblem::MatrixIsNotPositiveDefinite,",
+    "new": "    CfdLinearSolveProblem::MatrixIsNotPositiveDefinite,\n    CfdLinearSolveProblem::SystemIsSingular,"
+  },
+  {
+    "id": "M14 the pressure path's conditioning floor is raised six decades",
+    "file": "src/cfd/CfdLinearSolve.cpp",
+    "expect": "KILL",
+    "old": "                                          .pivotFloor = linalg::SymmetricSolveSettings{}.pivotFloor};",
+    "new": "                                          .pivotFloor = 1.0e-6};"
+  },
+  {
+    "id": "M15 the general predictor stops predicting",
+    "file": "src/linalg/SparseSolve.cpp",
+    "expect": "KILL",
+    "old": "        return solved.failure->problem;",
+    "new": "        return SparseSolveProblem::SingularSystem;"
+  },
+  {
+    "id": "M16 the symmetry error is reported as a constant",
+    "file": "src/cfd/CfdLinearSolve.cpp",
+    "expect": "KILL",
+    "old": "            out.largestSymmetryError = asymmetry;",
+    "new": "            out.largestSymmetryError = 1.0;"
+  },
+  {
+    "id": "M17 the conditioning floor comparison becomes inclusive",
+    "file": "src/linalg/SparseSolve.cpp",
+    "expect": "KILL",
+    "old": "    if (out.solution.rankRatio < settings.rankRatioFloor) {",
+    "new": "    if (out.solution.rankRatio <= settings.rankRatioFloor) {"
+  },
+  {
+    "id": "M19 the residual-path failure forgets the rank it measured",
+    "file": "src/linalg/SparseSolve.cpp",
+    "expect": "KILL",
+    "old": "        failure.reportedRank = out.solution.reportedRank;",
+    "new": "        failure.reportedRank = 0;"
+  },
+  {
+    "id": "M21 the indefinite refusal is folded back into singularity",
+    "file": "src/cfd/CfdLinearSolve.cpp",
+    "expect": "KILL",
+    "old": "        const bool indefinite = solved.error().problem == linalg::SymmetricSolveProblem::SingularSystem &&\n                                !solved.error().allPivotsPositive && !solved.error().exactlyZeroPivot;",
+    "new": "        const bool indefinite = false;"
+  },
+  {
+    "id": "M22 the R diagonal is read from the wrong axis",
+    "file": "src/linalg/SparseSolve.cpp",
+    "expect": "KILL",
+    "old": "            if (entry.row() == entry.col()) {",
+    "new": "            if (entry.row() == entry.col() + 1) {"
+  },
+  {
+    "id": "M18 NO-OP CONTROL: two independent summary assignments reordered",
+    "file": "src/cfd/CfdLinearSolve.cpp",
+    "expect": "SURVIVE",
+    "old": "    out.reportedRank = 0;\n    out.symmetricKernel = true;\n    return out;",
+    "new": "    out.symmetricKernel = true;\n    out.reportedRank = 0;\n    return out;"
+  }
+]

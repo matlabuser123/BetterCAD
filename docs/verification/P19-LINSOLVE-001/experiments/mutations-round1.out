@@ -1,0 +1,31 @@
+P19-LINSOLVE-001 mutation probes
+
+src/linalg/SparseSolve.cpp                   8986e663c3e58d02a3351cd3e406608123726d3cfc2c67f9e5a341a274042945
+src/linalg/SymmetricSolve.cpp                ce2e240b8eaa39d6f1a2fcf18c0f224ed36b148148377db0b0edeec873b256f8
+src/cfd/CfdLinearSolve.cpp                   dc8b72cc2899f7a0cadab63ee541edf4559c0093d460e33549d0964a5b6cc024
+include/bettercad/cfd/CfdLinearSolve.hpp     b435fc69457a5f4ebc319460e4c4ca5b2689d184f1dac7df241bd118d1d4a6ae
+
+BASELINE all filters pass
+
+KILL     KILLED   M1 non-square refused only when symmetry is required                    75s
+KILL     KILLED   M2 the empty-system early-out swallows a 1x1 system                     71s
+KILL     KILLED   M3 a singular general system is called a library fault                  67s
+KILL     KILLED   M4a the row-offset monotonicity check is removed                        72s
+KILL     KILLED   M4b the same check removed from the SYMMETRIC kernel                    72s
+KILL     SURVIVED M4c only the monotonicity half is removed, the bound stays              69s
+KILL     KILLED   M4d the last-offset clause is removed                                   67s
+KILL     KILLED   M5 the pressure path reports a fabricated conditioning ratio            68s
+KILL     KILLED   M6 the reported residual is corrupted by one part in a thousand         65s
+KILL     KILLED   M7 CFD's own right-hand-side finiteness guard is removed                65s
+KILL     KILLED   M8 an over-long right-hand side is accepted and truncated               64s
+KILL     SURVIVED M9a an infinite right-hand side entry slips past CFD's guard            64s
+KILL     KILLED   M9b a NaN matrix entry slips past the kernel's guard                    66s
+KILL     KILLED   M10 the port's exact routing becomes toleranced                         67s
+KILL     KILLED   M11 a general-path failure claims the symmetric kernel ran              63s
+KILL     KILLED   M12 the general path's failure carries no conditioning measure          64s
+KILL     KILLED   M13 two enumerators swap places in the declared order                   69s
+KILL     KILLED   M14 the pressure path's conditioning floor is raised six decades        61s
+KILL     KILLED   M15 the general predictor stops predicting                              49s
+KILL     KILLED   M16 the symmetry error is reported as a constant                        48s
+KILL     KILLED   M17 the conditioning floor comparison becomes inclusive                 47s
+ERROR  M19 the residual-path failure forgets the rank it measured             the probe text occurs 2 times, not once

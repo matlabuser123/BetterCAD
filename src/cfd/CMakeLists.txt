@@ -43,14 +43,30 @@
 #                   ADR-052), linked PRIVATE, never an include of structural or
 #                   thermal and never a hand copy
 #
-# So BetterCAD::linalg is NOT linked here and no linalg header is included. The
-# consequence is deliberate: CfdSparseIndex is cfd's own uint64_t alias rather
-# than linalg::SparseIndex, same width and signedness by construction so a later
-# solve consumes these spans without translation, and the static_assert that
-# turns "same by construction" into "same, enforced" belongs to the milestone
-# that may legitimately include that header. ADR-069 Decision 3 records why
-# buying the assert today would cost a decision that is not this milestone's to
-# spend.
+# NO LINEAR ALGEBRA LINKED -- UNTIL NOW. The paragraph above stood from
+# P19-DIFF-001 until P19-LINSOLVE-001 (ADR-076) was authorized to make the
+# solve, and the clause "BetterCAD::linalg is NOT linked here and no linalg
+# header is included" is now false while the distinction it drew still stands.
+# The amendment:
+#
+#   the CONTAINER   still P19-DIFF-001's, unchanged
+#   the SOLVE       now BetterCAD::linalg, linked PRIVATE as that paragraph
+#                   said it would be, and reached only from
+#                   CfdLinearSolve.cpp. Two kernels: solveSymmetricSparse for
+#                   the SYMMETRIC pressure correction -- P17's, qualified, the
+#                   one structural and thermal already call -- and solveSparse
+#                   for the ASYMMETRIC momentum system, which an LDLT cannot
+#                   take (ADR-072 Decision 3)
+#
+# PRIVATE IS LOAD-BEARING: a consumer of BetterCAD::cfd does not inherit the
+# link, so no linalg type may appear in a cfd PUBLIC header, and none does.
+# That is why the static_assert this file asked a later milestone for --
+# "CfdSparseIndex is cfd's own uint64_t alias rather than linalg::SparseIndex,
+# same width and signedness by construction ... and the static_assert that turns
+# 'same by construction' into 'same, enforced' belongs to the milestone that may
+# legitimately include that header" -- now sits in CfdLinearSolve.cpp and not in
+# a header. ADR-069 Decision 3 is thereby spent, by the milestone it was
+# deferred to.
 
 bettercad_add_library(bettercad_cfd
     ALIAS cfd
@@ -71,6 +87,7 @@ bettercad_add_library(bettercad_cfd
         CfdGeometry.cpp
         CfdGradient.cpp
         CfdInitialField.cpp
+        CfdLinearSolve.cpp
         CfdMesh.cpp
         CfdMomentum.cpp
         CfdSparse.cpp
@@ -81,6 +98,8 @@ bettercad_add_library(bettercad_cfd
         BetterCAD::core
         BetterCAD::features
         BetterCAD::meshing
+    PRIVATE_LINK
+        BetterCAD::linalg
 )
 
 install(TARGETS bettercad_cfd

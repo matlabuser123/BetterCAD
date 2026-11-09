@@ -1,0 +1,23 @@
+---
+# P19-LINSOLVE-001
+
+## CFD Linear Solver Infrastructure
+
+Audit and qualify reusable sparse linear algebra.
+
+* [ ] Audit existing generic solver
+* [ ] Respect dependency-layer ADRs
+* [ ] Reuse generic lower-layer solver
+* [ ] Pressure-system solver
+* [ ] Momentum-system solver
+* [ ] Define tolerances
+* [ ] Define singular detection
+* [ ] Define non-finite rejection
+* [ ] Independent residual validation
+* [ ] No solver-success-only qualification
+* [ ] Determinism PASS
+* [ ] Large sparse smoke PASS
+* [ ] Regression PASS
+* [ ] Evidence recorded
+
+---

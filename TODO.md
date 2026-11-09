@@ -23,13 +23,97 @@ Prerequisite:
            may set). P17's F1-F3 stand unchanged beneath them.
 
 Current milestone:
-           NONE IS OPEN, AND THE NEXT ONE IS NOT CLAUDE'S TO CHOOSE.
-           P19-PVCOUPLE-001 passed its gates on 2026-11-09 and finishing
-           a milestone is itself a stop condition: being next in the
-           phase plan below, being small, or being obvious is not
-           authorization. The two milestones it would be easiest to
-           drift into are named under Next: so that the drift stays
-           visible.
+           P19-LINSOLVE-001 - CFD Linear Solver Infrastructure. AUTHORIZED
+           2026-11-09 by the owner's "implement and fully verify" over the
+           fourteen-item checklist, which arrived pasted into the instruction
+           as P19-BC-001's, P19-IC-001's, P19-DIFF-001's, P19-GRAD-001's,
+           P19-CONV-001's, P19-MOM-001's, P19-CONT-001's and
+           P19-PVCOUPLE-001's did. PASS 2026-11-09 - all fourteen items
+           ticked, qualified from clean on the first attempt, evidence in
+           docs/verification/P19-LINSOLVE-001/ and ADR-076. The four defects
+           the post-gate reconciliation found were in this milestone's own
+           EVIDENCE, not in the frozen surface, and are corrected in place
+           rather than rewritten away. THE PASTED TEXT WAS DIFFED AGAINST THIS FILE'S OWN
+           SECTION FIRST and is byte-for-byte identical across all 23 lines,
+           with 14 unticked items and 0 ticked -- counted, not assumed -- so
+           the scope is this file's checklist unaltered, and sha256
+           86a54ddba6c61ce2 over both after CR normalization. This
+           authorization was written here BEFORE any implementation, as the
+           eight before it were.
+           Six scope notes recorded at authorization time, not discovered
+           later:
+           (1) THE KERNEL ALREADY EXISTS, AND cfd IS ALREADY ALLOWED TO
+           INCLUDE IT. tests/architecture/CheckLayering.cmake sets
+           layer_linalg 5 and layer_cfd 42, and the rule is strictly-lower, so
+           this needs no renumbering and no new permission. That file's own
+           comment says why linalg sits at 5: "the kernel P17 qualified inside
+           structural (50) had to move BELOW thermal (45) to be reachable from
+           it", and "linalg holds the GENERIC numerical kernels more than one
+           physics needs". src/cfd/CMakeLists.txt then names this milestone's
+           plan outright: "the SOLVE -- still P19-LINSOLVE-001's decision,
+           unchanged. The generic kernel it would reuse is BetterCAD::linalg
+           (layer 5, ADR-052), linked PRIVATE, never an include of structural
+           or thermal and never a hand copy." So items 1-3 are satisfied by
+           auditing that kernel, linking it PRIVATE and calling it -- NOT by
+           writing a solver. A second symmetric factorisation in cfd would be
+           the duplication ADR-052 chose extraction to avoid.
+           (2) THIS MILESTONE WAS LEFT A SPECIFIC static_assert BY NAME.
+           src/cfd/CMakeLists.txt: "CfdSparseIndex is cfd's own uint64_t alias
+           rather than linalg::SparseIndex, same width and signedness by
+           construction so a later solve consumes these spans without
+           translation, and the static_assert that turns 'same by
+           construction' into 'same, enforced' belongs to the milestone that
+           may legitimately include that header. ADR-069 Decision 3 records
+           why buying the assert today would cost a decision that is not this
+           milestone's to spend." This is that milestone, so the assert is
+           owed here and the CMake comment it contradicts is corrected rather
+           than left standing.
+           (3) ADR-058 HAS ALREADY DEFINED THE TOLERANCE, SO "Define
+           tolerances" MEANS BIND THE DECLARED ONE. CfdData.hpp declares
+           CfdLinearSolverSettings with relativeResidualTolerance = 1e-9 and
+           says "ONE RATIO: the normalised residual of the solved system,
+           computed independently of the solver... Which solver is used is
+           P19-LINSOLVE-001's decision and not a field." The kernel's own
+           SymmetricSolveSettings carries a second ratio, pivotFloor = 1e-12,
+           which cfd does not own; where that value comes from for a cfd solve
+           is a decision this milestone must make and record, not a new
+           settings type to invent. Inventing one would be the "second
+           parameter system" ARCHITECTURE.md rejects -- the P19-CONT-001 and
+           P19-PVCOUPLE-001 lesson a third time.
+           (4) THE TWO SYSTEMS NEED TWO DIFFERENT KERNELS, AND BOTH FACTS ARE
+           ALREADY COMMITTED. CfdCoupling.hpp: "THE PRESSURE-CORRECTION MATRIX
+           IS SYMMETRIC BY CONSTRUCTION... That the momentum system is NOT
+           symmetric is equally deliberate: convection makes it asymmetric
+           (ADR-072 Decision 3), so a port must accept both and a port that
+           assumes symmetry everywhere is wrong." CfdConvection.hpp: "THE
+           MATRIX IS ASYMMETRIC, AND THAT IS CORRECT... Demanding symmetry of
+           a convection operator would be wrong rather than merely slack." The
+           existing kernel is an LDLT and symmetric-only, so item 4 reuses it
+           and item 5 cannot. Where the non-symmetric kernel belongs is this
+           milestone's architecturally significant decision and gets an ADR
+           with candidates; ADR-052's own Rationale anticipated the case --
+           "What would have made Option B right: if the thermal system needed
+           a different algorithm (an iterative method, a non-symmetric
+           factorisation). It does not" -- and CFD's momentum system does.
+           (5) THE EXISTING KERNEL DOES NOT CHECK SYMMETRY, WHICH THE AUDIT
+           FOUND AND WHICH IS MEASURED BEFORE IT IS RELIED ON.
+           src/linalg/SymmetricSolve.cpp builds the FULL CSR into Eigen and
+           hands it to SimplicialLDLT; the word "symmetric" appears in that
+           file only in comments and type names, never in a check. What stands
+           between a wrong input and a wrong answer is the independent
+           residual, computed from the ORIGINAL arrays after the solve, so a
+           mis-routed asymmetric system should be refused as ResidualTooLarge
+           rather than solved. "Should" is a prediction about a library, and
+           this project measures those: it is an open question to be answered
+           by experiment before any code depends on it.
+           (6) WHAT IS NOT THIS MILESTONE'S. P19-STEADY-001 owns the outer
+           loop and the atomic result publication, so nothing here iterates to
+           convergence or publishes a result. P19-PVCOUPLE-001 owns the
+           coupling and is QUALIFIED: its CfdLinearSolve port is the shape
+           this milestone must satisfy, and changing that port would requalify
+           a passed milestone. Adding a function to linalg changes a module
+           structural and thermal both depend on (ADR-052's own stated
+           consequence), so both are requalified by the full unfiltered run.
 
 Previous milestone:
            P19-PVCOUPLE-001 - Pressure-Velocity Coupling. AUTHORIZED
@@ -698,19 +782,28 @@ Qualified:
            P18 — Thermal Analysis
 
 Next:
-           NOTHING IS AUTHORIZED. This file records no open milestone,
-           which is a stop condition in CLAUDE.md's own terms: the next
-           milestone is a scope decision and it belongs to the owner.
-           Two milestones it would be easy to drift into are named here
-           so that the drift is visible. P19-LINSOLVE-001 owns the
-           pressure-system and momentum-system SOLVERS -- the decision
-           ADR-069 Decision 3 deferred and P19-PVCOUPLE-001 deliberately
-           did not spend, which is exactly why the coupling consumes a
-           CALLER-SUPPLIED solve. P19-STEADY-001 owns the orchestration
-           and the atomic result publication. Each milestone is started
-           by the owner, as every P17, P18 and P19 milestone was, and a
-           predecessor's PASS is not permission to start the one after
-           it.
+           NO MILESTONE IS OPEN. P19-LINSOLVE-001 PASSED on 2026-11-09, and
+           finishing a milestone is itself a stop condition. The next
+           milestone is a scope decision for the owner and not Claude's to
+           make.
+           P19-STEADY-001 - Steady Incompressible Solver is next in the
+           dependency order and is NOT AUTHORIZED. It is named here so that
+           the drift is visible rather than available: it owns the outer
+           loop, the convergence verdict, divergence detection and the
+           atomic result publication, and now that both the coupling and the
+           solvers exist it is the milestone it would be easiest to begin by
+           momentum. Being next in the dependency order is not permission.
+           Each milestone is started by the owner, as every P17, P18 and P19
+           milestone was, and a predecessor's PASS is not permission to start
+           the one after it.
+           One finding is OPEN AND UNAUTHORIZED, reported rather than fixed:
+           docs/verification/*/qualification/verify-harness.cmd carries a
+           literal 0x08 byte where \bc-build was meant, in 72 of 96
+           committed copies, entered 2026-09-30 with the P15 materials work.
+           It fires only when BETTERCAD_BUILD_ROOT is undefined, which
+           run-qualification.cmd always defines, so no gate in any milestone
+           ever evaluated it. Repairing it across the lineage needs the
+           owner's scope decision.
 
 P19 objective, as planned:
            authoritative CAD / fluid / mesh state
@@ -3975,20 +4068,20 @@ Do not silently copy OpenFOAM implementation.
 
 Audit and qualify reusable sparse linear algebra.
 
-* [ ] Audit existing generic solver
-* [ ] Respect dependency-layer ADRs
-* [ ] Reuse generic lower-layer solver
-* [ ] Pressure-system solver
-* [ ] Momentum-system solver
-* [ ] Define tolerances
-* [ ] Define singular detection
-* [ ] Define non-finite rejection
-* [ ] Independent residual validation
-* [ ] No solver-success-only qualification
-* [ ] Determinism PASS
-* [ ] Large sparse smoke PASS
-* [ ] Regression PASS
-* [ ] Evidence recorded
+* [x] Audit existing generic solver
+* [x] Respect dependency-layer ADRs
+* [x] Reuse generic lower-layer solver
+* [x] Pressure-system solver
+* [x] Momentum-system solver
+* [x] Define tolerances
+* [x] Define singular detection
+* [x] Define non-finite rejection
+* [x] Independent residual validation
+* [x] No solver-success-only qualification
+* [x] Determinism PASS
+* [x] Large sparse smoke PASS
+* [x] Regression PASS
+* [x] Evidence recorded
 
 ---
 # P19-STEADY-001

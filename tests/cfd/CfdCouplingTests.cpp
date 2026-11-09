@@ -50,6 +50,7 @@
 #include <bettercad/cfd/CfdContinuity.hpp>
 #include <bettercad/cfd/CfdConvection.hpp>
 #include <bettercad/cfd/CfdCoupling.hpp>
+#include <bettercad/cfd/CfdLinearSolve.hpp>
 #include <bettercad/cfd/CfdData.hpp>
 #include <bettercad/cfd/CfdDiffusion.hpp>
 #include <bettercad/cfd/CfdGeometry.hpp>
@@ -2994,4 +2995,170 @@ TEST_CASE("CfdCoupling_ANonPositiveAssembledDiagonalIsRefusedAndIsReachable", "[
     CHECK(iteration.error().problem == CfdCouplingProblem::MomentumDiagonalNotPositive);
     CHECK_THAT(iteration.error().error.message,
                Catch::Matchers::ContainsSubstring("strictly positive"));
+}
+
+TEST_CASE("CfdCoupling_TheRealSolverDrivesTheBenchmarkAndAgreesWithTheDenseReference",
+          "[cfd][pvc][linsolve]") {
+    // P19-LINSOLVE-001 ADDED THIS CASE, and it is the only place where the
+    // production solver meets the operator it was built for. Every other case
+    // in this file supplies `denseSolve`, a Gaussian elimination written here
+    // so that the operator could be qualified before a solver existed. That
+    // reference is now worth more than it was: it is INDEPENDENT of
+    // `BetterCAD::linalg`, of Eigen, and of both factorisations, so running the
+    // same SIMPLE loop twice -- once through `cfdLinearSolve()` and once through
+    // the dense reference -- checks the real solver against an implementation
+    // that shares no code with it.
+    //
+    // The fixture is the benchmark's, for the reason the benchmark gives: the
+    // inlet speed is derived from the cell Peclet number rather than picked,
+    // because upwind convection drives the momentum diagonal negative above
+    // Pe ~ 1 and this operator refuses that.
+    const double inletSpeed = 2.0e-5;
+    const double peclet = kDensity.si() * inletSpeed * 0.01 / kViscosity.si();
+    REQUIRE(peclet < 1.0);
+
+    const Hand hand = Hand::make(chainPoints(10), chainTets(10));
+    const PreparedCfdBoundary boundary = hand.mixed(inlet(inletSpeed), outlet(0.0));
+    const std::size_t cells = hand.topology.cells();
+    CfdIterationSettings settings;
+    settings.velocityRelaxation = 0.7;
+    settings.pressureRelaxation = 0.3;
+
+    const auto run = [&](const CfdLinearSolve& solve, std::size_t& iterations) {
+        std::vector<double> velocity = zeros(3 * cells);
+        std::vector<double> pressure = zeros(cells);
+        std::optional<CfdResiduals> first;
+        iterations = 0;
+        for (std::size_t k = 0; k < 200; ++k) {
+            const CfdCouplingIteration iteration =
+                advance(hand, boundary, velocity, pressure, solve, settings, true);
+            if (!first.has_value()) {
+                first = iteration.residuals;
+            }
+            velocity = iteration.corrected.velocity;
+            pressure = iteration.corrected.pressure;
+            const CfdCouplingVerdict verdict =
+                cfd::cfdCouplingVerdict(iteration.residuals, *first, CfdConvergenceSettings{});
+            REQUIRE(verdict != CfdCouplingVerdict::Diverged);
+            iterations = k + 1;
+            if (verdict == CfdCouplingVerdict::Converged) {
+                break;
+            }
+        }
+        return std::pair{velocity, pressure};
+    };
+
+    std::size_t realIterations = 0;
+    std::size_t denseIterations = 0;
+    const auto [realVelocity, realPressure] = run(cfd::cfdLinearSolve(), realIterations);
+    const auto [denseVelocity, densePressure] = run(denseSolve(), denseIterations);
+
+    SECTION("the real solver drives the loop to convergence") {
+        // A solver that returned zero, or refused, could not get here: the
+        // operator refuses a non-finite result and the verdict would never
+        // reach Converged.
+        CHECK(realIterations > 1);
+        CHECK(realIterations < 200);
+    }
+
+    SECTION("and it agrees with the independent dense reference") {
+        // TWO DIFFERENT FACTORISATIONS OF THE SAME SYSTEMS, so the agreement
+        // is numerical and NOT bitwise, and nothing here claims otherwise.
+        double velocityScale = 0.0;
+        double worstVelocity = 0.0;
+        for (std::size_t i = 0; i < realVelocity.size(); ++i) {
+            velocityScale = std::max(velocityScale, std::abs(denseVelocity[i]));
+            worstVelocity = std::max(worstVelocity, std::abs(realVelocity[i] - denseVelocity[i]));
+        }
+        double pressureScale = 0.0;
+        double worstPressure = 0.0;
+        for (std::size_t i = 0; i < realPressure.size(); ++i) {
+            pressureScale = std::max(pressureScale, std::abs(densePressure[i]));
+            worstPressure = std::max(worstPressure, std::abs(realPressure[i] - densePressure[i]));
+        }
+        INFO("iterations: real " << realIterations << ", dense " << denseIterations);
+        REQUIRE(velocityScale > 0.0);
+        // THE PRESSURE PREMISE IS REQUIRED AND NOT SKIPPED. An `if` here meant
+        // that an identically zero pressure field would silently remove the
+        // pressure comparison, and nothing asserted otherwise.
+        REQUIRE(pressureScale > 0.0);
+        CHECK(worstVelocity / velocityScale <= 1.0e-6);
+        CHECK(worstPressure / pressureScale <= 1.0e-6);
+        // AND THE REFERENCE MUST HAVE CONVERGED TOO, or the comparison above is
+        // against an unconverged state and the only symptom would be a
+        // confusing bound failure.
+        CHECK(denseIterations > 1);
+        CHECK(denseIterations < 200);
+        WARN(std::format("real vs dense reference: velocity {:.3e} relative, pressure {:.3e} relative, "
+                         "{} vs {} iterations",
+                         worstVelocity / velocityScale,
+                         pressureScale > 0.0 ? worstPressure / pressureScale : 0.0, realIterations,
+                         denseIterations));
+    }
+
+    SECTION("ONE iteration from the same state agrees far more tightly than the loop") {
+        // THE LOOP COMPARISON'S BOUND IS THE CONVERGENCE TOLERANCE ITSELF.
+        // `CfdConvergenceSettings` stops at 1e-6, so both runs halt inside the
+        // same 1e-6 neighbourhood of the fixed point and landing within 1e-6 of
+        // each other is close to automatic -- it discriminates gross solver
+        // error, not the accuracy the gates promise. Isolating a SINGLE
+        // iteration from one shared state removes the loop from the comparison,
+        // and the two solvers must then agree to their own accuracy.
+        const std::vector<double> velocity = zeros(3 * cells);
+        const std::vector<double> pressure = zeros(cells);
+        const CfdCouplingIteration byReal =
+            advance(hand, boundary, velocity, pressure, cfd::cfdLinearSolve(), settings, true);
+        const CfdCouplingIteration byDense =
+            advance(hand, boundary, velocity, pressure, denseSolve(), settings, true);
+
+        double scale = 0.0;
+        double worst = 0.0;
+        for (std::size_t i = 0; i < byReal.corrected.velocity.size(); ++i) {
+            scale = std::max(scale, std::abs(byDense.corrected.velocity[i]));
+            worst = std::max(worst, std::abs(byReal.corrected.velocity[i] - byDense.corrected.velocity[i]));
+        }
+        REQUIRE(scale > 0.0);
+        INFO("one-iteration relative departure " << worst / scale);
+        CHECK(worst / scale <= 1.0e-10);
+
+        double pressureScale = 0.0;
+        double worstPressure = 0.0;
+        for (std::size_t i = 0; i < byReal.corrected.pressure.size(); ++i) {
+            pressureScale = std::max(pressureScale, std::abs(byDense.corrected.pressure[i]));
+            worstPressure =
+                std::max(worstPressure, std::abs(byReal.corrected.pressure[i] - byDense.corrected.pressure[i]));
+        }
+        REQUIRE(pressureScale > 0.0);
+        CHECK(worstPressure / pressureScale <= 1.0e-10);
+        WARN(std::format("one iteration, real vs dense: velocity {:.3e} relative, pressure {:.3e} relative",
+                         worst / scale, worstPressure / pressureScale));
+    }
+
+    SECTION("the real solver drives the residual DOWN, not merely to a verdict") {
+        // The benchmark case asserts this of the dense reference; under the real
+        // solver the only convergence claim was an iteration count.
+        const std::vector<double> velocity = zeros(3 * cells);
+        const std::vector<double> pressure = zeros(cells);
+        const CfdCouplingIteration first =
+            advance(hand, boundary, velocity, pressure, cfd::cfdLinearSolve(), settings, true);
+        const double firstMomentum =
+            std::max({first.residuals.momentumX, first.residuals.momentumY, first.residuals.momentumZ});
+        REQUIRE(firstMomentum > 0.0);
+        const CfdCouplingIteration last = advance(hand, boundary, realVelocity, realPressure,
+                                                  cfd::cfdLinearSolve(), settings, true);
+        const double lastMomentum =
+            std::max({last.residuals.momentumX, last.residuals.momentumY, last.residuals.momentumZ});
+        CHECK(lastMomentum < firstMomentum);
+    }
+
+    SECTION("the closure identity holds under the real solver too") {
+        // ADR-075 Decision 5's identity is a property of the OPERATOR, so it
+        // must not depend on which solver supplied the correction.
+        const CfdCouplingIteration iteration =
+            advance(hand, boundary, realVelocity, realPressure, cfd::cfdLinearSolve(), settings, true);
+        CHECK(std::abs(iteration.residuals.continuity - iteration.summary.systemResidual) <=
+              cfd::kCfdCouplingClosureFloor);
+        CHECK(iteration.balance.maxCellContinuity <=
+              iteration.summary.systemResidual + cfd::kCfdCouplingClosureFloor);
+    }
 }

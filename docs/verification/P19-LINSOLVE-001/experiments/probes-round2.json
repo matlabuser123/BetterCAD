@@ -1,0 +1,58 @@
+[
+  {
+    "id": "M4c only the monotonicity half is removed, the bound stays",
+    "file": "src/linalg/SparseSolve.cpp",
+    "expect": "KILL",
+    "old": "        if (rowStart[row] > rowStart[row + 1] ||\n            static_cast<std::size_t>(rowStart[row + 1]) > inner.size()) {",
+    "new": "        if (static_cast<std::size_t>(rowStart[row + 1]) > inner.size()) {"
+  },
+  {
+    "id": "M4e only the interior BOUND is removed, monotonicity stays",
+    "file": "src/linalg/SparseSolve.cpp",
+    "expect": "KILL",
+    "old": "        if (rowStart[row] > rowStart[row + 1] ||\n            static_cast<std::size_t>(rowStart[row + 1]) > inner.size()) {",
+    "new": "        if (rowStart[row] > rowStart[row + 1]) {"
+  },
+  {
+    "id": "M9a an infinite right-hand side entry slips past CFD's guard",
+    "file": "src/cfd/CfdLinearSolve.cpp",
+    "expect": "KILL",
+    "old": "        if (!std::isfinite(rightHandSide[i])) {",
+    "new": "        if (std::isnan(rightHandSide[i])) {"
+  },
+  {
+    "id": "M19 the residual-path failure forgets the rank it measured",
+    "file": "src/linalg/SparseSolve.cpp",
+    "expect": "KILL",
+    "old": "        failure.index = accepted.error().index;\n        failure.rankRatio = out.solution.rankRatio;\n        failure.reportedRank = out.solution.reportedRank;",
+    "new": "        failure.index = accepted.error().index;\n        failure.rankRatio = out.solution.rankRatio;\n        failure.reportedRank = 0;"
+  },
+  {
+    "id": "M21 the indefinite refusal is folded back into singularity",
+    "file": "src/cfd/CfdLinearSolve.cpp",
+    "expect": "KILL",
+    "old": "        const bool indefinite = solved.error().problem == linalg::SymmetricSolveProblem::SingularSystem &&\n                                !solved.error().allPivotsPositive && !solved.error().exactlyZeroPivot;",
+    "new": "        const bool indefinite = false;"
+  },
+  {
+    "id": "M22 the new R-diagonal scan reads one row off the diagonal",
+    "file": "src/linalg/SparseSolve.cpp",
+    "expect": "KILL",
+    "old": "            if (entry.row() == entry.col()) {",
+    "new": "            if (entry.row() == entry.col() + 1) {"
+  },
+  {
+    "id": "M23 an ABSENT R diagonal reads as a healthy 1.0 instead of zero",
+    "file": "src/linalg/SparseSolve.cpp",
+    "expect": "KILL",
+    "old": "    std::vector<double> diagonal(rows, 0.0);",
+    "new": "    std::vector<double> diagonal(rows, 1.0);"
+  },
+  {
+    "id": "M18 NO-OP CONTROL: two independent summary assignments reordered",
+    "file": "src/cfd/CfdLinearSolve.cpp",
+    "expect": "SURVIVE",
+    "old": "    out.reportedRank = 0;\n    out.symmetricKernel = true;\n    return out;",
+    "new": "    out.symmetricKernel = true;\n    out.reportedRank = 0;\n    return out;"
+  }
+]

@@ -1,0 +1,37 @@
+[
+  {
+    "id": "M4a the whole monotonicity guard is removed (general kernel)",
+    "file": "src/linalg/SparseSolve.cpp",
+    "expect": "KILL",
+    "old": "        if (rowStart[row] > rowStart[row + 1]) {",
+    "new": "        if (false) {"
+  },
+  {
+    "id": "M4b the whole monotonicity guard is removed (SYMMETRIC kernel)",
+    "file": "src/linalg/SymmetricSolve.cpp",
+    "expect": "KILL",
+    "old": "        if (rowStart[row] > rowStart[row + 1]) {",
+    "new": "        if (false) {"
+  },
+  {
+    "id": "M4d the back-equality clause the proof leans on is removed",
+    "file": "src/linalg/SparseSolve.cpp",
+    "expect": "KILL",
+    "old": "        (rows > 0 && rowStart.front() != 0) || rowStart.back() != static_cast<SparseIndex>(inner.size())) {",
+    "new": "        (rows > 0 && rowStart.front() != 0)) {"
+  },
+  {
+    "id": "M4f monotonicity becomes strict, so a legitimate EMPTY row is refused",
+    "file": "src/linalg/SparseSolve.cpp",
+    "expect": "KILL",
+    "old": "        if (rowStart[row] > rowStart[row + 1]) {",
+    "new": "        if (rowStart[row] >= rowStart[row + 1]) {"
+  },
+  {
+    "id": "M18 NO-OP CONTROL: two independent summary assignments reordered",
+    "file": "src/cfd/CfdLinearSolve.cpp",
+    "expect": "SURVIVE",
+    "old": "    out.reportedRank = 0;\n    out.symmetricKernel = true;\n    return out;",
+    "new": "    out.symmetricKernel = true;\n    out.reportedRank = 0;\n    return out;"
+  }
+]

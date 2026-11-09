@@ -1,0 +1,26 @@
+P19-LINSOLVE-001 mutation probes
+
+src/linalg/SparseSolve.cpp                   8986e663c3e58d02a3351cd3e406608123726d3cfc2c67f9e5a341a274042945
+src/linalg/SymmetricSolve.cpp                ce2e240b8eaa39d6f1a2fcf18c0f224ed36b148148377db0b0edeec873b256f8
+src/cfd/CfdLinearSolve.cpp                   dc8b72cc2899f7a0cadab63ee541edf4559c0093d460e33549d0964a5b6cc024
+include/bettercad/cfd/CfdLinearSolve.hpp     b435fc69457a5f4ebc319460e4c4ca5b2689d184f1dac7df241bd118d1d4a6ae
+
+BASELINE all filters pass
+
+KILL     KILLED   M4c only the monotonicity half is removed, the bound stays              52s
+KILL     SURVIVED M4e only the interior BOUND is removed, monotonicity stays              52s
+KILL     KILLED   M9a an infinite right-hand side entry slips past CFD's guard            54s
+KILL     KILLED   M19 the residual-path failure forgets the rank it measured              54s
+KILL     KILLED   M21 the indefinite refusal is folded back into singularity              55s
+KILL     KILLED   M22 the new R-diagonal scan reads one row off the diagonal              53s
+KILL     KILLED   M23 an ABSENT R diagonal reads as a healthy 1.0 instead of zero         52s
+SURVIVE  SURVIVED M18 NO-OP CONTROL: two independent summary assignments reordered        54s
+
+rebuilt from pristine: ok
+FINAL all filters pass: True
+src/linalg/SparseSolve.cpp                   8986e663c3e58d02a3351cd3e406608123726d3cfc2c67f9e5a341a274042945 MATCH
+src/linalg/SymmetricSolve.cpp                ce2e240b8eaa39d6f1a2fcf18c0f224ed36b148148377db0b0edeec873b256f8 MATCH
+src/cfd/CfdLinearSolve.cpp                   dc8b72cc2899f7a0cadab63ee541edf4559c0093d460e33549d0964a5b6cc024 MATCH
+include/bettercad/cfd/CfdLinearSolve.hpp     b435fc69457a5f4ebc319460e4c4ca5b2689d184f1dac7df241bd118d1d4a6ae MATCH
+
+killed 6, compiler 0, survived 2, of 8 probes

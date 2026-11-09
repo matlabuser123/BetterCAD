@@ -10,7 +10,16 @@
 # modules could then let drift apart.
 #
 # WHAT IS HERE: `solveSymmetricSparse`, its three-condition acceptance and its
-# independent residual. Moved MECHANICALLY out of `structural`: the same
+# independent residual -- and, since P19-LINSOLVE-001 (ADR-076), `solveSparse`,
+# the GENERAL square solve for a system that is not symmetric. A convection
+# operator is asymmetric and correct (ADR-072 Decision 3), so a CFD momentum
+# system cannot go through an LDLT, and ADR-052's own Rationale named that case
+# as the one that would justify a second algorithm. The two kernels share ONE
+# residual gate: `solveSparse` calls `evaluateResidual`, which takes only arrays
+# and knows no algorithm. Their conditioning measures are deliberately named
+# apart -- `pivotFloor` bounds an LDLT's min|D|/max|D|, `rankRatioFloor` bounds a
+# QR's min|R_ii|/max|R_ii| -- because they are the same shape and not the same
+# quantity. Moved MECHANICALLY out of `structural`: the same
 # algorithm, the same order of checks, the same gates. `structural` calls it
 # through a wrapper that adds P17's units and P17's wording; `thermal` calls it
 # through its own.
@@ -31,6 +40,7 @@ bettercad_add_library(bettercad_linalg
     EXPORT_BASE BETTERCAD_LINALG
     EXPORT_HEADER bettercad/linalg/Export.hpp
     SOURCES
+        SparseSolve.cpp
         SymmetricSolve.cpp
     PUBLIC_LINK
         BetterCAD::core

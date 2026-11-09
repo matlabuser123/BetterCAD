@@ -1,0 +1,37 @@
+Q5  THE PRESSURE SYSTEM'S PIVOT RATIO AGAINST THE PHYSICAL COEFFICIENT
+    pinned diagonal fixed at 1.0, as the qualified coupling writes it.
+    pivotFloor = 1e-12. A refusal here REFUSES A CORRECT SYSTEM.
+    a_f          n        verdict            pivotRatio     ratio/a_f
+    1.000e-03    8        SOLVED             5.000000e-04   0.5000
+    1.000e-03    64       SOLVED             5.000000e-04   0.5000
+    1.000e-06    8        SOLVED             5.000000e-07   0.5000
+    1.000e-06    64       SOLVED             5.000000e-07   0.5000
+    1.000e-07    8        SOLVED             5.000000e-08   0.5000
+    1.000e-07    64       SOLVED             5.000000e-08   0.5000
+    1.000e-09    8        SOLVED             5.000000e-10   0.5000
+    1.000e-09    64       SOLVED             5.000000e-10   0.5000
+    1.000e-12    8        singular_system    5.000000e-13   0.5000
+    1.000e-12    64       singular_system    5.000000e-13   0.5000
+    1.000e-13    8        singular_system    5.000000e-14   0.5000
+    1.000e-13    64       singular_system    5.000000e-14   0.5000
+    1.000e-15    8        singular_system    5.000000e-16   0.5000
+    1.000e-15    64       singular_system    5.000000e-16   0.5000
+
+    The same systems with the pinned diagonal set to a_f instead of 1.0:
+    a_f=1.000e-09    n=64   SOLVED             pivotRatio=2.500000e-01
+    a_f=1.000e-12    n=64   SOLVED             pivotRatio=2.500000e-01
+    a_f=1.000e-13    n=64   SOLVED             pivotRatio=2.500000e-01
+    a_f=1.000e-15    n=64   SOLVED             pivotRatio=2.500000e-01
+
+Q6  IS SPARSE LU'S U DIAGONAL REACHABLE, AND DOES ITS RATIO SEPARATE?
+    well conditioned       U-diagonal ratio = 5.555556e-01   logAbsDet = +2.7081e+00
+    near-singular 1e-13    U-diagonal ratio = 3.330669e-14   logAbsDet = -2.8836e+01
+    near-singular 1e-9     U-diagonal ratio = 3.333334e-10   logAbsDet = -1.9625e+01
+    tiny but well cond.    U-diagonal ratio = 5.555556e-01   logAbsDet = -5.9462e+01
+
+C   THE CONTROL: a deliberately WRONG x must score large
+    the kernel's own x          normalized = 3.710432e-17
+    x with 1.0 added to x[1]    normalized = 2.555443e-01
+    x = 0                       normalized = 1.000000e+00
+
+done

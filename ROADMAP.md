@@ -107,7 +107,7 @@ P19-ARCH-001": P19-ARCH-001 and P19-DATA-001 (2026-10-27), P19-FLUID-001
 P19-DOF-001 and P19-BC-001 (both 2026-11-05) and P19-IC-001 and P19-DIFF-001
 (both 2026-11-06) and P19-GRAD-001 and P19-DIV-001 (both 2026-11-07) and
 P19-CONV-001, P19-MOM-001 and P19-CONT-001 (all 2026-11-08) and
-P19-PVCOUPLE-001 (2026-11-09) have PASSED.
+P19-PVCOUPLE-001 and P19-LINSOLVE-001 (both 2026-11-09) have PASSED.
 P19-MESH-001 was qualified by a second attempt on a replacement machine: its
 first attempt, on 2026-10-28, failed 5 of 17 stages when the previous machine's
 temp volume filled and no test suite ran, and that machine was then permanently
@@ -182,9 +182,17 @@ reported two failed stages, the second time in two milestones. Its logs and the
 freeze it was launched under are kept under qualification-attempt-1/, including
 the claim that freeze got wrong, and all three places where the tree carried the
 false argument were CORRECTED IN PLACE rather than deleted, because the error is
-the finding. The harness has now run SIXTY-FIVE milestones unchanged, and is
-self-checked before each run, because an unchanged harness is not the same as a
-working one. No milestone is open, and nothing after P19-PVCOUPLE-001 is
+the finding. The harness has now run SIXTY-SIX milestones with its executable
+content unchanged, and is self-checked before each run, because an unchanged
+harness is not the same as a working one. `P19-LINSOLVE-001` is the first of
+those sixty-six whose copy of `run-qualification.cmd` was edited AFTER its gate
+ran, and the distinction is kept rather than blurred: its sixteen executable
+statements are identical before and after, proven by reconstructing the pre-edit
+body from the inverse replacements and hashing it back to
+`f80acaa80552617393a8501cb86213abb7169aab`, the hash the freeze recorded. What
+changed is the comment body, which asserted that no existing source file was
+modified four lines above its own correction, and counted six new files where
+there are eight. No milestone is open, and nothing after `P19-LINSOLVE-001` is
 authorized;
 see TODO.md.
 
@@ -1668,6 +1676,123 @@ be a property of three different runs. And there is still no performance
 baseline, for the fifth milestone running, now for a sharper reason than before —
 the solve is the caller's, so the cost of an outer iteration is not this
 milestone's to measure.
+
+`P19-LINSOLVE-001` (PASS 2026-11-09) SPENDS THE DECISION `ADR-069` DECISION 3
+DEFERRED, AND IT WROTE NO SYMMETRIC SOLVER. Three committed records had already
+fixed its shape before any code was written, and reading them is what turned a
+solver-writing task into an audit, a `PRIVATE` link and a call:
+`tests/architecture/CheckLayering.cmake` sets `layer_linalg 5` and `layer_cfd
+42` under a strictly-lower rule, so `cfd` was ALREADY permitted to include it
+and no renumbering was needed; `src/cfd/CMakeLists.txt` already named the kernel
+to reuse and the `static_assert` that was owed; and `ADR-052`'s own rationale
+had anticipated the case — "What would have made Option B right: if the thermal
+system needed a different algorithm (an iterative method, a non-symmetric
+factorisation). It does not" — which is exactly what CFD's momentum system
+needs. A second symmetric factorisation inside `cfd` would have been the
+duplication `ADR-052` chose extraction to avoid.
+
+**THE AUDIT'S FINDING IS THE MOST USEFUL THING IN THE MILESTONE.**
+`solveSymmetricSparse` performs NO SYMMETRY CHECK: it builds the full CSR into
+Eigen and hands it to a `SimplicialLDLT` whose default `UpLo` is `Lower`, so the
+upper triangle is simply never read. The word "symmetric" appears in that file
+only in comments and type names, and no test anywhere — in `linalg`,
+`structural` or `thermal` — had ever shown it an asymmetric matrix. It is not a
+defect: the independent residual is computed from the ORIGINAL arrays, so a
+wrong answer is refused rather than returned. But it was an untested
+precondition under a name that promises otherwise, and it is now pinned by tests
+in both kernels, with the measured behaviour recorded — asymmetry 1e-12 and
+1e-9 refused as `residual_too_large`, 1e-7 and above as `singular_system`, and
+exactly zero solved.
+
+**TWO SYSTEMS, TWO KERNELS, AND THE SECOND IS GATED ON A READABLE `R`
+DIAGONAL.** Pressure correction is symmetric by construction and keeps the
+`LDLT` that `structural` and `thermal` already call; momentum is asymmetric and
+correct that way, so it needs a general factorisation. `SparseLU` was MEASURED
+and rejected rather than argued about: it reports `info() == Success` with a
+normalized residual of exactly 0 on a system singular to 1e-13,
+`logAbsDeterminant` reads `-5.9e+01` for a well-conditioned 3x3 whose entries
+are all 1e-9 so it cannot be a gate, and the pinned Eigen exposes no accessor
+for `U`'s diagonal — verified against `Eigen/src/SparseLU/SparseLU.h` rather
+than taken from documentation — so recovering one means a dense inverse, 272 MB
+at `P18`'s smoke size of 5832. `SparseQR::matrixR()` returns a real sparse
+matrix, read by iteration and never by `coeff()`, since its contract does not
+promise sorted inner indices.
+
+Three gates, in the symmetric kernel's own order: `info() == Success` with
+`min|R_ii|/max|R_ii| >= rankRatioFloor`; every component of the solution finite;
+and the independent residual passing the normalized bound. **`rank()` is
+REPORTED AND NEVER GATED**, because it is `m_nonzeropivots` under a threshold
+Eigen chooses that grows with the system size. There is exactly ONE residual
+gate in BetterCAD: `solveSparse` calls `linalg::evaluateResidual` and translates
+its verdict rather than computing a second residual of its own.
+
+The port routes on EXACT symmetry, `largestSymmetryError() == 0.0`, because the
+coupling takes ONE `CfdLinearSolve` for both of its systems. The consequence is
+stated rather than left to be discovered: a momentum system at exactly zero flux
+IS symmetric positive definite and takes the `LDLT`, so nothing anywhere may
+assert bitwise equality across the two kernels.
+
+**A REACHABLE OUT-OF-BOUNDS READ WAS FOUND IN A KERNEL ALREADY QUALIFIED UNDER
+P17 AND P18, AND WHETHER TO REPAIR IT HERE WAS THE OWNER'S DECISION.**
+`checkSystem` validated a CSR row-offset array's length, first and last entries
+and nothing in between, so `{0, 5, 2}` over two rows and two entries passed and
+the build loop read three elements past both spans — reproduced as an abort
+inside `std::span::operator[]`. The scope question went to the owner and the
+answer on 2026-11-09 was to keep the repair in this milestone; `[structural]`
+271,414 in 415 and `[thermal]` 595,622 in 1168 were then measured IDENTICAL to
+their pre-change baselines, which is the measurement that matters for the first
+P19 milestone to modify a module both of those physics link.
+
+**THREE MUTATION-PROBE ROUNDS FOUND WHAT TWO INDEPENDENT REVIEWS COULD NOT,
+BECAUSE ALL THREE SURVIVORS WERE IN THE FIXES RATHER THAN THE ORIGINAL CODE.**
+The reviews produced 32 findings — 3 production defects fixed, 17 test gaps
+closed, one wrong-value claim REFUTED by measurement, one scope question
+escalated. Then 29 behavioural probes, of which the three survivors were: `M4c`,
+a two-part guard whose five malformed inputs were all caught by the OTHER
+clause; `M9a`, a CFD guard the kernel below made invisible by repeating it,
+catchable only through the check ORDER; and `M4e`, which was not a missing test
+at all but a PROOF that one clause could not fire — the dimension check already
+requires `rowStart.back() == inner.size()`, so monotonicity gives
+`rowStart[i] <= inner.size()` by transitivity. That clause was REMOVED from both
+kernels, because a guard no input can fire is what this project's own rule
+rejects and that rule was being cited elsewhere in the same milestone. The guard
+that ships is simpler than the one the audit's finding first produced and
+provably sufficient rather than defensively redundant.
+
+**It qualified from clean ON THE FIRST ATTEMPT** — 6870/6870 in three presets,
+3474 x 5 executions in two repeat stages with 17,370 counted `Start` markers and
+result lines each against 3,474 progress-prefixed lines, a ratio of exactly
+5.000, 0 `error:` and 0 `warning:` under `-Werror`, 17 of 17 stages exit 0,
+3h47m02s. The eight frozen subtree identities were read three times — the
+harness before its first build, the harness after its last test, and a
+recomputation from the working tree afterwards — and agree in all three. The
+cross-preset bit fingerprints and the per-subsystem assertion counts were read
+FROM THE THREE QUALIFIED BINARIES, because `ctest --preset` captures no stdout
+from a passing test and the earlier claim that the logs established that
+identity had no log behind it.
+
+Recorded as less than a reader might assume: **this solves two linear systems,
+and it neither iterates nor orchestrates.** `P19-STEADY-001` still owns the
+outer loop, the convergence verdict and the atomic result publication. There is
+still no performance baseline, for the sixth milestone running: relative kernel
+cost WAS measured to choose between the options — QR against LU at 0.35, 0.61
+and 1.65 for n = 200, 1000 and 4000 — but that is option-comparison data, not a
+benchmark, and optimizing is not what this milestone was authorized to do.
+
+**The post-gate reconciliation found four defects in this milestone's own
+evidence**, none of them in the frozen surface, and all are corrected in place
+and published rather than quietly rewritten: a harness paragraph asserting a
+file was unmodified four lines above its own correction; "six" new files where
+there are eight; this milestone's `TESTS` section still holding the pre-review
+snapshot and calling it `EXACTLY` three times; and a `cfd` assertion figure four
+short, which survived every check because 728,802 + 22,965 = 751,767 made it
+INTERNALLY CONSISTENT and therefore unfalsifiable from inside the document —
+only reading `[cfd]` off the built binary exposed it. Two of the author's own
+measurement tools were wrong before the evidence was: a freshness check that
+asked about file extensions instead of asking the build tool, which reported a
+FAIL on 24 zero-byte stubs written by the deployment tests; and a progress-line
+count that returned 999 in a 6870-test log, which is `1..999` and not a
+measurement of anything.
 
 ```text
 incompressible laminar

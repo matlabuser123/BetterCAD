@@ -103,6 +103,69 @@ using Failure = SymmetricSolveFailure;
                         .error(),
                     rows);
     }
+    // ROW OFFSETS MUST BE NON-DECREASING, AND THEIR ABSENCE WAS A
+    // MEMORY-SAFETY DEFECT RATHER THAN A MISSING DIAGNOSTIC.
+    // P19-LINSOLVE-001's audit found it: the checks above accept
+    // `rowStart = {0, 5, 2}` for a 2 x 2 system with two stored entries --
+    // the size is right, the first offset is 0 and the last equals
+    // `inner.size()` -- and the build loop below then reads `inner[2..4]`
+    // and `values[2..4]` past the end of their spans. `std::span`'s
+    // `operator[]` is unchecked, so a hardened build aborts and an
+    // unhardened one reads adjacent memory, narrows the garbage to Eigen's
+    // index type and hands it to `setFromTriplets`, which guards the result
+    // with `eigen_assert` alone: Debug aborts, Release writes out of
+    // bounds. It was reproduced before this guard was written.
+    //
+    // MONOTONICITY ALONE IS SUFFICIENT, AND A SECOND CLAUSE BOUNDING EACH
+    // INTERIOR OFFSET WAS REMOVED AFTER A MUTATION PROBE SHOWED IT COULD NOT
+    // FIRE. The proof is one line: the clause above has already required
+    // `rowStart.back() == inner.size()`, so if the offsets never decrease then
+    // `rowStart[i] <= rowStart[rows] == inner.size()` for every `i`, and every
+    // `slot` the loop below visits lies inside both spans. A guard no input can
+    // fire is exactly what this project's own rule rejects -- `CfdBoundary.hpp`:
+    // "An enumerator no input can produce is worse than no enumerator" -- and
+    // the rule was being invoked elsewhere in this same milestone to justify
+    // omitting other checks, so it applies here too.
+    //
+    // Both surviving clauses are pinned by probes: removing this one, and
+    // removing the `rowStart.back()` clause it leans on, are each caught.
+    //
+    // Every in-tree caller validates monotonicity in its own container
+    // first -- `CfdSparseMatrix::fromCsr` reports `RowStartInvalid`, and
+    // thermal's and structural's do the same -- so no caller's behaviour
+    // changes. The kernels are PUBLIC, and this file already claims they
+    // validate their input: "the library must not become the validator".
+    for (std::size_t row = 0; row < rows; ++row) {
+        if (rowStart[row] > rowStart[row + 1]) {
+            return fail(SymmetricSolveProblem::DimensionMismatch,
+                        makeError(ErrorCode::InvalidArgument,
+                                  std::format("row offset {} is {} and row offset {} is {}: the offsets "
+                                              "must not decrease",
+                                              row, rowStart[row], row + 1, rowStart[row + 1]))
+                            .error(),
+                        rows);
+        }
+    }
+
+    // AND THE SYSTEM MUST FIT EIGEN'S INDEX TYPE. `Eigen::SparseMatrix`'s
+    // StorageIndex is `int`, and the build loop narrows both the row and
+    // the column to it. A system with more than `INT_MAX` stored entries
+    // wraps silently to a negative index and lands in the same
+    // `eigen_assert`-only path as the case above. Refused here rather than
+    // left to wrap.
+    {
+        constexpr std::size_t limit = static_cast<std::size_t>(std::numeric_limits<int>::max());
+        if (rows > limit || values.size() > limit) {
+            return fail(SymmetricSolveProblem::DimensionMismatch,
+                        makeError(ErrorCode::InvalidArgument,
+                                  std::format("a {} row system with {} stored entries exceeds the index "
+                                              "range the sparse factorisation can address ({})",
+                                              rows, values.size(), limit))
+                            .error(),
+                        rows);
+        }
+    }
+
     for (const SparseIndex column : inner) {
         if (static_cast<std::size_t>(column) >= rows) {
             return fail(SymmetricSolveProblem::DimensionMismatch,

@@ -2222,3 +2222,80 @@ foreach(_case
         "could not convert|cannot convert|no matching function|no match for|invalid conversion|conversion from|invalid initialization|no member named|has no member"
         BetterCAD::cfd)
 endforeach()
+
+# P19-LINSOLVE-001 -- misuse of the two kernels and of the CFD solve. ADR-076.
+#
+# THE REGEXES LIST EVERY DIAGNOSTIC GCC CAN EMIT FOR THE CASE, not the one a
+# reader expects (the P19-GRAD-001 lesson).
+#
+# TWO FILES BECAUSE THE VOCABULARIES ARE SEPARATE. BetterCAD::linalg is linked
+# PRIVATE by cfd, so a cfd translation unit cannot name a linalg type -- which
+# is itself one of the gates below.
+set(_linsolve "${CMAKE_CURRENT_SOURCE_DIR}/LinalgSparseMisuse.cpp")
+bettercad_compile_fail_group(linsolve "${_linsolve}" BetterCAD::linalg)
+foreach(_case
+        SPARSE_SETTINGS_HAVE_A_PIVOT_FLOOR
+        SYMMETRIC_SETTINGS_HAVE_A_RANK_RATIO_FLOOR
+        A_SPARSE_SOLUTION_HAS_A_PIVOT_RATIO
+        A_SYMMETRIC_SOLUTION_HAS_A_RANK_RATIO
+        A_SPARSE_FAILURE_HAS_AN_EXACTLY_ZERO_PIVOT
+        A_SYMMETRIC_FAILURE_HAS_A_REPORTED_RANK)
+    bettercad_compile_fail_case(linsolve "${_linsolve}" ${_case}
+        "no member named|has no member"
+        BetterCAD::linalg)
+endforeach()
+foreach(_case
+        SOLVE_SPARSE_TAKES_SYMMETRIC_SETTINGS
+        SOLVE_SYMMETRIC_TAKES_SPARSE_SETTINGS
+        SPARSE_SETTINGS_ARE_SYMMETRIC_SETTINGS
+        SYMMETRIC_SETTINGS_ARE_SPARSE_SETTINGS
+        A_SPARSE_SOLUTION_IS_A_SYMMETRIC_SOLUTION
+        A_SPARSE_FAILURE_IS_A_SYMMETRIC_FAILURE
+        A_SPARSE_PROBLEM_IS_A_SYMMETRIC_PROBLEM)
+    bettercad_compile_fail_case(linsolve "${_linsolve}" ${_case}
+        "cannot convert|no matching function|invalid conversion|invalid initialization|no known conversion|could not convert|to non-scalar type|conversion from"
+        BetterCAD::linalg)
+endforeach()
+foreach(_case
+        THE_SPARSE_PROBLEM_TABLE_IS_ASSIGNABLE)
+    bettercad_compile_fail_case(linsolve "${_linsolve}" ${_case}
+        "read-only|assignment of read-only|cannot assign|lvalue required"
+        BetterCAD::linalg)
+endforeach()
+
+set(_cfdlinsolve "${CMAKE_CURRENT_SOURCE_DIR}/CfdLinearSolveMisuse.cpp")
+bettercad_compile_fail_group(cfdlinsolve "${_cfdlinsolve}" BetterCAD::cfd)
+foreach(_case
+        THE_CFD_HEADER_DOES_NOT_EXPOSE_LINALG)
+    bettercad_compile_fail_case(cfdlinsolve "${_cfdlinsolve}" ${_case}
+        "has not been declared|is not a member of|no member named|does not name a type"
+        BetterCAD::cfd)
+endforeach()
+foreach(_case
+        A_CFD_SOLUTION_HAS_A_PIVOT_RATIO
+        A_CFD_SOLUTION_HAS_A_RANK_RATIO
+        A_CFD_FAILURE_HAS_A_PIVOT_FLOOR
+        A_CFD_SOLUTION_HAS_A_RESIDUAL_NORMS
+        THE_CFD_SETTINGS_HAVE_A_PIVOT_FLOOR
+        THE_CFD_SETTINGS_HAVE_A_RANK_RATIO_FLOOR)
+    bettercad_compile_fail_case(cfdlinsolve "${_cfdlinsolve}" ${_case}
+        "no member named|has no member"
+        BetterCAD::cfd)
+endforeach()
+foreach(_case
+        A_LINEAR_SOLVE_PROBLEM_IS_A_COUPLING_PROBLEM
+        A_COUPLING_PROBLEM_IS_A_LINEAR_SOLVE_PROBLEM
+        A_LINEAR_SOLVE_FAILURE_IS_A_COUPLING_FAILURE
+        A_LINEAR_SOLUTION_IS_A_SOLVE_RESULT
+        THE_PRESSURE_SOLVE_TAKES_RAW_ARRAYS
+        THE_MOMENTUM_SOLVE_TAKES_A_BARE_TOLERANCE)
+    bettercad_compile_fail_case(cfdlinsolve "${_cfdlinsolve}" ${_case}
+        "cannot convert|no matching function|invalid conversion|invalid initialization|no known conversion|could not convert|to non-scalar type|conversion from"
+        BetterCAD::cfd)
+endforeach()
+foreach(_case
+        THE_CFD_LINEAR_SOLVE_PROBLEM_TABLE_IS_ASSIGNABLE)
+    bettercad_compile_fail_case(cfdlinsolve "${_cfdlinsolve}" ${_case}
+        "read-only|assignment of read-only|cannot assign|lvalue required"
+        BetterCAD::cfd)
+endforeach()

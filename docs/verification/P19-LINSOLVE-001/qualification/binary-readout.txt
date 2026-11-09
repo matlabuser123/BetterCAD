@@ -1,0 +1,57 @@
+P19-LINSOLVE-001 -- read from the three qualified binaries
+generated 2026-11-09 11:47:44
+
+The binaries, with the mtime the gate left on them:
+  debug-ext          2026-11-09 08:11:33  53b9baf5930996041adfdbbe8b74427cb9a1551b
+  release-ext        2026-11-09 09:08:38  eafca36ecf5e0f11306109b162de934732b83361
+  debug-shared-ext   2026-11-09 10:10:04  e2559dfed60d4e169aaee393de882703bfa2aad5
+
+==========================================================================
+ASSERTION IDENTITY PER PRESET
+==========================================================================
+
+--- debug-ext ---
+  [linalg]       All tests passed (2560 assertions in 29 test cases)    [0s]
+  [cfd]          All tests passed (751771 assertions in 644 test cases)    [75s]
+  [structural]   All tests passed (271414 assertions in 415 test cases)    [215s]
+  [thermal]      All tests passed (595622 assertions in 1168 test cases)    [112s]
+
+--- release-ext ---
+  [linalg]       All tests passed (2560 assertions in 29 test cases)    [1s]
+  [cfd]          All tests passed (751771 assertions in 644 test cases)    [61s]
+  [structural]   All tests passed (271414 assertions in 415 test cases)    [186s]
+  [thermal]      All tests passed (595622 assertions in 1168 test cases)    [100s]
+
+--- debug-shared-ext ---
+  [linalg]       All tests passed (2560 assertions in 29 test cases)    [0s]
+  [cfd]          All tests passed (751771 assertions in 644 test cases)    [66s]
+  [structural]   All tests passed (271414 assertions in 415 test cases)    [196s]
+  [thermal]      All tests passed (595622 assertions in 1168 test cases)    [112s]
+
+==========================================================================
+CROSS-PRESET BIT FINGERPRINTS
+==========================================================================
+Catch2 WARN, so these appear only when the binary is run directly.
+
+--- debug-ext ---
+    bit fingerprint, for comparing presets outside the test
+    bit fingerprint, 24-cell asymmetric chain: 045b00105d248b79
+    bit fingerprints, for comparing presets outside the test
+    bit fingerprint, 24-cell pressure system: 9c29663b4850a63c
+    bit fingerprint, 24-cell momentum system: 045b00105d248b79
+
+--- release-ext ---
+    bit fingerprint, for comparing presets outside the test
+    bit fingerprint, 24-cell asymmetric chain: 045b00105d248b79
+    bit fingerprints, for comparing presets outside the test
+    bit fingerprint, 24-cell pressure system: 9c29663b4850a63c
+    bit fingerprint, 24-cell momentum system: 045b00105d248b79
+
+--- debug-shared-ext ---
+    bit fingerprint, for comparing presets outside the test
+    bit fingerprint, 24-cell asymmetric chain: 045b00105d248b79
+    bit fingerprints, for comparing presets outside the test
+    bit fingerprint, 24-cell pressure system: 9c29663b4850a63c
+    bit fingerprint, 24-cell momentum system: 045b00105d248b79
+
+done

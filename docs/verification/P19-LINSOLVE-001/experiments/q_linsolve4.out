@@ -1,0 +1,28 @@
+THE FIXTURE IS CHECKED FIRST: rank must be n, or nothing below means anything
+    n        q            rank       n            well posed
+    8        0.000e+00    8          8            yes
+    8        1.000e-06    8          8            yes
+    8        1.000e-03    8          8            yes
+    200      0.000e+00    200        200          yes
+    200      1.000e-06    200        200          yes
+    200      1.000e-03    200        200          yes
+    1000     0.000e+00    1000       1000         yes
+    1000     1.000e-06    1000       1000         yes
+    1000     1.000e-03    1000       1000         yes
+
+A   DOES THE SYMMETRIC KERNEL REFUSE A WELL-POSED ASYMMETRIC SYSTEM?
+    q            largest asymmetry      symmetric kernel     normalized
+    0.000e+00    0.000000e+00           SOLVED               4.201379e-17
+    1.000e-12    1.000000e-12           residual_too_large   2.316292e-07
+    1.000e-09    1.000000e-09           residual_too_large   2.387288e-04
+    1.000e-07    1.000000e-07           singular_system      0.000000e+00
+    1.000e-06    1.000000e-06           singular_system      0.000000e+00
+    1.000e-03    1.000000e-03           singular_system      0.000000e+00
+
+B+C LU AND QR ON THE SAME WELL-POSED SYSTEMS: agreement, cost, conditioning
+    n       LU s        QR s        QR/LU    LU normalized QR normalized R-diag ratio  largest gap
+    200     0.000118    0.000042    0.35     4.470226e-17  2.475578e-16  3.178803e-02  1.625219e-16 (rel 2.438e-13)
+    1000    0.000422    0.000256    0.61     4.207224e-17  5.385403e-16  1.415682e-02  1.787633e-15 (rel 2.681e-12)
+    4000    0.001697    0.002798    1.65     4.163406e-17  1.269122e-15  7.072902e-03  1.678464e-14 (rel 2.518e-11)
+
+done
