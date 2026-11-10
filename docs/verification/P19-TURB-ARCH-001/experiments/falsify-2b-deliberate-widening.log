@@ -1,0 +1,27 @@
+[1/18] Checking git revision
+[2/16] Building CXX object src/cfd/CMakeFiles/bettercad_cfd.dir/CfdFields.cpp.obj
+[3/16] Building CXX object src/cfd/CMakeFiles/bettercad_cfd.dir/CfdInitialField.cpp.obj
+[4/16] Building CXX object src/cfd/CMakeFiles/bettercad_cfd.dir/CfdSteady.cpp.obj
+[5/16] Building CXX object src/cfd/CMakeFiles/bettercad_cfd.dir/CfdTransient.cpp.obj
+[6/16] Building CXX object src/cfd/CMakeFiles/bettercad_cfd.dir/CfdResult.cpp.obj
+[7/16] Linking CXX static library lib\libbettercad_cfd.a
+[8/16] Building CXX object tests/CMakeFiles/bettercad_tests.dir/cfd/CfdFluidTests.cpp.obj
+[9/16] Building CXX object tests/CMakeFiles/bettercad_tests.dir/cfd/CfdFieldTests.cpp.obj
+[10/16] Building CXX object tests/CMakeFiles/bettercad_tests.dir/cfd/CfdDataTests.cpp.obj
+[11/16] Building CXX object tests/CMakeFiles/bettercad_tests.dir/cfd/CfdDivergenceTests.cpp.obj
+[12/16] Building CXX object tests/CMakeFiles/bettercad_tests.dir/cfd/CfdTurbulenceArchitectureTests.cpp.obj
+FAILED: [code=1] tests/CMakeFiles/bettercad_tests.dir/cfd/CfdTurbulenceArchitectureTests.cpp.obj 
+C:\Users\Hasib\AppData\Local\Microsoft\WinGet\Packages\BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe\mingw64\bin\c++.exe -DBETTERCAD_ASSEMBLY_STATIC_DEFINE -DBETTERCAD_CFD_STATIC_DEFINE -DBETTERCAD_CORE_STATIC_DEFINE -DBETTERCAD_DRAWING_STATIC_DEFINE -DBETTERCAD_EXAMPLE_MODELS_DIR=\"C:/Users/Hasib/Desktop/CAD/examples/models\" -DBETTERCAD_EXPECTED_BUILD_CONFIG=\"Debug\" -DBETTERCAD_EXPECTED_VERSION=\"0.1.0\" -DBETTERCAD_FEATURES_STATIC_DEFINE -DBETTERCAD_GEOMETRY_STATIC_DEFINE -DBETTERCAD_IO_STATIC_DEFINE -DBETTERCAD_LINALG_STATIC_DEFINE -DBETTERCAD_MESHING_STATIC_DEFINE -DBETTERCAD_RENDERER_STATIC_DEFINE -DBETTERCAD_SKETCH_STATIC_DEFINE -DBETTERCAD_STRUCTURAL_STATIC_DEFINE -DBETTERCAD_TESTS_EXPECT_NETGEN -DBETTERCAD_THERMAL_ORACLE_PATH=\"C:/Users/Hasib/Desktop/CAD/tests/reference/ThermalAnalytic.hpp\" -DBETTERCAD_THERMAL_STATIC_DEFINE -IC:/Users/Hasib/Desktop/CAD/tests -IC:/Users/Hasib/Desktop/CAD/src -IC:/Users/Hasib/Desktop/CAD/include -IC:/bettercad/bc-build/debug-ext/generated/include -IC:/Users/Hasib/Desktop/CAD/apps/bettercad_cli -IC:/Users/Hasib/Desktop/CAD/examples/reference_models -isystem C:/bettercad/bc-build/debug-ext/_deps/catch2-src/src/catch2/.. -isystem C:/bettercad/bc-build/debug-ext/_deps/catch2-build/generated-includes -isystem C:/bettercad/bc-build/debug-ext/_deps/eigen3-src -g -std=c++23 -fvisibility=hidden -fno-keep-inline-dllexport -Wall -Wextra -Wpedantic -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual -Wconversion -Wsign-conversion -Wdouble-promotion -Wformat=2 -Wimplicit-fallthrough -Wextra-semi -Wundef -Wmissing-declarations -Wsuggest-override -Wmisleading-indentation -Wduplicated-cond -Wduplicated-branches -Wlogical-op -Werror -Wa,-mbig-obj -MD -MT tests/CMakeFiles/bettercad_tests.dir/cfd/CfdTurbulenceArchitectureTests.cpp.obj -MF tests\CMakeFiles\bettercad_tests.dir\cfd\CfdTurbulenceArchitectureTests.cpp.obj.d -o tests/CMakeFiles/bettercad_tests.dir/cfd/CfdTurbulenceArchitectureTests.cpp.obj -c C:/Users/Hasib/Desktop/CAD/tests/cfd/CfdTurbulenceArchitectureTests.cpp
+C:/Users/Hasib/Desktop/CAD/tests/cfd/CfdTurbulenceArchitectureTests.cpp: In function 'void CATCH2_INTERNAL_TEST_0()':
+C:/Users/Hasib/Desktop/CAD/tests/cfd/CfdTurbulenceArchitectureTests.cpp:72:56: error: static assertion failed: ADR-058 refuses a fourth CFD variable in v1 and ADR-079 adds none: a turbulence field, a species or an energy equation widening this table is a formulation change and its own milestone's decision, not an implicit extension
+   72 |     static_assert(bettercad::cfd::kCfdVariables.size() == 3,
+      |                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~
+  â€¢ the comparison reduces to '(4 == 3)'
+C:/Users/Hasib/Desktop/CAD/tests/cfd/CfdTurbulenceArchitectureTests.cpp:76:53: error: static assertion failed: the descriptor table is parallel to kCfdVariables and is pinned with it; CfdFields.hpp's own assertions compare the two row by row and would accept four rows in both
+   76 |     static_assert(bettercad::cfd::kCfdFields.size() == 3,
+      |                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~
+  â€¢ the comparison reduces to '(4 == 3)'
+[13/16] Building CXX object tests/CMakeFiles/bettercad_tests.dir/cfd/CfdInitialFieldTests.cpp.obj
+[14/16] Building CXX object tests/CMakeFiles/bettercad_tests.dir/cfd/CfdSteadyTests.cpp.obj
+[15/16] Building CXX object tests/CMakeFiles/bettercad_tests.dir/cfd/CfdTransientTests.cpp.obj
+ninja: build stopped: subcommand failed.

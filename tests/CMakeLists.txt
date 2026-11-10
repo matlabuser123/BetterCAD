@@ -379,6 +379,7 @@ if(TARGET bettercad_reference_models)
         # P19-TRANSIENT-001: the transient march, on the same real meshed body,
         # with the steady solve itself as one of its independent references.
         cfd/CfdTransientTests.cpp
+        cfd/CfdTurbulenceArchitectureTests.cpp
         qualification/P15MaterialsQualificationTests.cpp
         qualification/P16MeshingQualificationTests.cpp
         qualification/P17StructuralQualificationTests.cpp

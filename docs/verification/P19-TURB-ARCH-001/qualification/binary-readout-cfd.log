@@ -1,0 +1,19 @@
+# P19-TURB-ARCH-001 -- per-tag readout off the three QUALIFIED executables
+# taken 2026-11-11 00:19:26 from C:/bettercad/bc-build/<preset>/bin/bettercad_tests.exe
+# command, per row:  bettercad_tests.exe "<tag>"
+
+debug-ext          [cfd]              All tests passed (755077 assertions in 701 test cases)
+debug-ext          [cfd][turbarch]    All tests passed (34 assertions in 4 test cases)
+debug-ext          [cfd][steady]      All tests passed (1263 assertions in 19 test cases)
+debug-ext          [cfd][transient]   All tests passed (1813 assertions in 34 test cases)
+debug-ext          [linalg]           All tests passed (2560 assertions in 29 test cases)
+release-ext        [cfd]              All tests passed (755077 assertions in 701 test cases)
+release-ext        [cfd][turbarch]    All tests passed (34 assertions in 4 test cases)
+release-ext        [cfd][steady]      All tests passed (1263 assertions in 19 test cases)
+release-ext        [cfd][transient]   All tests passed (1813 assertions in 34 test cases)
+release-ext        [linalg]           All tests passed (2560 assertions in 29 test cases)
+debug-shared-ext   [cfd]              All tests passed (755077 assertions in 701 test cases)
+debug-shared-ext   [cfd][turbarch]    All tests passed (34 assertions in 4 test cases)
+debug-shared-ext   [cfd][steady]      All tests passed (1263 assertions in 19 test cases)
+debug-shared-ext   [cfd][transient]   All tests passed (1813 assertions in 34 test cases)
+debug-shared-ext   [linalg]           All tests passed (2560 assertions in 29 test cases)

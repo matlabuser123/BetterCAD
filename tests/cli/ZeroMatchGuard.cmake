@@ -780,6 +780,13 @@ set(_filters
     "unit\\.ThermalSolve_(ADisconnectedMeshWithAnUnanchoredComponentFailsEndToEnd|AnUnmeetableToleranceRefusesTheSolveItself|TheSolverSettingDefaultsAreTheKernelDefaults)$" 3
     "unit\\.ThermalCli_ValidationJsonCarriesAWarningReportWithEveryOptionalFieldItHolds$" 1
     "compile_fail\\.thermalviz\\.an-inspection-must-state-the-result-state$" 1
+    # P19-TURB-ARCH-001. The turbulence ARCHITECTURE, which adds no types (ADR-079): the ownership checker and its
+    # seven violation fixtures, the two structural pins, and the compile-fail group that proves the mode, the model
+    # interface, the turbulence variables, the wall treatment, the boundary kind, the result array and the
+    # flow-regime query are all ABSENT -- which is the mechanism ADR-058 prescribed for a deferred physics.
+    "architecture\\.turbulence-ownership" 12
+    "unit\\.CfdTurbulenceArchitecture_" 3
+    "compile_fail\\.cfdturb\\." 14
 )
 list(LENGTH _filters _count)
 math(EXPR _last "${_count} - 1")

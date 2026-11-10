@@ -1,0 +1,10 @@
+# P19-TURB-ARCH-001 -- [structural] and [thermal] off the three QUALIFIED executables
+# captured 2026-11-11 from C:/bettercad/bc-build/<preset>/bin/bettercad_tests.exe
+# command, per row:  bettercad_tests.exe "<tag>"
+
+release-ext  [structural]  All tests passed (271414 assertions in 415 test cases)
+release-ext  [thermal]  All tests passed (595622 assertions in 1168 test cases)
+debug-ext  [structural]  All tests passed (271414 assertions in 415 test cases)
+debug-ext  [thermal]  All tests passed (595622 assertions in 1168 test cases)
+debug-shared-ext  [structural]  All tests passed (271414 assertions in 415 test cases)
+debug-shared-ext  [thermal]  All tests passed (595622 assertions in 1168 test cases)

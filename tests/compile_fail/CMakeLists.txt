@@ -2452,3 +2452,85 @@ foreach(_case
         "cannot convert|invalid conversion|no known conversion|could not convert|to non-scalar type|conversion from|no match for"
         BetterCAD::cfd)
 endforeach()
+
+
+# P19-TURB-ARCH-001. THE TURBULENCE TYPES THAT MUST NOT EXIST (ADR-079).
+#
+# ADR-058 prescribes this mechanism by name: "The refusal is by ABSENCE where it can be (there is no field,
+# no enumerator and no function for radiation or for a viscosity law) ... each unsupported item stays absent
+# from the types, which the compile-fail groups of those milestones assert." ADR-079 decides the turbulence
+# architecture WITHOUT TYPES -- no mode field, no model interface, no turbulence variable, no wall-treatment
+# record, no turbulence result array, no flow-regime query -- so every one of its decisions is a claim about
+# absence, and a build that still succeeds is the only way such a claim can fail.
+#
+# THE GROUP IS ALSO A TRIPWIRE FOR THE DAY A MODEL IS AUTHORIZED. When P19-KEPS-001 adds k, epsilon and a
+# turbulent viscosity, these gates stop compile-failing and the build goes red, so the milestone that adds
+# turbulence has to come here and delete the gate that said there was none. architecture.turbulence-ownership
+# is its sibling and guards WHERE turbulence may live; this group guards WHETHER the types exist.
+#
+# THE REGEXES LIST EVERY DIAGNOSTIC GCC CAN EMIT FOR THE CASE, not the one a reader expects -- the
+# P19-GRAD-001 lesson, which cost six of twenty-eight gates on P19-LINSOLVE-001's first run and one of
+# twenty-eight on P19-STEADY-001's.
+set(_cfdturb "${CMAKE_CURRENT_SOURCE_DIR}/CfdTurbulenceMisuse.cpp")
+bettercad_compile_fail_group(cfdturb "${_cfdturb}" BetterCAD::cfd)
+# A TYPE THAT DOES NOT EXIST. ADR-061 Decision 4 forbids the mode as a field while only laminar is
+# qualified, ADR-079 decision 2 declares no model interface, and ADR-067 already rejected the generic
+# per-face form a wall-treatment record would be.
+foreach(_case
+        THERE_IS_NO_TURBULENCE_MODE_TYPE
+        THERE_IS_NO_TURBULENCE_MODEL_TYPE
+        THERE_IS_NO_WALL_TREATMENT_TYPE)
+    bettercad_compile_fail_case(cfdturb "${_cfdturb}" ${_case}
+        "does not name a type|has not been declared|was not declared|no type named|is not a member of|no member named"
+        BetterCAD::cfd)
+endforeach()
+# A MEMBER THAT DOES NOT EXIST: canonical intent carries no turbulence (decisions 1 and 3), a boundary
+# treatment is one policy per ADR-066 variable and no more (decision 4), and a result publishes p, U and phi
+# (decision 6).
+foreach(_case
+        THE_DEFINITION_HAS_NO_TURBULENCE_MODE
+        THE_DEFINITION_HAS_NO_TURBULENCE_SETTINGS
+        A_TREATMENT_HAS_NO_TURBULENCE_POLICY
+        A_RESULT_HAS_NO_TURBULENT_VISCOSITY
+        RESULT_METADATA_HAS_NO_TURBULENCE_MEASURE)
+    bettercad_compile_fail_case(cfdturb "${_cfdturb}" ${_case}
+        "no member named|has no member named"
+        BetterCAD::cfd)
+endforeach()
+# AN ENUMERATOR THAT DOES NOT EXIST. ADR-066's variable table names turbulence as precisely the change it
+# forbids in v1, and the six boundary condition kinds are six.
+#
+# EACH REGEX NAMES ITS OWN ENUMERATOR, and the reason is a defect a mutation analysis found in the first
+# version of this block. A shared "is not a member of" cannot tell a missing ENUMERATOR from a missing
+# ENCLOSING ENUM -- GCC says `'CfdVariable' is not a member of 'bettercad::cfd'` for one and
+# `'TurbulentKineticEnergy' is not a member of 'bettercad::cfd::CfdVariable'` for the other -- so deleting
+# or renaming CfdVariable left all three cases GREEN while they had stopped saying anything about
+# turbulence. That is P19-STEADY-001's arity-for-access failure in a new disguise, and the repository
+# already owned the fix: line 255 of this file reads "TurbulentFlow. is not a member of" and line 220
+# reads "has no member named .isInherited". The idiom was in front of this milestone and it did not use it.
+bettercad_compile_fail_case(cfdturb "${_cfdturb}" THERE_IS_NO_TURBULENT_ENERGY_VARIABLE
+    "TurbulentKineticEnergy. is not a member of|TurbulentKineticEnergy. has not been declared"
+    BetterCAD::cfd)
+bettercad_compile_fail_case(cfdturb "${_cfdturb}" THERE_IS_NO_TURBULENT_VISCOSITY_VARIABLE
+    "TurbulentViscosity. is not a member of|TurbulentViscosity. has not been declared"
+    BetterCAD::cfd)
+bettercad_compile_fail_case(cfdturb "${_cfdturb}" THERE_IS_NO_TURBULENCE_BOUNDARY_KIND
+    "TurbulenceInlet. is not a member of|TurbulenceInlet. has not been declared"
+    BetterCAD::cfd)
+# A FUNCTION OR CONSTANT THAT DOES NOT EXIST. The last two are decision 10: ADR-058 assigns the Reynolds
+# limit to P19-VALID-001 "from a reference", so the regime query and its threshold are absent here -- a
+# regime function whose only honest answer is "I may not say" is derived state with no consumer.
+#
+# AND THE FLOW-REGIME CASE WAS THE WORST OF THE FOURTEEN. It is the only one that takes a PARAMETER
+# (`const cfd::CfdAnalysisDefinition&`), and the shared regex admitted "is not a member of" -- so renaming
+# or deleting CfdAnalysisDefinition made the case fail to compile for a reason that matched, leaving it
+# green while saying nothing about cfdFlowRegime at all. Each regex now names its own identifier.
+bettercad_compile_fail_case(cfdturb "${_cfdturb}" THERE_IS_NO_TURBULENT_VISCOSITY_ASSEMBLY
+    "assembleCfdTurbulentViscosity. was not declared|assembleCfdTurbulentViscosity. has not been declared|assembleCfdTurbulentViscosity. is not a member of"
+    BetterCAD::cfd)
+bettercad_compile_fail_case(cfdturb "${_cfdturb}" THERE_IS_NO_FLOW_REGIME_QUERY
+    "cfdFlowRegime. was not declared|cfdFlowRegime. has not been declared|cfdFlowRegime. is not a member of"
+    BetterCAD::cfd)
+bettercad_compile_fail_case(cfdturb "${_cfdturb}" THERE_IS_NO_LAMINAR_REYNOLDS_LIMIT
+    "kCfdLaminarReynoldsLimit. was not declared|kCfdLaminarReynoldsLimit. has not been declared|kCfdLaminarReynoldsLimit. is not a member of"
+    BetterCAD::cfd)

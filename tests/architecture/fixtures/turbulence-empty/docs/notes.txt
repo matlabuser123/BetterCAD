@@ -1,0 +1,5 @@
+P19-TURB-ARCH-001 fixture: a tree with NO file the checker's glob matches.
+
+A check that read nothing is not a check that passed. This fixture makes the
+zero-scan guard fire, which is the defect tests/cli/ZeroMatchGuard.cmake exists
+for elsewhere in this repository.

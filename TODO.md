@@ -23,13 +23,81 @@ Prerequisite:
            may set). P17's F1-F3 stand unchanged beneath them.
 
 Current milestone:
-           NONE AUTHORIZED. P19-TRANSIENT-001 passed its gate and finishing a
+           NONE AUTHORIZED. P19-TURB-ARCH-001 passed its gate and finishing a
            milestone is itself a stop condition: the next one is a scope
            decision and not Claude's to make. Nothing below this line is
            authorized by being next, by being small, or by being the obvious
-           continuation.
+           continuation. P19-KEPS-001 is the one it would be easiest to drift
+           into, and ADR-079 exists precisely to make that drift visible: the
+           architecture is decided and NO turbulence type is declared, so the
+           first model is an explicit authorization and not a continuation.
 
 Previous milestone:
+           P19-TURB-ARCH-001 - Turbulence Architecture. AUTHORIZED 2026-11-10
+           by the owner's "implement and fully verify" over the thirteen-item
+           checklist, which arrived pasted into the instruction as the eleven
+           P19 checklists before it did, and was diffed against this file's own
+           section before any implementation: byte-for-byte identical, 22 lines,
+           13 unticked and 0 ticked -- counted, not assumed -- and sha256
+           0dee4f73ba12fa54 over the section as the previous commit carries it.
+           The same section was pasted and re-diffed when the work resumed, and
+           matched again.
+           PASS 2026-11-10, thirteen of thirteen, ON THE FIRST QUALIFICATION
+           ATTEMPT: 6995/6995 x 3 presets, 3543 x 5 = 17715 executions x 2
+           presets, 17 of 17 stages exit 0, 0 stage(s) failed, 5h41m, and 179
+           reconciliation checks over the harness's own logs with every figure
+           parsed out of FREEZE.md rather than typed in twice.
+           ITS CENTRAL CLAIM IS TWO UNCHANGED HASHES. ADR-079 decides the
+           turbulence architecture WITHOUT TYPES -- no mode field, no model
+           enumerator, no turbulence variable, no wall-treatment record, no
+           result array, no flow-regime query -- so include/ and src/ are
+           BIT-IDENTICAL to the previous commit, and seven of the eight frozen
+           paths did not move at all. The whole deliverable is tests/, which
+           went 47658ea5 -> bf65a34a. A decision to add no production type
+           either shows up as two unchanged subtrees or it was not taken.
+           ADR-061 Decision 4 is why: "a selector would be a field with one
+           legal value". A laminar/turbulent mode field would be exactly that,
+           so the mode is DECIDED to be absent rather than added, and the
+           refusal it implies belongs to P19-VALID-001 with a threshold from a
+           reference, which ADR-058 already assigns there.
+           THIRTY GATES HOLD THE DECISION IN PLACE: a four-rule source-text
+           ownership checker run as twelve ctests (eleven fixtures plus the real
+           tree, 600 files scanned, 0 violations), fourteen compile-fail cases
+           that prove the absent types are absent, and four runtime cases
+           pinning the variable table, the treatment mirror and the nested
+           settings records. The checker's rule 4 exists because a review
+           MEASURED that nut, mut, epsilon, omega and tke are zero inside cfd.
+           THE GATES WERE MADE TO FAIL ON PURPOSE BEFORE THEY WERE BELIEVED,
+           and that is how this milestone's own overstatement was caught: two
+           mutations that were supposed to prove the new count pin necessary
+           were ALREADY caught by -Werror=switch, so the claim was narrowed in
+           ADR-079 with the logs behind it rather than left standing.
+           TWO INDEPENDENT REVIEWS FOUND REAL DEFECTS: ten surviving mutations,
+           four gates that changed meaning instead of failing, six tautologies,
+           and two false MEASURED claims in ADR-079 -- nine ownership checkers
+           where there are seven, and false-positive counts taken over 1830
+           files and quoted against 600. Both corrected by re-measuring. One of
+           the reviewers' own corrections was itself wrong and is recorded as
+           checked rather than conceded.
+           FOUR MORE FALSE FIGURES WERE CAUGHT IN THIS MILESTONE'S OWN
+           VERIFICATION, which is the part worth carrying forward: the
+           reconciliation measured a 1306-byte file as 1320 by rewriting LF to
+           CRLF, read five identical harness files as five mismatches because
+           msys sha1sum escapes a backslashed filename, counted test reports
+           without ever reading the Start lines beside them, and this file's own
+           0x08 finding below undercounted the copies. Each was corrected in
+           place with the correction stated, and the reconciliation was then
+           FALSIFIED: fourteen sabotages of a copy of the evidence, all fourteen
+           caught, control still passing.
+           FIFTEEN LIMITATIONS ARE RECORDED RATHER THAN FIXED, and L12 is the
+           one the next milestone inherits: the ownership checker will FIRE on
+           the refusal decision 10 prescribes, because P19-VALID-001 must name
+           turbulence in order to refuse it. The shape of the allow-path is
+           recorded for that milestone rather than pre-built, since
+           CfdValidation.hpp does not exist yet. Evidence
+           docs/verification/P19-TURB-ARCH-001/ and ADR-079.
+
+Before it:
            P19-TRANSIENT-001 - Transient Incompressible Solver. AUTHORIZED
            2026-11-10 by the owner's "implement and fully verify" over the
            nineteen-item checklist, which arrived pasted into the instruction as
@@ -706,11 +774,25 @@ Qualified:
            P18 — Thermal Analysis
 
 Next:
-           NOTHING IS AUTHORIZED. P19-TRANSIENT-001 is PASS and no milestone is
+           NOTHING IS AUTHORIZED. P19-TURB-ARCH-001 is PASS and no milestone is
            open, so the next one is a scope decision for the owner. A
            predecessor's PASS has never been permission to start the one after
-           it, and the one it would be easiest to drift into is named so that
+           it, and the two it would be easiest to drift into are named so that
            the drift stays visible:
+           P19-KEPS-001 would IMPLEMENT a turbulence model. ADR-079 declares no
+           type for one on purpose, so the first model is an authorization and
+           not a continuation -- and it would have to come and DELETE fourteen
+           compile-fail gates that currently prove its quantities absent. That
+           deletion is the visible act of authorizing turbulence, and it is the
+           owner's to ask for.
+           P19-VALID-001 inherits ADR-079 L12 BEFORE it inherits anything else:
+           decision 10 requires a beyond-laminar solve to be refused by name,
+           and naming turbulence is exactly what the new ownership checker bans
+           outside the validation owner. The fix is an allow-path for that
+           owner's own file, shaped like CheckValidationOwnership.cmake's
+           existing idiom for thermal, and its shape is written down in
+           ADR-079 L12 rather than pre-built, because CfdValidation.hpp does
+           not exist yet.
            P19-VALID-001 owns whether the numbers are good enough. CfdResult.hpp
            says "CONVERGENCE IS RECORDED, NOT RE-JUDGED HERE", so the marches
            this milestone publishes are converged runs and not validated ones,
@@ -720,7 +802,7 @@ Next:
            exact solution is not measured at all, because the fixture has no
            closed-form transient. An analytic transient reference is
            P19-VALID-001's to bring.
-           THREE FINDINGS ARE OPEN AND UNAUTHORIZED, all reported rather than
+           FOUR FINDINGS ARE OPEN AND UNAUTHORIZED, all reported rather than
            fixed, and all needing the owner's scope decision:
            (1) ADR-078 L7, inheriting ADR-077 L12 unchanged - the convection
            scheme and the gradient method are hard-coded in both solveCfdSteady
@@ -742,11 +824,24 @@ Next:
            P19-PVCOUPLE-001, and changing it would change what every steady run
            is accepted on as well.
            (3) docs/verification/*/qualification/verify-harness.cmd carries a
-           literal 0x08 byte where c-build was meant, in 72 of 96 committed
-           copies, entered 2026-09-30 with the P15 materials work. It fires only
+           literal 0x08 byte where c-build was meant, in 75 of the 99 copies
+           committed before P19-TURB-ARCH-001 and 76 of 100 once its own copy
+           lands, entered 2026-09-30 with the P15 materials work. It fires only
            when BETTERCAD_BUILD_ROOT is undefined, which run-qualification.cmd
            always defines, so no gate in any milestone ever evaluated it.
            Repairing it across the lineage needs the owner's scope decision.
+           P19-TRANSIENT-001 recorded this as "72 of 96" and P19-TURB-ARCH-001's
+           freeze as 73; three independent counts say 75 of 99, and both are
+           corrected in place rather than left to drift.
+           (4) THE ZERO-MATCH GUARD HAS LAPSED ACROSS MOST OF THE TREE, measured
+           rather than suspected: tests/cli/ZeroMatchGuard.cmake holds a minimum
+           for 23 of the 56 registered compile-fail groups, and 33 are unguarded,
+           8 of them CFD -- cfdcont, cfdconv, cfdlinsolve, cfdmom, cfdpvc, cfdsteady, cfdtopo, cfdtransient. A group whose name is
+           typo'd or whose registration is dropped would then select zero tests
+           and report a pass. P19-TURB-ARCH-001 added minimums for its OWN three
+           groups only; retro-fitting the other 33 edits a file inside the frozen
+           surface for milestones that are already qualified, which is a scope
+           decision for the owner and not part of a feature milestone.
            TWO LESSONS ARE WORTH CARRYING INTO THE NEXT MILESTONE, and both cost
            this one a re-run:
            - A QUALIFICATION IS ONLY AS GOOD AS THE SHELL IT IS LAUNCHED FROM.
@@ -4103,19 +4198,19 @@ backward Euler
 
 Do not jump directly into a turbulence model without defining architecture.
 
-* [ ] Define laminar/turbulent mode
-* [ ] Define turbulence model interface
-* [ ] Define model field ownership
-* [ ] Define wall-treatment interface
-* [ ] Define turbulence BC interface
-* [ ] Define turbulence result fields
-* [ ] Define persistence policy
-* [ ] Define command policy
-* [ ] Define CLI policy
-* [ ] Define validation policy
-* [ ] No turbulence model implemented here unless explicitly included
-* [ ] Regression PASS
-* [ ] Evidence recorded
+* [x] Define laminar/turbulent mode
+* [x] Define turbulence model interface
+* [x] Define model field ownership
+* [x] Define wall-treatment interface
+* [x] Define turbulence BC interface
+* [x] Define turbulence result fields
+* [x] Define persistence policy
+* [x] Define command policy
+* [x] Define CLI policy
+* [x] Define validation policy
+* [x] No turbulence model implemented here unless explicitly included
+* [x] Regression PASS
+* [x] Evidence recorded
 
 ---
 # P19-KEPS-001

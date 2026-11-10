@@ -1,0 +1,164 @@
+[1/18] Checking git revision
+[2/16] Building CXX object src/cfd/CMakeFiles/bettercad_cfd.dir/CfdFields.cpp.obj
+FAILED: [code=1] src/cfd/CMakeFiles/bettercad_cfd.dir/CfdFields.cpp.obj 
+C:\Users\Hasib\AppData\Local\Microsoft\WinGet\Packages\BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe\mingw64\bin\c++.exe -DBETTERCAD_CFD_STATIC_DEFINE -DBETTERCAD_CORE_STATIC_DEFINE -DBETTERCAD_FEATURES_STATIC_DEFINE -DBETTERCAD_GEOMETRY_STATIC_DEFINE -DBETTERCAD_LINALG_STATIC_DEFINE -DBETTERCAD_MESHING_STATIC_DEFINE -DBETTERCAD_SKETCH_STATIC_DEFINE -IC:/Users/Hasib/Desktop/CAD/include -IC:/bettercad/bc-build/debug-ext/generated/include -IC:/Users/Hasib/Desktop/CAD/src -g -std=c++23 -fvisibility=hidden -fno-keep-inline-dllexport -Wall -Wextra -Wpedantic -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual -Wconversion -Wsign-conversion -Wdouble-promotion -Wformat=2 -Wimplicit-fallthrough -Wextra-semi -Wundef -Wmissing-declarations -Wsuggest-override -Wmisleading-indentation -Wduplicated-cond -Wduplicated-branches -Wlogical-op -Werror -Wa,-mbig-obj -MD -MT src/cfd/CMakeFiles/bettercad_cfd.dir/CfdFields.cpp.obj -MF src\cfd\CMakeFiles\bettercad_cfd.dir\CfdFields.cpp.obj.d -o src/cfd/CMakeFiles/bettercad_cfd.dir/CfdFields.cpp.obj -c C:/Users/Hasib/Desktop/CAD/src/cfd/CfdFields.cpp
+In file included from C:/Users/Hasib/Desktop/CAD/src/cfd/CfdFields.cpp:25:
+C:/Users/Hasib/Desktop/CAD/include/bettercad/cfd/CfdFields.hpp:205:2: error: non-constant condition for static assertion
+  198 | static_assert([] {
+      |               ~~~~
+  199 |     for (std::size_t i = 0; i < kCfdVariables.size(); ++i) {
+      |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  200 |         if (kCfdFields[i].variable != kCfdVariables[i]) {
+      |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  201 |             return false;
+      |             ~~~~~~~~~~~~~
+  202 |         }
+      |         ~
+  203 |     }
+      |     ~
+  204 |     return true;
+      |     ~~~~~~~~~~~~
+  205 | }());
+      | ~^~
+In file included from C:/Users/Hasib/AppData/Local/Microsoft/WinGet/Packages/BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe/mingw64/include/c++/16.1.0/bits/version.h:51,
+                 from C:/Users/Hasib/AppData/Local/Microsoft/WinGet/Packages/BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe/mingw64/include/c++/16.1.0/expected:40,
+                 from C:/Users/Hasib/Desktop/CAD/include/bettercad/core/Error.hpp:5,
+                 from C:/Users/Hasib/Desktop/CAD/include/bettercad/cfd/CfdData.hpp:44,
+                 from C:/Users/Hasib/Desktop/CAD/include/bettercad/cfd/CfdFields.hpp:58:
+C:/Users/Hasib/Desktop/CAD/include/bettercad/cfd/CfdFields.hpp:205:2:   in 'constexpr' expansion of '<lambda closure object>bettercad::cfd::<lambda()>().bettercad::cfd::<lambda()>()'
+C:/Users/Hasib/Desktop/CAD/include/bettercad/cfd/CfdFields.hpp:200:25:   in 'constexpr' expansion of 'bettercad::cfd::kCfdFields.std::array<bettercad::cfd::CfdFieldDescriptor, 3>::operator[](i)'
+  200 |         if (kCfdFields[i].variable != kCfdVariables[i]) {
+      |                         ^
+C:/Users/Hasib/AppData/Local/Microsoft/WinGet/Packages/BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe/mingw64/include/c++/16.1.0/array:219:9: error: call to non-'constexpr' function 'void std::__glibcxx_assert_fail(const char*, int, const char*, const char*)'
+  219 |         __glibcxx_requires_subscript(__n);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:/Users/Hasib/AppData/Local/Microsoft/WinGet/Packages/BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe/mingw64/include/c++/16.1.0/x86_64-w64-mingw32/bits/c++config.h:629:3: note: 'void std::__glibcxx_assert_fail(const char*, int, const char*, const char*)' declared here
+  629 |   __glibcxx_assert_fail /* Called when a precondition violation is detected. */
+      |   ^~~~~~~~~~~~~~~~~~~~~
+C:/Users/Hasib/Desktop/CAD/src/cfd/CfdFields.cpp: In function 'std::string_view bettercad::cfd::toString(CfdVariable)':
+C:/Users/Hasib/Desktop/CAD/src/cfd/CfdFields.cpp:64:12: error: enumeration value 'Extra' not handled in switch [-Werror=switch]
+   64 |     switch (variable) {
+      |            ^
+cc1plus.exe: all warnings being treated as errors
+[3/16] Building CXX object src/cfd/CMakeFiles/bettercad_cfd.dir/CfdInitialField.cpp.obj
+FAILED: [code=1] src/cfd/CMakeFiles/bettercad_cfd.dir/CfdInitialField.cpp.obj 
+C:\Users\Hasib\AppData\Local\Microsoft\WinGet\Packages\BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe\mingw64\bin\c++.exe -DBETTERCAD_CFD_STATIC_DEFINE -DBETTERCAD_CORE_STATIC_DEFINE -DBETTERCAD_FEATURES_STATIC_DEFINE -DBETTERCAD_GEOMETRY_STATIC_DEFINE -DBETTERCAD_LINALG_STATIC_DEFINE -DBETTERCAD_MESHING_STATIC_DEFINE -DBETTERCAD_SKETCH_STATIC_DEFINE -IC:/Users/Hasib/Desktop/CAD/include -IC:/bettercad/bc-build/debug-ext/generated/include -IC:/Users/Hasib/Desktop/CAD/src -g -std=c++23 -fvisibility=hidden -fno-keep-inline-dllexport -Wall -Wextra -Wpedantic -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual -Wconversion -Wsign-conversion -Wdouble-promotion -Wformat=2 -Wimplicit-fallthrough -Wextra-semi -Wundef -Wmissing-declarations -Wsuggest-override -Wmisleading-indentation -Wduplicated-cond -Wduplicated-branches -Wlogical-op -Werror -Wa,-mbig-obj -MD -MT src/cfd/CMakeFiles/bettercad_cfd.dir/CfdInitialField.cpp.obj -MF src\cfd\CMakeFiles\bettercad_cfd.dir\CfdInitialField.cpp.obj.d -o src/cfd/CMakeFiles/bettercad_cfd.dir/CfdInitialField.cpp.obj -c C:/Users/Hasib/Desktop/CAD/src/cfd/CfdInitialField.cpp
+In file included from C:/Users/Hasib/Desktop/CAD/include/bettercad/cfd/CfdInitialField.hpp:84,
+                 from C:/Users/Hasib/Desktop/CAD/src/cfd/CfdInitialField.cpp:10:
+C:/Users/Hasib/Desktop/CAD/include/bettercad/cfd/CfdFields.hpp:205:2: error: non-constant condition for static assertion
+  198 | static_assert([] {
+      |               ~~~~
+  199 |     for (std::size_t i = 0; i < kCfdVariables.size(); ++i) {
+      |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  200 |         if (kCfdFields[i].variable != kCfdVariables[i]) {
+      |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  201 |             return false;
+      |             ~~~~~~~~~~~~~
+  202 |         }
+      |         ~
+  203 |     }
+      |     ~
+  204 |     return true;
+      |     ~~~~~~~~~~~~
+  205 | }());
+      | ~^~
+In file included from C:/Users/Hasib/AppData/Local/Microsoft/WinGet/Packages/BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe/mingw64/include/c++/16.1.0/bits/version.h:51,
+                 from C:/Users/Hasib/AppData/Local/Microsoft/WinGet/Packages/BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe/mingw64/include/c++/16.1.0/expected:40,
+                 from C:/Users/Hasib/Desktop/CAD/include/bettercad/core/Error.hpp:5,
+                 from C:/Users/Hasib/Desktop/CAD/include/bettercad/cfd/CfdData.hpp:44,
+                 from C:/Users/Hasib/Desktop/CAD/include/bettercad/cfd/CfdAnalysisObject.hpp:25,
+                 from C:/Users/Hasib/Desktop/CAD/include/bettercad/cfd/CfdInitialField.hpp:82:
+C:/Users/Hasib/Desktop/CAD/include/bettercad/cfd/CfdFields.hpp:205:2:   in 'constexpr' expansion of '<lambda closure object>bettercad::cfd::<lambda()>().bettercad::cfd::<lambda()>()'
+C:/Users/Hasib/Desktop/CAD/include/bettercad/cfd/CfdFields.hpp:200:25:   in 'constexpr' expansion of 'bettercad::cfd::kCfdFields.std::array<bettercad::cfd::CfdFieldDescriptor, 3>::operator[](i)'
+  200 |         if (kCfdFields[i].variable != kCfdVariables[i]) {
+      |                         ^
+C:/Users/Hasib/AppData/Local/Microsoft/WinGet/Packages/BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe/mingw64/include/c++/16.1.0/array:219:9: error: call to non-'constexpr' function 'void std::__glibcxx_assert_fail(const char*, int, const char*, const char*)'
+  219 |         __glibcxx_requires_subscript(__n);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:/Users/Hasib/AppData/Local/Microsoft/WinGet/Packages/BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe/mingw64/include/c++/16.1.0/x86_64-w64-mingw32/bits/c++config.h:629:3: note: 'void std::__glibcxx_assert_fail(const char*, int, const char*, const char*)' declared here
+  629 |   __glibcxx_assert_fail /* Called when a precondition violation is detected. */
+      |   ^~~~~~~~~~~~~~~~~~~~~
+C:/Users/Hasib/Desktop/CAD/src/cfd/CfdInitialField.cpp: In function 'bettercad::Result<void> bettercad::cfd::expandCfdInitialField(const PreparedCfdInitialField&, CfdVariable, std::span<double>)':
+C:/Users/Hasib/Desktop/CAD/src/cfd/CfdInitialField.cpp:297:12: error: enumeration value 'Extra' not handled in switch [-Werror=switch]
+  297 |     switch (variable) {
+      |            ^
+cc1plus.exe: all warnings being treated as errors
+[4/16] Building CXX object src/cfd/CMakeFiles/bettercad_cfd.dir/CfdSteady.cpp.obj
+FAILED: [code=1] src/cfd/CMakeFiles/bettercad_cfd.dir/CfdSteady.cpp.obj 
+C:\Users\Hasib\AppData\Local\Microsoft\WinGet\Packages\BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe\mingw64\bin\c++.exe -DBETTERCAD_CFD_STATIC_DEFINE -DBETTERCAD_CORE_STATIC_DEFINE -DBETTERCAD_FEATURES_STATIC_DEFINE -DBETTERCAD_GEOMETRY_STATIC_DEFINE -DBETTERCAD_LINALG_STATIC_DEFINE -DBETTERCAD_MESHING_STATIC_DEFINE -DBETTERCAD_SKETCH_STATIC_DEFINE -IC:/Users/Hasib/Desktop/CAD/include -IC:/bettercad/bc-build/debug-ext/generated/include -IC:/Users/Hasib/Desktop/CAD/src -g -std=c++23 -fvisibility=hidden -fno-keep-inline-dllexport -Wall -Wextra -Wpedantic -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual -Wconversion -Wsign-conversion -Wdouble-promotion -Wformat=2 -Wimplicit-fallthrough -Wextra-semi -Wundef -Wmissing-declarations -Wsuggest-override -Wmisleading-indentation -Wduplicated-cond -Wduplicated-branches -Wlogical-op -Werror -Wa,-mbig-obj -MD -MT src/cfd/CMakeFiles/bettercad_cfd.dir/CfdSteady.cpp.obj -MF src\cfd\CMakeFiles\bettercad_cfd.dir\CfdSteady.cpp.obj.d -o src/cfd/CMakeFiles/bettercad_cfd.dir/CfdSteady.cpp.obj -c C:/Users/Hasib/Desktop/CAD/src/cfd/CfdSteady.cpp
+In file included from C:/Users/Hasib/Desktop/CAD/include/bettercad/cfd/CfdResult.hpp:56,
+                 from C:/Users/Hasib/Desktop/CAD/include/bettercad/cfd/CfdSteady.hpp:53,
+                 from C:/Users/Hasib/Desktop/CAD/src/cfd/CfdSteady.cpp:9:
+C:/Users/Hasib/Desktop/CAD/include/bettercad/cfd/CfdFields.hpp:205:2: error: non-constant condition for static assertion
+  198 | static_assert([] {
+      |               ~~~~
+  199 |     for (std::size_t i = 0; i < kCfdVariables.size(); ++i) {
+      |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  200 |         if (kCfdFields[i].variable != kCfdVariables[i]) {
+      |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  201 |             return false;
+      |             ~~~~~~~~~~~~~
+  202 |         }
+      |         ~
+  203 |     }
+      |     ~
+  204 |     return true;
+      |     ~~~~~~~~~~~~
+  205 | }());
+      | ~^~
+In file included from C:/Users/Hasib/AppData/Local/Microsoft/WinGet/Packages/BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe/mingw64/include/c++/16.1.0/bits/version.h:51,
+                 from C:/Users/Hasib/AppData/Local/Microsoft/WinGet/Packages/BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe/mingw64/include/c++/16.1.0/expected:40,
+                 from C:/Users/Hasib/Desktop/CAD/include/bettercad/core/Error.hpp:5,
+                 from C:/Users/Hasib/Desktop/CAD/include/bettercad/cfd/CfdData.hpp:44,
+                 from C:/Users/Hasib/Desktop/CAD/include/bettercad/cfd/CfdAnalysisObject.hpp:25,
+                 from C:/Users/Hasib/Desktop/CAD/include/bettercad/cfd/CfdSteady.hpp:50:
+C:/Users/Hasib/Desktop/CAD/include/bettercad/cfd/CfdFields.hpp:205:2:   in 'constexpr' expansion of '<lambda closure object>bettercad::cfd::<lambda()>().bettercad::cfd::<lambda()>()'
+C:/Users/Hasib/Desktop/CAD/include/bettercad/cfd/CfdFields.hpp:200:25:   in 'constexpr' expansion of 'bettercad::cfd::kCfdFields.std::array<bettercad::cfd::CfdFieldDescriptor, 3>::operator[](i)'
+  200 |         if (kCfdFields[i].variable != kCfdVariables[i]) {
+      |                         ^
+C:/Users/Hasib/AppData/Local/Microsoft/WinGet/Packages/BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe/mingw64/include/c++/16.1.0/array:219:9: error: call to non-'constexpr' function 'void std::__glibcxx_assert_fail(const char*, int, const char*, const char*)'
+  219 |         __glibcxx_requires_subscript(__n);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:/Users/Hasib/AppData/Local/Microsoft/WinGet/Packages/BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe/mingw64/include/c++/16.1.0/x86_64-w64-mingw32/bits/c++config.h:629:3: note: 'void std::__glibcxx_assert_fail(const char*, int, const char*, const char*)' declared here
+  629 |   __glibcxx_assert_fail /* Called when a precondition violation is detected. */
+      |   ^~~~~~~~~~~~~~~~~~~~~
+[5/16] Building CXX object src/cfd/CMakeFiles/bettercad_cfd.dir/CfdTransient.cpp.obj
+FAILED: [code=1] src/cfd/CMakeFiles/bettercad_cfd.dir/CfdTransient.cpp.obj 
+C:\Users\Hasib\AppData\Local\Microsoft\WinGet\Packages\BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe\mingw64\bin\c++.exe -DBETTERCAD_CFD_STATIC_DEFINE -DBETTERCAD_CORE_STATIC_DEFINE -DBETTERCAD_FEATURES_STATIC_DEFINE -DBETTERCAD_GEOMETRY_STATIC_DEFINE -DBETTERCAD_LINALG_STATIC_DEFINE -DBETTERCAD_MESHING_STATIC_DEFINE -DBETTERCAD_SKETCH_STATIC_DEFINE -IC:/Users/Hasib/Desktop/CAD/include -IC:/bettercad/bc-build/debug-ext/generated/include -IC:/Users/Hasib/Desktop/CAD/src -g -std=c++23 -fvisibility=hidden -fno-keep-inline-dllexport -Wall -Wextra -Wpedantic -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual -Wconversion -Wsign-conversion -Wdouble-promotion -Wformat=2 -Wimplicit-fallthrough -Wextra-semi -Wundef -Wmissing-declarations -Wsuggest-override -Wmisleading-indentation -Wduplicated-cond -Wduplicated-branches -Wlogical-op -Werror -Wa,-mbig-obj -MD -MT src/cfd/CMakeFiles/bettercad_cfd.dir/CfdTransient.cpp.obj -MF src\cfd\CMakeFiles\bettercad_cfd.dir\CfdTransient.cpp.obj.d -o src/cfd/CMakeFiles/bettercad_cfd.dir/CfdTransient.cpp.obj -c C:/Users/Hasib/Desktop/CAD/src/cfd/CfdTransient.cpp
+In file included from C:/Users/Hasib/Desktop/CAD/include/bettercad/cfd/CfdResult.hpp:56,
+                 from C:/Users/Hasib/Desktop/CAD/include/bettercad/cfd/CfdTransient.hpp:104,
+                 from C:/Users/Hasib/Desktop/CAD/src/cfd/CfdTransient.cpp:20:
+C:/Users/Hasib/Desktop/CAD/include/bettercad/cfd/CfdFields.hpp:205:2: error: non-constant condition for static assertion
+  198 | static_assert([] {
+      |               ~~~~
+  199 |     for (std::size_t i = 0; i < kCfdVariables.size(); ++i) {
+      |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  200 |         if (kCfdFields[i].variable != kCfdVariables[i]) {
+      |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  201 |             return false;
+      |             ~~~~~~~~~~~~~
+  202 |         }
+      |         ~
+  203 |     }
+      |     ~
+  204 |     return true;
+      |     ~~~~~~~~~~~~
+  205 | }());
+      | ~^~
+In file included from C:/Users/Hasib/AppData/Local/Microsoft/WinGet/Packages/BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe/mingw64/include/c++/16.1.0/bits/version.h:51,
+                 from C:/Users/Hasib/AppData/Local/Microsoft/WinGet/Packages/BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe/mingw64/include/c++/16.1.0/expected:40,
+                 from C:/Users/Hasib/Desktop/CAD/include/bettercad/core/Error.hpp:5,
+                 from C:/Users/Hasib/Desktop/CAD/include/bettercad/cfd/CfdData.hpp:44,
+                 from C:/Users/Hasib/Desktop/CAD/include/bettercad/cfd/CfdAnalysisObject.hpp:25,
+                 from C:/Users/Hasib/Desktop/CAD/include/bettercad/cfd/CfdTransient.hpp:101:
+C:/Users/Hasib/Desktop/CAD/include/bettercad/cfd/CfdFields.hpp:205:2:   in 'constexpr' expansion of '<lambda closure object>bettercad::cfd::<lambda()>().bettercad::cfd::<lambda()>()'
+C:/Users/Hasib/Desktop/CAD/include/bettercad/cfd/CfdFields.hpp:200:25:   in 'constexpr' expansion of 'bettercad::cfd::kCfdFields.std::array<bettercad::cfd::CfdFieldDescriptor, 3>::operator[](i)'
+  200 |         if (kCfdFields[i].variable != kCfdVariables[i]) {
+      |                         ^
+C:/Users/Hasib/AppData/Local/Microsoft/WinGet/Packages/BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe/mingw64/include/c++/16.1.0/array:219:9: error: call to non-'constexpr' function 'void std::__glibcxx_assert_fail(const char*, int, const char*, const char*)'
+  219 |         __glibcxx_requires_subscript(__n);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:/Users/Hasib/AppData/Local/Microsoft/WinGet/Packages/BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe/mingw64/include/c++/16.1.0/x86_64-w64-mingw32/bits/c++config.h:629:3: note: 'void std::__glibcxx_assert_fail(const char*, int, const char*, const char*)' declared here
+  629 |   __glibcxx_assert_fail /* Called when a precondition violation is detected. */
+      |   ^~~~~~~~~~~~~~~~~~~~~
+ninja: build stopped: subcommand failed.

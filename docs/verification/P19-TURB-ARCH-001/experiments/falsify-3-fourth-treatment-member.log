@@ -1,0 +1,42 @@
+[1/29] Checking git revision
+[2/27] Building CXX object src/cfd/CMakeFiles/bettercad_cfd.dir/CfdContinuity.cpp.obj
+[3/27] Building CXX object src/cfd/CMakeFiles/bettercad_cfd.dir/CfdConvection.cpp.obj
+[4/27] Building CXX object src/cfd/CMakeFiles/bettercad_cfd.dir/CfdCoupling.cpp.obj
+[5/27] Building CXX object src/cfd/CMakeFiles/bettercad_cfd.dir/CfdBoundary.cpp.obj
+[6/27] Building CXX object src/cfd/CMakeFiles/bettercad_cfd.dir/CfdDivergence.cpp.obj
+[7/27] Building CXX object src/cfd/CMakeFiles/bettercad_cfd.dir/CfdDiffusion.cpp.obj
+[8/27] Building CXX object src/cfd/CMakeFiles/bettercad_cfd.dir/CfdGradient.cpp.obj
+[9/27] Building CXX object src/cfd/CMakeFiles/bettercad_cfd.dir/CfdLinearSolve.cpp.obj
+[10/27] Building CXX object src/cfd/CMakeFiles/bettercad_cfd.dir/CfdMomentum.cpp.obj
+[11/27] Building CXX object src/cfd/CMakeFiles/bettercad_cfd.dir/CfdSteady.cpp.obj
+[12/27] Building CXX object src/cfd/CMakeFiles/bettercad_cfd.dir/CfdTransient.cpp.obj
+[13/27] Linking CXX static library lib\libbettercad_cfd.a
+[14/27] Building CXX object tests/CMakeFiles/bettercad_tests.dir/cfd/CfdBoundaryTests.cpp.obj
+[15/27] Building CXX object tests/CMakeFiles/bettercad_tests.dir/cfd/CfdContinuityTests.cpp.obj
+[16/27] Building CXX object tests/CMakeFiles/bettercad_tests.dir/cfd/CfdBoundaryMappedTests.cpp.obj
+[17/27] Building CXX object tests/CMakeFiles/bettercad_tests.dir/cfd/CfdCouplingTests.cpp.obj
+[18/27] Building CXX object tests/CMakeFiles/bettercad_tests.dir/cfd/CfdConvectionTests.cpp.obj
+[19/27] Building CXX object tests/CMakeFiles/bettercad_tests.dir/cfd/CfdLinearSolveTests.cpp.obj
+[20/27] Building CXX object tests/CMakeFiles/bettercad_tests.dir/cfd/CfdGradientTests.cpp.obj
+[21/27] Building CXX object tests/CMakeFiles/bettercad_tests.dir/cfd/CfdDiffusionTests.cpp.obj
+[22/27] Building CXX object tests/CMakeFiles/bettercad_tests.dir/cfd/CfdDivergenceTests.cpp.obj
+[23/27] Building CXX object tests/CMakeFiles/bettercad_tests.dir/cfd/CfdTurbulenceArchitectureTests.cpp.obj
+FAILED: [code=1] tests/CMakeFiles/bettercad_tests.dir/cfd/CfdTurbulenceArchitectureTests.cpp.obj 
+C:\Users\Hasib\AppData\Local\Microsoft\WinGet\Packages\BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe\mingw64\bin\c++.exe -DBETTERCAD_ASSEMBLY_STATIC_DEFINE -DBETTERCAD_CFD_STATIC_DEFINE -DBETTERCAD_CORE_STATIC_DEFINE -DBETTERCAD_DRAWING_STATIC_DEFINE -DBETTERCAD_EXAMPLE_MODELS_DIR=\"C:/Users/Hasib/Desktop/CAD/examples/models\" -DBETTERCAD_EXPECTED_BUILD_CONFIG=\"Debug\" -DBETTERCAD_EXPECTED_VERSION=\"0.1.0\" -DBETTERCAD_FEATURES_STATIC_DEFINE -DBETTERCAD_GEOMETRY_STATIC_DEFINE -DBETTERCAD_IO_STATIC_DEFINE -DBETTERCAD_LINALG_STATIC_DEFINE -DBETTERCAD_MESHING_STATIC_DEFINE -DBETTERCAD_RENDERER_STATIC_DEFINE -DBETTERCAD_SKETCH_STATIC_DEFINE -DBETTERCAD_STRUCTURAL_STATIC_DEFINE -DBETTERCAD_TESTS_EXPECT_NETGEN -DBETTERCAD_THERMAL_ORACLE_PATH=\"C:/Users/Hasib/Desktop/CAD/tests/reference/ThermalAnalytic.hpp\" -DBETTERCAD_THERMAL_STATIC_DEFINE -IC:/Users/Hasib/Desktop/CAD/tests -IC:/Users/Hasib/Desktop/CAD/src -IC:/Users/Hasib/Desktop/CAD/include -IC:/bettercad/bc-build/debug-ext/generated/include -IC:/Users/Hasib/Desktop/CAD/apps/bettercad_cli -IC:/Users/Hasib/Desktop/CAD/examples/reference_models -isystem C:/bettercad/bc-build/debug-ext/_deps/catch2-src/src/catch2/.. -isystem C:/bettercad/bc-build/debug-ext/_deps/catch2-build/generated-includes -isystem C:/bettercad/bc-build/debug-ext/_deps/eigen3-src -g -std=c++23 -fvisibility=hidden -fno-keep-inline-dllexport -Wall -Wextra -Wpedantic -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual -Wconversion -Wsign-conversion -Wdouble-promotion -Wformat=2 -Wimplicit-fallthrough -Wextra-semi -Wundef -Wmissing-declarations -Wsuggest-override -Wmisleading-indentation -Wduplicated-cond -Wduplicated-branches -Wlogical-op -Werror -Wa,-mbig-obj -MD -MT tests/CMakeFiles/bettercad_tests.dir/cfd/CfdTurbulenceArchitectureTests.cpp.obj -MF tests\CMakeFiles\bettercad_tests.dir\cfd\CfdTurbulenceArchitectureTests.cpp.obj.d -o tests/CMakeFiles/bettercad_tests.dir/cfd/CfdTurbulenceArchitectureTests.cpp.obj -c C:/Users/Hasib/Desktop/CAD/tests/cfd/CfdTurbulenceArchitectureTests.cpp
+C:/Users/Hasib/Desktop/CAD/tests/cfd/CfdTurbulenceArchitectureTests.cpp: In function 'void CATCH2_INTERNAL_TEST_2()':
+C:/Users/Hasib/Desktop/CAD/tests/cfd/CfdTurbulenceArchitectureTests.cpp:129:48: error: static assertion failed: a boundary treatment is one policy per ADR-066 variable -- pressure, velocity, mass flux -- and nothing else. A turbulence policy, a wall-function tag, a y+ or a set of Robin coefficients added to it breaks this
+  129 |     static_assert(sizeof(CfdBoundaryTreatment) == sizeof(PermittedTreatment),
+      |                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  â€¢ the comparison reduces to '(4 == 3)'
+C:/Users/Hasib/Desktop/CAD/tests/cfd/CfdTurbulenceArchitectureTests.cpp:137:34: error: only 3 names provided for structured binding
+  137 |     [[maybe_unused]] const auto& [pressure, velocity, massFlux] = CfdBoundaryTreatment{};
+      |                                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:/Users/Hasib/Desktop/CAD/tests/cfd/CfdTurbulenceArchitectureTests.cpp:137:34: note: while 'const bettercad::cfd::CfdBoundaryTreatment' decomposes into 4 elements
+C:/Users/Hasib/Desktop/CAD/tests/cfd/CfdTurbulenceArchitectureTests.cpp:147:38: error: only 3 names provided for structured binding
+  147 |         [[maybe_unused]] const auto& [p, u, phi] = treatment;
+      |                                      ^~~~~~~~~~~
+C:/Users/Hasib/Desktop/CAD/tests/cfd/CfdTurbulenceArchitectureTests.cpp:147:38: note: while 'const bettercad::cfd::CfdBoundaryTreatment' decomposes into 4 elements
+[24/27] Building CXX object tests/CMakeFiles/bettercad_tests.dir/cfd/CfdMomentumTests.cpp.obj
+[25/27] Building CXX object tests/CMakeFiles/bettercad_tests.dir/cfd/CfdSteadyTests.cpp.obj
+[26/27] Building CXX object tests/CMakeFiles/bettercad_tests.dir/cfd/CfdTransientTests.cpp.obj
+ninja: build stopped: subcommand failed.

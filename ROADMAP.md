@@ -108,7 +108,7 @@ P19-DOF-001 and P19-BC-001 (both 2026-11-05) and P19-IC-001 and P19-DIFF-001
 (both 2026-11-06) and P19-GRAD-001 and P19-DIV-001 (both 2026-11-07) and
 P19-CONV-001, P19-MOM-001 and P19-CONT-001 (all 2026-11-08) and
 P19-PVCOUPLE-001, P19-LINSOLVE-001 and P19-STEADY-001 (all 2026-11-09) and
-P19-TRANSIENT-001 (2026-11-10)
+P19-TRANSIENT-001 (2026-11-10) and P19-TURB-ARCH-001 (2026-11-10)
 have PASSED.
 P19-MESH-001 was qualified by a second attempt on a replacement machine: its
 first attempt, on 2026-10-28, failed 5 of 17 stages when the previous machine's
@@ -184,17 +184,17 @@ reported two failed stages, the second time in two milestones. Its logs and the
 freeze it was launched under are kept under qualification-attempt-1/, including
 the claim that freeze got wrong, and all three places where the tree carried the
 false argument were CORRECTED IN PLACE rather than deleted, because the error is
-the finding. The harness has now run SIXTY-EIGHT milestones with its executable
+the finding. The harness has now run SIXTY-NINE milestones with its executable
 content unchanged, and is self-checked before each run, because an unchanged
 harness is not the same as a working one. `P19-LINSOLVE-001` is the first of
-those sixty-eight whose copy of `run-qualification.cmd` was edited AFTER its
+those sixty-nine whose copy of `run-qualification.cmd` was edited AFTER its
 gate ran, and the distinction is kept rather than blurred: its sixteen executable
 statements are identical before and after, proven by reconstructing the pre-edit
 body from the inverse replacements and hashing it back to
 `f80acaa80552617393a8501cb86213abb7169aab`, the hash the freeze recorded. What
 changed is the comment body, which asserted that no existing source file was
 modified four lines above its own correction, and counted six new files where
-there are eight. No milestone is open, and nothing after `P19-TRANSIENT-001` is
+there are eight. No milestone is open, and nothing after `P19-TURB-ARCH-001` is
 authorized;
 see TODO.md.
 
@@ -2034,6 +2034,47 @@ discriminate the two choices when both orchestrators pin the same ones; and
 accepted on. Evidence
 [P19-TRANSIENT-001](docs/verification/P19-TRANSIENT-001/README.md) and
 `ADR-078`.
+
+`P19-TURB-ARCH-001` (PASS 2026-11-10) DECIDED THE TURBULENCE ARCHITECTURE AND
+DECLARED NO TYPE FOR IT. `ADR-058` defers turbulence in full from P19 v1 and
+names this milestone as the one that settles its architecture "before any
+model"; `ADR-079` settles it in ten decisions and adds nothing to `include/` or
+`src/`, which is why seven of the eight frozen subtrees are BIT-IDENTICAL to the
+previous commit and the entire deliverable is `tests/`. The reason is
+`ADR-061` Decision 4, read in the file rather than taken from a summary: there
+is no field for the coupling algorithm, the time scheme, the convection scheme
+or the linear solver, because each has one qualified value or none yet and *"a
+selector would be a field with one legal value"*. A laminar/turbulent mode field
+is precisely that selector, so the mode is decided to be ABSENT; laminar is what
+the solvers do, and the refusal of anything beyond it belongs to
+`P19-VALID-001`, which `ADR-058` already assigns the Reynolds threshold to
+*"from a reference"*.
+
+**THE DECISION IS HELD BY THIRTY GATES RATHER THAN BY PROSE**, which is the part
+that makes this a milestone and not a document. A four-rule source-text
+ownership checker, run as twelve ctests — eleven fixtures plus the real tree at
+600 files scanned and 0 violations — attributes any turbulence quantity to the
+area that would own it and fails the build when it appears anywhere else;
+fourteen compile-fail cases prove the absent types absent by name; four runtime
+cases pin the variable table, the wall-treatment mirror and the nested settings
+records. The gates were made to fail on purpose before they were believed, and
+that is how the milestone's own overstatement was found: two mutations meant to
+prove the new count pin necessary were already caught by `-Werror=switch`, so
+the claim was narrowed in the ADR instead of left standing. Two independent
+reviews then found ten surviving mutations, four gates that changed meaning
+instead of failing, six tautologies and two false MEASURED claims in `ADR-079`,
+and a fourth rule — banning the bare symbols `nut`, `mut`, `epsilon`, `omega`
+and `tke` inside `cfd`, where all five measure zero — came out of the review
+rather than out of the design. Four more false figures were caught in the
+milestone's own verification scripts and corrected in place; the reconciliation
+was then falsified by fourteen sabotages, all fourteen caught. Fifteen
+limitations are recorded rather than fixed, and `L12` is the one the next
+milestone inherits: the checker will FIRE on the refusal `ADR-079` itself
+prescribes, because `P19-VALID-001` must name turbulence in order to refuse it,
+so the shape of the allow-path is written down for that milestone rather than
+built ahead of a consumer that does not exist. Evidence
+[P19-TURB-ARCH-001](docs/verification/P19-TURB-ARCH-001/README.md) and
+`ADR-079`.
 
 ```text
 incompressible laminar

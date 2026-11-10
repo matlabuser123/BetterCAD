@@ -721,3 +721,67 @@ bettercad_add_process_test(architecture.thermalcli-ownership.header-validator-on
 bettercad_add_process_test(architecture.thermalcli-ownership.header-missing
     COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-header-missing|-P|${_check_thermalcli}"
     EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*include/bettercad/thermal/ThermalAnalysisRun\\.hpp:[ \n]+is[ \n]+missing")
+
+# P19-TURB-ARCH-001. WHERE TURBULENCE MAY LIVE, WHICH TODAY IS NOWHERE. ADR-058 defers turbulence in full
+# from P19 v1, and ADR-079 decides the architecture is recorded WITHOUT TYPES -- no mode field, no model
+# enumerator, no turbulence variable, no wall-treatment record, no result array. Those are claims about the
+# whole tree, so CheckTurbulenceOwnership.cmake scans apps/, src/, include/ and examples/ with comments
+# stripped and attributes each hit to the area it is in, so every one of ADR-079's decisions has a gate that
+# names it: canonical intent (decisions 1 and 3), persistence (7), a command (8), the CLI and the GUI (9),
+# anywhere else (ADR-058's deferral), and a laminar-regime threshold (10), which is P19-VALID-001's to fix.
+# tests/ is deliberately NOT scanned: a test that proves a thing is absent has to be able to say its name.
+# Each fixture tree holds exactly one violation (or none): the valid tree also holds a comment naming
+# turbulence, a turbulent viscosity, kEpsilon and yPlus, plus mutable, mutex, permutation, commutative,
+# minutes, epsilon, omega and STYLES -- the measured false positives of the bare patterns (mut 29 files,
+# epsilon 9, LES 8, nut 6, omega 4), none of which may be flagged.
+set(_check_turbulence "${CMAKE_CURRENT_SOURCE_DIR}/CheckTurbulenceOwnership.cmake")
+# THE REAL-TREE RUN ASSERTS ITS OWN SCAN COUNT, not merely its exit code. A mutation analysis pointed out
+# that "0 violations" is exactly what an EMPTY GLOB also prints -- a moved source root or a SOURCE_DIR that
+# is not the repository root would have reported success having read no file. That is the defect
+# tests/cli/ZeroMatchGuard.cmake exists for elsewhere in this repository, so the count is asserted as at
+# least three digits here and the turbulence-empty fixture proves the checker's own zero-scan guard fires.
+bettercad_add_process_test(architecture.turbulence-ownership
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${PROJECT_SOURCE_DIR}|-P|${_check_turbulence}"
+    EXIT_CODE 0 STDOUT_REGEX "check passed: [0-9][0-9][0-9]+ files scanned, 0 violations")
+bettercad_add_process_test(architecture.turbulence-ownership.empty
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/turbulence-empty|-P|${_check_turbulence}"
+    EXIT_CODE 1 STDERR_REGEX "scanned[ \n]+0[ \n]+files")
+# ADR-079 decision 2 says no `virtual` enters cfd. That was PROSE until the same analysis said so: measured,
+# 0 of the 46 cfd files contain it, and the module's one strategy seam is a supplied std::function port.
+bettercad_add_process_test(architecture.turbulence-ownership.virtual
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/turbulence-virtual|-P|${_check_turbulence}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*declares[ \n]+virtual[ \n]+inside[ \n]+cfd")
+# Rule 4: the bare symbols -- nut, mut, epsilon, omega, tke -- banned INSIDE cfd only, because rule 1
+# cannot match them tree-wide (they occur in innocent code: mut 9 files, tke 10, epsilon 1, nut 3) while
+# inside the 46 cfd files every one of them measures ZERO. An adversarial review found that the scope where
+# the ambiguity disappears is the one that matters, and this closed what the ADR calls its largest hole.
+# THE RULE CAUGHT THE VALID FIXTURE WHEN IT WAS ADDED, because that fixture was at src/cfd/CfdSteady.cpp
+# stuffed with exactly those symbols; it now holds a non-cfd file for rule 1's exclusions and an innocent
+# cfd file carrying `closure`, which is cfd's own word in 7 of its 46 files and deliberately not banned.
+bettercad_add_process_test(architecture.turbulence-ownership.bare-symbol
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/turbulence-bare-symbol|-P|${_check_turbulence}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*bare[ \n]+turbulence[ \n]+symbol[ \n]+inside[ \n]+cfd")
+bettercad_add_process_test(architecture.turbulence-ownership.valid
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/turbulence-valid|-P|${_check_turbulence}"
+    EXIT_CODE 0 STDOUT_REGEX "Turbulence ownership check passed")
+bettercad_add_process_test(architecture.turbulence-ownership.in-intent
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/turbulence-in-intent|-P|${_check_turbulence}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*canonical[ \n]+intent[ \n]+or[ \n]+the[ \n]+frozen")
+bettercad_add_process_test(architecture.turbulence-ownership.in-persistence
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/turbulence-in-persistence|-P|${_check_turbulence}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*persistence[ \n]+names")
+bettercad_add_process_test(architecture.turbulence-ownership.in-commands
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/turbulence-in-commands|-P|${_check_turbulence}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*a[ \n]+command[ \n]+names")
+bettercad_add_process_test(architecture.turbulence-ownership.in-cli
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/turbulence-in-cli|-P|${_check_turbulence}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*the[ \n]+CLI[ \n]+names")
+bettercad_add_process_test(architecture.turbulence-ownership.in-gui
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/turbulence-in-gui|-P|${_check_turbulence}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*a[ \n]+view[ \n]+names")
+bettercad_add_process_test(architecture.turbulence-ownership.anywhere
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/turbulence-anywhere|-P|${_check_turbulence}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*turbulence[ \n]+is[ \n]+not[ \n]+authorized")
+bettercad_add_process_test(architecture.turbulence-ownership.threshold
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/turbulence-threshold|-P|${_check_turbulence}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*fixes[ \n]+a[ \n]+laminar-regime[ \n]+threshold")

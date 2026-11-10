@@ -1,0 +1,20 @@
+[1/18] Checking git revision
+[2/16] Building CXX object src/cfd/CMakeFiles/bettercad_cfd.dir/CfdFields.cpp.obj
+FAILED: [code=1] src/cfd/CMakeFiles/bettercad_cfd.dir/CfdFields.cpp.obj 
+C:\Users\Hasib\AppData\Local\Microsoft\WinGet\Packages\BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe\mingw64\bin\c++.exe -DBETTERCAD_CFD_STATIC_DEFINE -DBETTERCAD_CORE_STATIC_DEFINE -DBETTERCAD_FEATURES_STATIC_DEFINE -DBETTERCAD_GEOMETRY_STATIC_DEFINE -DBETTERCAD_LINALG_STATIC_DEFINE -DBETTERCAD_MESHING_STATIC_DEFINE -DBETTERCAD_SKETCH_STATIC_DEFINE -IC:/Users/Hasib/Desktop/CAD/include -IC:/bettercad/bc-build/debug-ext/generated/include -IC:/Users/Hasib/Desktop/CAD/src -g -std=c++23 -fvisibility=hidden -fno-keep-inline-dllexport -Wall -Wextra -Wpedantic -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual -Wconversion -Wsign-conversion -Wdouble-promotion -Wformat=2 -Wimplicit-fallthrough -Wextra-semi -Wundef -Wmissing-declarations -Wsuggest-override -Wmisleading-indentation -Wduplicated-cond -Wduplicated-branches -Wlogical-op -Werror -Wa,-mbig-obj -MD -MT src/cfd/CMakeFiles/bettercad_cfd.dir/CfdFields.cpp.obj -MF src\cfd\CMakeFiles\bettercad_cfd.dir\CfdFields.cpp.obj.d -o src/cfd/CMakeFiles/bettercad_cfd.dir/CfdFields.cpp.obj -c C:/Users/Hasib/Desktop/CAD/src/cfd/CfdFields.cpp
+C:/Users/Hasib/Desktop/CAD/src/cfd/CfdFields.cpp: In function 'std::string_view bettercad::cfd::toString(CfdVariable)':
+C:/Users/Hasib/Desktop/CAD/src/cfd/CfdFields.cpp:64:12: error: enumeration value 'Extra' not handled in switch [-Werror=switch]
+   64 |     switch (variable) {
+      |            ^
+cc1plus.exe: all warnings being treated as errors
+[3/16] Building CXX object src/cfd/CMakeFiles/bettercad_cfd.dir/CfdInitialField.cpp.obj
+FAILED: [code=1] src/cfd/CMakeFiles/bettercad_cfd.dir/CfdInitialField.cpp.obj 
+C:\Users\Hasib\AppData\Local\Microsoft\WinGet\Packages\BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe\mingw64\bin\c++.exe -DBETTERCAD_CFD_STATIC_DEFINE -DBETTERCAD_CORE_STATIC_DEFINE -DBETTERCAD_FEATURES_STATIC_DEFINE -DBETTERCAD_GEOMETRY_STATIC_DEFINE -DBETTERCAD_LINALG_STATIC_DEFINE -DBETTERCAD_MESHING_STATIC_DEFINE -DBETTERCAD_SKETCH_STATIC_DEFINE -IC:/Users/Hasib/Desktop/CAD/include -IC:/bettercad/bc-build/debug-ext/generated/include -IC:/Users/Hasib/Desktop/CAD/src -g -std=c++23 -fvisibility=hidden -fno-keep-inline-dllexport -Wall -Wextra -Wpedantic -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual -Wconversion -Wsign-conversion -Wdouble-promotion -Wformat=2 -Wimplicit-fallthrough -Wextra-semi -Wundef -Wmissing-declarations -Wsuggest-override -Wmisleading-indentation -Wduplicated-cond -Wduplicated-branches -Wlogical-op -Werror -Wa,-mbig-obj -MD -MT src/cfd/CMakeFiles/bettercad_cfd.dir/CfdInitialField.cpp.obj -MF src\cfd\CMakeFiles\bettercad_cfd.dir\CfdInitialField.cpp.obj.d -o src/cfd/CMakeFiles/bettercad_cfd.dir/CfdInitialField.cpp.obj -c C:/Users/Hasib/Desktop/CAD/src/cfd/CfdInitialField.cpp
+C:/Users/Hasib/Desktop/CAD/src/cfd/CfdInitialField.cpp: In function 'bettercad::Result<void> bettercad::cfd::expandCfdInitialField(const PreparedCfdInitialField&, CfdVariable, std::span<double>)':
+C:/Users/Hasib/Desktop/CAD/src/cfd/CfdInitialField.cpp:297:12: error: enumeration value 'Extra' not handled in switch [-Werror=switch]
+  297 |     switch (variable) {
+      |            ^
+cc1plus.exe: all warnings being treated as errors
+[4/16] Building CXX object src/cfd/CMakeFiles/bettercad_cfd.dir/CfdSteady.cpp.obj
+[5/16] Building CXX object src/cfd/CMakeFiles/bettercad_cfd.dir/CfdTransient.cpp.obj
+ninja: build stopped: subcommand failed.
