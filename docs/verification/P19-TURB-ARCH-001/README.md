@@ -501,7 +501,8 @@ self-check verify-harness.cmd deliberately failed two stages beforehand and
 The eight frozen paths were read **five times** by three different mechanisms:
 at the freeze, by the harness before its first build, by the harness after its
 last test run, independently after the gate with a scratch `GIT_INDEX_FILE`, and
-from the commit object itself once committed. The first four agree exactly:
+out of the commit object itself. **All five agree exactly**, so the tree that
+was qualified is the tree that is committed:
 
 ```text
 apps               fc398a3d2e524178cf38e8b667236379d8381086
@@ -519,6 +520,23 @@ CMakePresets.json  3229f0f89b236744d7d5c082bed47c28b718288e
 add no production type either shows up as two unchanged subtrees or it was not
 taken. Seven of the eight are unchanged; `tests` moved from `47658ea5` to
 `bf65a34a` and is the whole deliverable.
+
+```text
+qualified and committed as   6c791579d3c442e284cdeaa63d06b43cf0f5e264
+on top of                    9d89f4d5002e0724323cc7340ea30c3cb7dc8419
+include                      4759b768   IDENTICAL to the previous commit
+src                          c33a7b6f   IDENTICAL
+tests                        bf65a34a   the only subtree that moved
+```
+
+`git rev-parse HEAD:<path>` is used for this reading and for nothing else.
+Before the commit it reads the PREVIOUS commit's tree and would agree with
+itself for the wrong reason, which is why the other four readings go through an
+index. The comparison is made by
+[`experiments/reconcile.py`](experiments/reconcile.py), which asserts that both
+sides hold eight paths before reporting them equal — a comparison that cannot
+fail is not a comparison, which was the defect in `P19-STEADY-001`'s first
+reconciliation pass.
 
 ### The harness itself
 
@@ -598,6 +616,13 @@ below and seven of them are open by choice.
 ```text
 r1  this directory, written while the qualification gate ran, after two
     independent reviews had changed the deliverable substantially
+r3  the commit recorded, and with it the fifth identity reading, which only
+    exists once the commit does: all eight paths out of commit 6c79157
+    equal FREEZE.md's eight, and include and src equal the PREVIOUS commit's.
+    reconcile.py was changed to make that reading -- its pre-commit check
+    asserted that exactly one path differed from HEAD, which was true before
+    this commit and false after it -- and re-falsified: 183 checks, 14 of 14
+    sabotages caught, control passing.
 r2  REGRESSION, QUALIFICATION and RESULT filled from the harness's own logs
     after the gate returned 0 stage(s) failed. The per-tag readout was taken
     off the three qualified executables, the reconciliation was extended from

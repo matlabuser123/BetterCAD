@@ -396,17 +396,34 @@ os.remove(idx)
 eq('the live tree still holds eight paths', len(live), 8)
 eq('THE QUALIFIED TREE IS STILL THE TREE ON DISK', live, FROZEN)
 
-# the seven that must not have moved since HEAD, and the one that did
+# ------------------------------------- the fifth reading, out of the commit
+# This is the only place `git rev-parse HEAD:<path>` is used. Before the
+# milestone's commit it reads the PREVIOUS commit's tree and would agree with
+# itself for the wrong reason, which is why the other four readings go through
+# an index. It is meaningful only once the commit exists.
+print('\n== the commit object, the fifth reading ==')
 head = {}
 for p8 in EIGHT:
     head[p8] = subprocess.check_output(
         ['git', 'rev-parse', 'HEAD:%s' % p8], cwd=REPO).decode('ascii').strip()
-moved = [k for k in EIGHT if head[k] != live[k]]
-eq('exactly one frozen path differs from HEAD', moved, ['tests'])
-check('include is bit-identical to HEAD -- no production type was added',
-      head['include'] == live['include'])
-check('src is bit-identical to HEAD -- no production code was added',
-      head['src'] == live['src'])
+eq('the commit holds eight paths', len(head), 8)
+eq('THE QUALIFIED TREE IS THE COMMITTED TREE', head, FROZEN)
+eq('and the working tree still agrees with the commit', head, live)
+
+# the no-production-change claim is against the PREVIOUS commit, not this one
+prev = {}
+for p8 in EIGHT:
+    prev[p8] = subprocess.check_output(
+        ['git', 'rev-parse', 'HEAD~1:%s' % p8],
+        cwd=REPO).decode('ascii').strip()
+eq('the previous commit holds eight paths', len(prev), 8)
+moved = [k for k in EIGHT if prev[k] != head[k]]
+eq('exactly one frozen path moved in this commit', moved, ['tests'])
+check('include is BIT-IDENTICAL to the previous commit -- no type was added',
+      prev['include'] == head['include'],
+      '%s -> %s' % (prev['include'], head['include']))
+check('src is BIT-IDENTICAL to the previous commit -- no code was added',
+      prev['src'] == head['src'], '%s -> %s' % (prev['src'], head['src']))
 
 # ----------------------------------------------- the checker, on this tree
 print('\n== the ownership checker, re-run against the live tree ==')

@@ -94,7 +94,15 @@ Previous milestone:
            the refusal decision 10 prescribes, because P19-VALID-001 must name
            turbulence in order to refuse it. The shape of the allow-path is
            recorded for that milestone rather than pre-built, since
-           CfdValidation.hpp does not exist yet. Evidence
+           CfdValidation.hpp does not exist yet.
+           Commit 6c791579d3c442e284cdeaa63d06b43cf0f5e264, and the eight frozen subtree
+           identities were read FIVE times -- the harness before its first
+           build, the harness after its last test run, a working-tree
+           recomputation through a scratch index, the staged tree, and OUT OF
+           the commit object -- all eight identical in all five, so the
+           qualified tree is the committed tree. include and src are
+           BIT-IDENTICAL to the previous commit as well, which is the claim the
+           milestone exists to make. Evidence
            docs/verification/P19-TURB-ARCH-001/ and ADR-079.
 
 Before it:
