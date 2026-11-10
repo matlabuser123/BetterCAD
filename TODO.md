@@ -27,10 +27,16 @@ Current milestone:
            milestone is itself a stop condition: the next one is a scope
            decision and not Claude's to make. Nothing below this line is
            authorized by being next, by being small, or by being the obvious
-           continuation. P19-KEPS-001 is the one it would be easiest to drift
-           into, and ADR-079 exists precisely to make that drift visible: the
-           architecture is decided and NO turbulence type is declared, so the
-           first model is an explicit authorization and not a continuation.
+           continuation.
+           P19-KEPS-001 IS NO LONGER A DRIFT PATH. It was put to the owner on
+           2026-11-11, because the section's own last line defers it when P19 v1
+           is strictly laminar and ADR-058's accepted Decision says v1 is, and
+           the owner DEFERRED it. P19-SST-001 is deferred with it by ADR-058's
+           own terms. So the first turbulence model now needs an explicit
+           widening of P19 v1, and an ADR, before it needs any code -- which is
+           what ADR-079 was written to make visible: the architecture is decided
+           and NO turbulence type is declared, so a model is an authorization
+           and never a continuation.
 
 Previous milestone:
            P19-TURB-ARCH-001 - Turbulence Architecture. AUTHORIZED 2026-11-10
@@ -787,12 +793,16 @@ Next:
            predecessor's PASS has never been permission to start the one after
            it, and the two it would be easiest to drift into are named so that
            the drift stays visible:
-           P19-KEPS-001 would IMPLEMENT a turbulence model. ADR-079 declares no
-           type for one on purpose, so the first model is an authorization and
-           not a continuation -- and it would have to come and DELETE fourteen
-           compile-fail gates that currently prove its quantities absent. That
-           deletion is the visible act of authorizing turbulence, and it is the
-           owner's to ask for.
+           P19-KEPS-001 IS DEFERRED, 2026-11-11, and so is P19-SST-001. The
+           pasted checklist's own last line defers the milestone when P19 v1 is
+           strictly laminar; ADR-058's accepted Decision says turbulence is
+           "None in v1" and defers both models "in full if v1 stays laminar";
+           ten v1 milestones are unqualified, so v1 has not stopped being
+           laminar; and the owner decided. Nothing was implemented and no box
+           was ticked. Un-deferring needs an ADR superseding ADR-058's
+           turbulence scope and amending ADR-079's decisions 1-6 BEFORE any
+           code, and then the deletion of fourteen qualified compile-fail
+           gates. Each section records this where it will be read.
            P19-VALID-001 inherits ADR-079 L12 BEFORE it inherits anything else:
            decision 10 requires a beyond-laminar solve to be refused by name,
            and naming turbulence is exactly what the new ownership checker bans
@@ -4244,6 +4254,27 @@ Only after turbulence architecture is qualified.
 
 If P19 v1 is strictly laminar, defer this whole milestone.
 
+DEFERRED 2026-11-11 by the owner's explicit scope decision, answering this
+section's own last line. P19 v1 IS strictly laminar, and the authority is
+ADR-058's accepted Decision (Option B), which says of turbulence: "None in v1.
+P19-TURB-ARCH-001 defines the interface ... before any model; k-epsilon and
+k-omega SST are separate milestones and are deferred in full if v1 stays
+laminar." v1 has not stopped being laminar: ten of its milestones are
+unqualified, among them P19-VALID-001, which owns the laminar Reynolds
+threshold, and P19-QUAL-001, the phase's own gate. ADR-058's Decision also
+states why this could not be settled by implication -- "the scope of P19 v1,
+and everything outside it, is stated here so a later milestone cannot widen it
+by implication."
+THE FOURTEEN BOXES STAY UNTICKED. A deferral is not a completion; this
+milestone has no evidence directory and no gate was run for it.
+WHAT WOULD UN-DEFER IT: a scope decision widening P19 v1 to include turbulence.
+That is an architecture change before it is a feature, so it begins with an ADR
+superseding ADR-058's turbulence scope and amending ADR-079's decisions 1-6 --
+not with code -- and it must then DELETE the fourteen compile-fail gates
+P19-TURB-ARCH-001 qualified to prove these quantities absent. ADR-079 names
+that deletion "the visible act of authorizing turbulence", and it is the
+owner's to ask for.
+
 ---
 # P19-SST-001
 
@@ -4264,6 +4295,16 @@ Only if explicitly within P19 scope.
 * [ ] Evidence recorded
 
 Otherwise defer.
+
+DEFERRED 2026-11-11, by this section's own clause rather than by a second
+decision: it is authorized "only if explicitly within P19 scope", and it is
+not. ADR-058 defers k-epsilon and k-omega SST together, "in full if v1 stays
+laminar", so the owner's decision on P19-KEPS-001 settles this section too by
+that ADR's own terms. The eleven boxes stay UNTICKED. Un-deferring it needs the
+same widening P19-KEPS-001 needs, and k-omega SST additionally needs a
+qualified k-epsilon to compare against: ADR-058 treats the two models as
+separate milestones precisely so that neither is validated against the other's
+assumptions.
 
 ---
 # P19-POST-001
