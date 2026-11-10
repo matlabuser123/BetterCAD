@@ -107,7 +107,8 @@ P19-ARCH-001": P19-ARCH-001 and P19-DATA-001 (2026-10-27), P19-FLUID-001
 P19-DOF-001 and P19-BC-001 (both 2026-11-05) and P19-IC-001 and P19-DIFF-001
 (both 2026-11-06) and P19-GRAD-001 and P19-DIV-001 (both 2026-11-07) and
 P19-CONV-001, P19-MOM-001 and P19-CONT-001 (all 2026-11-08) and
-P19-PVCOUPLE-001, P19-LINSOLVE-001 and P19-STEADY-001 (all 2026-11-09)
+P19-PVCOUPLE-001, P19-LINSOLVE-001 and P19-STEADY-001 (all 2026-11-09) and
+P19-TRANSIENT-001 (2026-11-10)
 have PASSED.
 P19-MESH-001 was qualified by a second attempt on a replacement machine: its
 first attempt, on 2026-10-28, failed 5 of 17 stages when the previous machine's
@@ -183,17 +184,17 @@ reported two failed stages, the second time in two milestones. Its logs and the
 freeze it was launched under are kept under qualification-attempt-1/, including
 the claim that freeze got wrong, and all three places where the tree carried the
 false argument were CORRECTED IN PLACE rather than deleted, because the error is
-the finding. The harness has now run SIXTY-SEVEN milestones with its executable
+the finding. The harness has now run SIXTY-EIGHT milestones with its executable
 content unchanged, and is self-checked before each run, because an unchanged
 harness is not the same as a working one. `P19-LINSOLVE-001` is the first of
-those sixty-six whose copy of `run-qualification.cmd` was edited AFTER its gate
-ran, and the distinction is kept rather than blurred: its sixteen executable
+those sixty-eight whose copy of `run-qualification.cmd` was edited AFTER its
+gate ran, and the distinction is kept rather than blurred: its sixteen executable
 statements are identical before and after, proven by reconstructing the pre-edit
 body from the inverse replacements and hashing it back to
 `f80acaa80552617393a8501cb86213abb7169aab`, the hash the freeze recorded. What
 changed is the comment body, which asserted that no existing source file was
 modified four lines above its own correction, and counted six new files where
-there are eight. No milestone is open, and nothing after `P19-STEADY-001` is
+there are eight. No milestone is open, and nothing after `P19-TRANSIENT-001` is
 authorized;
 see TODO.md.
 
@@ -1918,6 +1919,121 @@ them in the definition means changing `CfdAnalysisDefinition` and
 `canonicalText`, both qualified under `P19-DATA-001`, and no item on the
 checklist asked for a selector. Evidence
 [P19-STEADY-001](docs/verification/P19-STEADY-001/README.md).
+
+`P19-TRANSIENT-001` (PASS 2026-11-10) MARCHES IN TIME AND WROTE NO NUMERICS
+EITHER. `solveCfdTransient` calls `cfdMassFlux`,
+`reconstructCfdPressureGradient`, `assembleCfdMomentum` three times and
+`advanceCfdCoupling`, in that order, every outer iteration of every step — and
+the transient term it depends on was qualified two milestones earlier under
+`P19-MOM-001`, with `ADR-073`'s unit assertions and a dedicated test for the one
+way a caller can get it wrong. `CfdTransientSettings`, `CfdTimeSampling`,
+`CfdResultMetadata`'s time and step, and `CfdResult::create`'s "transient: a
+finite time > 0 s and a step >= 1" were all written by `P19-DATA-001` FOR this
+milestone. Four files were added and three `CMakeLists` gained a registration;
+not one signature, field, enumerator or default moved, and `CfdSteady.hpp` and
+`CfdSteady.cpp` were not touched at all — which `[cfd][steady]` at 1263
+assertions in 19 cases, read off the qualified binaries and identical to
+baseline, is what measures rather than asserts.
+
+**THE TWO VELOCITY ARRAYS ARE THE WHOLE MILESTONE.** `CfdMomentumInput` takes
+`currentVelocity` (the latest outer iterate) and `previousVelocity` (U^n, frozen
+for a step's inner loop) as spans of the same length in the same layout, so the
+type system cannot tell them apart. `ADR-073` Decision 4 names the consequence:
+passing the current field as the previous one makes the transient term's two
+halves cancel, and the run then CONVERGES TO THE CORRECT STEADY ANSWER with
+every steady assertion passing. Two checklist items are the tests that see it —
+the first step's change must scale with `dt`, measured at ratios 1.9834 and
+1.9916 where the defect would give 1, and a short march must NOT be the steady
+solution, measured 1.75% of the way there. The fixed-point test `ADR-078` had
+proposed cannot see it at all, because at a fixed point the two arrays are
+equal.
+
+**A CHECKLIST ITEM SURVIVED A PASSING SUITE, AND TWO REVIEWS FOUND IT.**
+`CfdTransientStepRecord::balance` was never assigned, so every step record
+published two zeros where the qualified evaluator's two mass-balance measures
+belong — and "Per-step mass balance" is one of the nineteen items. The suite
+passed because the only assertion on it was `isfinite()`, and zero is finite.
+The repair asserts that each sampled step's record EQUALS its sample's own
+metadata, a comparison with no tolerance a default can satisfy, and it was
+verified to fail without the fix. An adversarial review and a mutation analysis
+each found it independently; five test cases and about 370 assertions were added
+after them.
+
+**THE MOST INTERESTING FINDING IS RECORDED RATHER THAN FIXED, AND THE
+PREDICTION ABOUT IT WAS WRONG.** `ADR-078` `L11`: the per-step convergence
+criterion goes vacuous at a small enough `dt`, because on a step's first
+iteration the field IS U^n and the transient term's two halves cancel exactly,
+leaving a residual numerator independent of `dt` while the normalisation grows
+as 1/`dt`. The prediction was that the LATER steps would collapse; that
+assertion failed at `65 <= 8` and the measurement replaced it — it is STEP 1
+that collapses, from 60 outer iterations to 1, with the work moving into the
+later steps rather than disappearing. The answer is not wrong: such a step is a
+lagged-pressure step, consistent, first order, and published with a
+conservative flux. What stops being worth what a reader expects is the
+EVIDENCE, since `outerIterations = 1` beside a residual under tolerance reads
+as convergence for a step that coupled nothing. The normalisation belongs to
+`advanceCfdCoupling`, qualified under `P19-PVCOUPLE-001`, and changing it would
+change what every steady run is accepted on as well.
+
+**THE TWO POLICY ITEMS ARE BUILD FAILURES, because a negative claim with no
+test is prose.** "Time-dependent BC policy" and "Time-dependent load policy"
+claim that nothing in the canonical data varies with time, and thirteen of the
+twenty-eight compile-fail gates are "no member named" gates over every record a
+time profile would have to live in, plus gates that a prescribed speed and a
+gravity vector do not accept a callable. One gate was NARROWED rather than
+widened after review: `A_TIME_GRIDS_STEP_COUNT_IS_WRITABLE` had accepted "no
+member named" alongside the access diagnostics, which would let a rename retire
+the gate silently — `P19-STEADY-001`'s arity-for-access failure in a new
+disguise.
+
+**THE GATE PASSED ON THE THIRD ATTEMPT AND NEITHER FAILURE WAS THE TREE.**
+6965/6965 in three presets, 3527 x 5 = 17635 executions in two, 17 of 17 stages
+exit 0, 4h49m, and no product code changed between the three attempts. Attempt 1
+died 63 minutes in when the machine stopped being able to launch processes — 374
+of its 375 ctest failures are `0xC0000142`, and both remaining configures
+returned it within 30 ms of being asked. Attempt 2 was launched from a shell
+that cannot see the dependency prefix, so CMake never put it on
+`CMAKE_PREFIX_PATH` and `find_package(OpenCASCADE)` fell through to msys64's
+7.9.3, which the project's own supported-range gate refused; the cause was
+established by running one probe in BOTH shells — `cmake EXISTS` reads YES in
+one and NO in the other for the same absolute path — rather than inferred from
+the message, and the three qualified caches carry 0 msys64 references.
+
+**THAT SECOND ATTEMPT EXPOSED A HOLE IN THE GATE ITSELF.** With no build stage
+having run, its two repeat stages still reported `100% tests passed`, off
+binaries left on disk, and `release-ext` selected 3522 tests instead of 3527 —
+exactly the five cases the reviews had added. The three build trees were emptied
+before attempt 3, so that a stage with no build behind it now fails loudly
+instead of passing quietly.
+
+**THE RECONCILIATION WAS FALSIFIED BEFORE IT WAS BELIEVED**, which is this
+milestone's answer to the check `P19-STEADY-001` found could not fail. Its 82
+checks parse every predicted figure out of `FREEZE.md` rather than restating it,
+and five single-line sabotages of a COPY of the evidence were each required to
+make it fail — a removed `Passed` marker, an altered identity hex, an altered
+assertion figure, a removed verdict sentence, a stage exit changed to 1. All
+five were caught and the untouched control still passed. The post-gate
+reconciliation also found one defect in this milestone's own evidence and
+corrected it in place: `KNOWN LIMITATIONS` claimed nine carried limitations plus
+one found during implementation, while `ADR-078` carries FOURTEEN, so four were
+silently dropped — including `L11`, the finding the same file devotes a
+subsection of its own to.
+
+Fourteen limitations are recorded rather than fixed, and there is still no
+performance baseline, for the eighth milestone running — which a transient run,
+being `steps x iterations` linear solves, makes the most expensive thing in the
+tree.
+
+**Two scope decisions are open and were reported rather than taken:** `ADR-078`
+`L7`, which inherits `ADR-077` `L12` unchanged — the convection scheme and the
+gradient method hard-coded in BOTH orchestrators, outside the analysis
+definition and outside its fingerprint — with `ADR-078` `L14` reading the same
+finding from the test side, since the steady-limit cross-check cannot
+discriminate the two choices when both orchestrators pin the same ones; and
+`ADR-078` `L11` above, whose repair would change what every steady run is
+accepted on. Evidence
+[P19-TRANSIENT-001](docs/verification/P19-TRANSIENT-001/README.md) and
+`ADR-078`.
 
 ```text
 incompressible laminar

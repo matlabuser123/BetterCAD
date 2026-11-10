@@ -94,6 +94,7 @@ bettercad_add_library(bettercad_cfd
         CfdSteady.cpp
         CfdTarget.cpp
         CfdTopology.cpp
+        CfdTransient.cpp
         CfdResult.cpp
     PUBLIC_LINK
         BetterCAD::core

@@ -23,80 +23,99 @@ Prerequisite:
            may set). P17's F1-F3 stand unchanged beneath them.
 
 Current milestone:
-           NONE AUTHORIZED. P19-STEADY-001 passed its gate and finishing a
+           NONE AUTHORIZED. P19-TRANSIENT-001 passed its gate and finishing a
            milestone is itself a stop condition: the next one is a scope
            decision and not Claude's to make. Nothing below this line is
            authorized by being next, by being small, or by being the obvious
            continuation.
 
 Previous milestone:
-           P19-STEADY-001 - Steady Incompressible Solver. AUTHORIZED 2026-11-09
-           by the owner's "implement and verify" over the nineteen-item
-           checklist, which arrived pasted into the instruction as the nine P19
-           checklists before it did, and was diffed against this file's own
-           section before any implementation: byte-for-byte identical across all
-           28 lines, 19 unticked and 0 ticked, sha256 209e080f2110e3d0 after CR
-           normalization. Seven scope notes were recorded at authorization time;
-           they are in docs/verification/P19-STEADY-001/README.md's SCOPE
-           section, which CLAUDE.md makes the authority for a completed
-           milestone.
-           PASS 2026-11-09, nineteen of nineteen, ON THE SECOND QUALIFICATION
-           ATTEMPT: 6903/6903 x 3 presets, 3493 x 5 = 17465 executions x 2
-           presets with the marker-to-progress ratio exactly 5.000, 17 of 17
-           stages exit 0, 0 stage(s) failed, 3h23m55s, and the eight subtree
-           identities read FIVE times -- the harness before its first build, the
-           harness after its last test, a recomputation from the working tree,
-           the staged tree, and OUT OF the commit object -- all eight identical
-           in all five, so the qualified tree is the committed tree. Commit
-           370b90da75de236e66d0ddfbda1fb9254e557133.
-           THE FIRST ATTEMPT FAILED AND THE FAILURE WAS THIS MILESTONE'S.
-           QUALIFICATION FAILED: 3 stage(s) failed, one test in 6903, the same
-           one in all three presets, while the launcher reported "completed
-           (exit code 0)" -- the second milestone running where the launcher's
-           exit code and the harness's verdict disagreed. The failing gate was
-           compile_fail.cfdids.a-result-cannot-be-built-without-its-factory,
-           inherited from P19-DATA-001: giving CfdResult's private constructor a
-           third parameter (ADR-077 Decision 2) turned an ACCESS test into an
-           ARITY test, because GCC resolves arity before access. It still
-           compile-failed and still exited 1, so nothing looked wrong, while the
-           claim it exists to make had stopped being tested. The production code
-           was never wrong; the PROOF was. Widening the regex was refused -- it
-           would have produced a PASS by retiring the gate -- and the repair
-           passes the right arity so the private constructor is selected again,
-           measured afterwards as "is private within this context". The blast
-           radius had been drawn around the factory and missed a file that calls
-           it nowhere and names the constructor instead; TODO and the evidence
-           both now carry that line. Only `tests` moved for the repair, so
-           `include` and `src` are bit-identical to the voided freeze.
-           It added no numerics: solveCfdSteady orchestrates fifteen operators
-           that were already qualified, which is why ten of the nineteen items
-           were orchestration rather than implementation. CfdResult gained its
-           field arrays in a nested validating record, and the settings are read
-           from the analysis definition rather than taken as a parameter --
-           canonicalText fingerprints all seven settings lines, so a parameter
-           would have let a run publish provenance it did not have, a defect no
-           test of the numerics could have found. Independent validation came
-           from a dense LU reference agreeing to 1.485e-15 and from the
-           published flux's conservation measured through P19-DIV-001's
-           divergeCfdMassFlux at 7.07e-17 against 7.26e-05 for the
-           pre-correction flux. Three of twenty behavioural probes survive by
-           design, each with the reason a test cannot reach it; nine
+           P19-TRANSIENT-001 - Transient Incompressible Solver. AUTHORIZED
+           2026-11-10 by the owner's "implement and fully verify" over the
+           nineteen-item checklist, which arrived pasted into the instruction as
+           the ten P19 checklists before it did, and was diffed against this
+           file's own section before any implementation: byte-for-byte
+           identical, 19 unticked and 0 ticked -- counted, not assumed -- and
+           sha256 1d8018b25bd7ed26 over the section as the previous commit
+           carries it. An off-by-one line range was caught and the section
+           re-extracted before the comparison was believed.
+           PASS 2026-11-10, nineteen of nineteen, ON THE THIRD QUALIFICATION
+           ATTEMPT: 6965/6965 x 3 presets, 3527 x 5 = 17635 executions x 2
+           presets with the marker-to-progress ratio exactly 5.0000, 17 of 17
+           stages exit 0, 0 stage(s) failed, 4h49m, and 82 reconciliation checks
+           over the harness's own logs with every predicted figure parsed out of
+           FREEZE.md rather than typed in twice.
+           THE RECONCILIATION WAS FALSIFIED BEFORE IT WAS BELIEVED. Five
+           single-line sabotages of a COPY of the evidence -- a removed Passed
+           marker, an altered identity hex, an altered assertion figure, a
+           removed verdict sentence, a stage exit changed to 1 -- were each
+           required to make the reconciliation fail, and each did, while the
+           untouched control still passed. That is this milestone's answer to
+           the check P19-STEADY-001 found could not fail.
+           NEITHER FAILED ATTEMPT WAS THE TREE, and no product code changed
+           between the three. Attempt 1 died 63 minutes in when the machine
+           stopped being able to launch processes: 374 of its 375 ctest failures
+           are 0xC0000142 and both remaining configures returned it within 30 ms
+           of being asked. Attempt 2 was launched from a shell that cannot see
+           the dependency prefix, so CMake never put it on CMAKE_PREFIX_PATH and
+           find_package(OpenCASCADE) fell through to msys64's 7.9.3, which the
+           project's own supported-range gate refused; the cause was established
+           by running one probe in BOTH shells -- cmake EXISTS reads YES in one
+           and NO in the other for the same absolute path, with LOCALAPPDATA
+           identical -- rather than inferred from the message, and the three
+           qualified caches contain 0 msys64 references.
+           THAT SECOND ATTEMPT ALSO EXPOSED A HOLE WORTH NAMING. With no build
+           stage having run, its two repeat stages still reported 100% tests
+           passed, off binaries left on disk, and release-ext selected 3522
+           instead of 3527 -- exactly the five cases the reviews had added. The
+           three build trees were emptied before attempt 3 so that a stage with
+           no build behind it fails loudly instead of passing quietly.
+           IT ADDED NO NUMERICS: solveCfdTransient calls cfdMassFlux,
+           reconstructCfdPressureGradient, assembleCfdMomentum three times and
+           advanceCfdCoupling, in that order, every outer iteration of every
+           step, and the transient term itself was qualified under P19-MOM-001
+           two milestones earlier. No existing declaration changed and
+           CfdSteady.hpp and CfdSteady.cpp are untouched -- which [cfd][steady]
+           at 1263/19 and architecture at 205, both IDENTICAL to baseline and
+           both read off the qualified binaries, are what measure rather than
+           assert. [cfd] at 755043/697 minus the new suite's 1813/34 is exactly
+           P19-STEADY-001's 753230/663.
+           AN ADVERSARIAL REVIEW AND A MUTATION ANALYSIS EACH FOUND THE SAME
+           LIVE DEFECT, which the author had found first:
+           CfdTransientStepRecord::balance was never assigned, so every step
+           record published two zeros where the qualified evaluator's two
+           mass-balance measures belong -- "Per-step mass balance" is one of the
+           nineteen items -- and the suite passed because the only assertion on
+           it was isfinite() and zero is finite. The repair asserts that each
+           sampled step's record EQUALS its sample's own metadata, which has no
+           tolerance a default can satisfy, and it was verified to fail without
+           the fix. Five test cases and about 370 assertions were added after the
+           reviews, which is why the frozen counts are higher than the
+           launcher's first draft carried.
+           Independent validation came from five references: the analytic
+           boundary throughput rho u A = 1.1976e-5 kg/s matched to five figures,
+           the steady suite's own gravity figure reproduced through the transient
+           path (-5.77935e-05 Pa/m, ratio 1.15819), the qualified steady solver
+           reproduced by one large step to 1.50592e-07 relative in the same 59
+           outer iterations, first-step refinement ratios 1.9834 and 1.9916
+           against a first-order prediction of 2, and 240 solve-port calls over
+           60 outer iterations = exactly 4, the same ratio as the steady
+           solver's 244/61. The two policy items are BUILD failures: thirteen of
+           the twenty-eight compile-fail gates are "no member named" gates over
+           every record a time profile would have to live in. Fourteen
            limitations are recorded rather than fixed. Evidence
-           docs/verification/P19-STEADY-001/ and ADR-077.
-           ONE SCOPE DECISION IS OPEN AND REPORTED RATHER THAN TAKEN: ADR-077
-           L12. The convection scheme and the gradient method are hard-coded in
-           the orchestrator, outside the analysis definition and outside the
-           definition fingerprint, which contradicts ADR-073 Decision 5 -- "which
-           of ADR-070's two methods made it is the analysis's decision and not
-           this operator's". Of the two, one is pinned only incidentally by the
-           gravity test's dp/dy check and the other is not pinned at all.
-           Putting them in the definition means changing CfdAnalysisDefinition
-           and canonicalText, both qualified under P19-DATA-001, and no item on
-           this checklist asked for a selector.
-           P19-LINSOLVE-001 (PASS 2026-11-09, commit
-           e63b19db2d4f48c3e73812eeb66784d71a7ce805) came before it and held
+           docs/verification/P19-TRANSIENT-001/ and ADR-078.
+           TWO SCOPE DECISIONS ARE OPEN AND REPORTED RATHER THAN TAKEN:
+           ADR-078 L7 / ADR-077 L12, the convection scheme and gradient method
+           hard-coded outside the analysis definition and outside its
+           fingerprint; and the inherited literal 0x08 byte in
+           verify-harness.cmd, in 72 of the 96 committed copies across the
+           lineage, which no gate has ever evaluated. Both are below, under
+           Next.
+           P19-STEADY-001 (PASS 2026-11-09, commit
+           370b90da75de236e66d0ddfbda1fb9254e557133) came before it and held
            this section until now; its full record is ROADMAP.md's capability
-           entry and docs/verification/P19-LINSOLVE-001/. The sections below
+           entry and docs/verification/P19-STEADY-001/. The sections below
            hold the milestones before that, from P19-CONT-001 backwards.
 
 Before that:
@@ -680,39 +699,58 @@ Qualified:
            P18 — Thermal Analysis
 
 Next:
-           NOTHING IS AUTHORIZED. P19-STEADY-001 is PASS and no milestone is
+           NOTHING IS AUTHORIZED. P19-TRANSIENT-001 is PASS and no milestone is
            open, so the next one is a scope decision for the owner. A
            predecessor's PASS has never been permission to start the one after
-           it, and the two it would be easiest to drift into are named so that
+           it, and the one it would be easiest to drift into is named so that
            the drift stays visible:
-           P19-TRANSIENT-001 owns time stepping. P19-VALID-001 owns whether the
-           numbers are good enough -- CfdResult.hpp already says "CONVERGENCE IS
-           RECORDED, NOT RE-JUDGED HERE", so the converged channel run this
-           milestone publishes is not a validated one, and nothing in
-           docs/verification/P19-STEADY-001/ claims it is.
-           TWO FINDINGS ARE OPEN AND UNAUTHORIZED, both reported rather than
-           fixed, and both needing the owner's scope decision:
-           (1) ADR-077 L12 - the convection scheme and the gradient method are
-           hard-coded in solveCfdSteady, outside the analysis definition and
-           outside the definition fingerprint, which contradicts ADR-073
-           Decision 5. One of the two is pinned only incidentally, by a side
-           effect of the gravity test's dp/dy check; the other is not pinned at
-           all, because telling ADR-070's two gradient methods apart needs an
-           analytic reference this subsystem does not have. Moving them into the
-           definition means changing CfdAnalysisDefinition and canonicalText,
-           both qualified under P19-DATA-001.
-           (2) docs/verification/*/qualification/verify-harness.cmd carries a
-           literal 0x08 byte where c-build was meant, in 72 of 96 committed
+           P19-VALID-001 owns whether the numbers are good enough. CfdResult.hpp
+           says "CONVERGENCE IS RECORDED, NOT RE-JUDGED HERE", so the marches
+           this milestone publishes are converged runs and not validated ones,
+           and nothing in docs/verification/P19-TRANSIENT-001/ claims otherwise.
+           ADR-078 L3 says what is missing by name: backward Euler's ORDER is
+           asserted by halving dt, and the absolute temporal error against an
+           exact solution is not measured at all, because the fixture has no
+           closed-form transient. An analytic transient reference is
+           P19-VALID-001's to bring.
+           THREE FINDINGS ARE OPEN AND UNAUTHORIZED, all reported rather than
+           fixed, and all needing the owner's scope decision:
+           (1) ADR-078 L7, inheriting ADR-077 L12 unchanged - the convection
+           scheme and the gradient method are hard-coded in both solveCfdSteady
+           and solveCfdTransient, outside the analysis definition and outside
+           the definition fingerprint, which contradicts ADR-073 Decision 5.
+           ADR-078 L14 reads the same finding from the test side: the
+           steady-limit cross-check cannot discriminate them, because both
+           orchestrators pin the same two choices, so changing ONE would be
+           caught and changing BOTH would not. Moving them into the definition
+           means changing CfdAnalysisDefinition and canonicalText, both
+           qualified under P19-DATA-001.
+           (2) ADR-078 L11 - the per-step convergence criterion becomes vacuous
+           at a small enough dt, measured rather than argued: step 1 collapses
+           from 60 outer iterations to 1 between dt = 1e-1 and dt = 1e-3, and
+           the effect saturates. The ANSWER is not wrong; the EVIDENCE says more
+           than it means, because outerIterations = 1 beside a residual under
+           tolerance reads as convergence for a step that coupled nothing. The
+           normalisation lives in advanceCfdCoupling, qualified under
+           P19-PVCOUPLE-001, and changing it would change what every steady run
+           is accepted on as well.
+           (3) docs/verification/*/qualification/verify-harness.cmd carries a
+           literal 0x08 byte where c-build was meant, in 72 of 96 committed
            copies, entered 2026-09-30 with the P15 materials work. It fires only
            when BETTERCAD_BUILD_ROOT is undefined, which run-qualification.cmd
            always defines, so no gate in any milestone ever evaluated it.
            Repairing it across the lineage needs the owner's scope decision.
-           ONE LESSON IS WORTH CARRYING INTO THE NEXT MILESTONE, because it cost
-           this one a three-and-a-half-hour re-run: a change to a CONSTRUCTOR's
-           parameter list reaches every compile-fail case that names that
-           constructor, and a search for the factory's callers cannot find them,
-           because they are deliberate NON-callers. A private constructor has one
-           intended caller and one intended refusal, and the refusal is a test.
+           TWO LESSONS ARE WORTH CARRYING INTO THE NEXT MILESTONE, and both cost
+           this one a re-run:
+           - A QUALIFICATION IS ONLY AS GOOD AS THE SHELL IT IS LAUNCHED FROM.
+           The desktop app's interactive terminal cannot see the dependency
+           prefix, so CMake silently found a different Open CASCADE and the
+           gate refused it in five seconds. Configure all three presets as a
+           pre-flight before committing hours to a run.
+           - A STAGE THAT RUNS WITHOUT A BUILD BEHIND IT CAN REPORT GREEN. Two
+           repeat stages passed 100% against binaries left on disk from an
+           earlier tree. Empty the build trees before a gate, so an absent
+           build is an absent stage rather than a quiet pass.
 P19 objective, as planned:
            authoritative CAD / fluid / mesh state
            → CFD analysis definition
@@ -4031,25 +4069,25 @@ Recommended initial scheme:
 backward Euler
 ```
 
-* [ ] Define initial fields
-* [ ] Define `dt`
-* [ ] Define end time
-* [ ] Define output times
-* [ ] Transient momentum term
-* [ ] Pressure-velocity coupling per step
-* [ ] Actual final partial step
-* [ ] Time-dependent BC policy
-* [ ] Time-dependent load policy
-* [ ] Per-step residual
-* [ ] Per-step mass balance
-* [ ] Reject invalid `dt`
-* [ ] Reject time ordering errors
-* [ ] Reject NaN / Inf
-* [ ] Deterministic timestepping
-* [ ] Time-step refinement
-* [ ] Steady-limit comparison
-* [ ] Regression PASS
-* [ ] Evidence recorded
+* [x] Define initial fields
+* [x] Define `dt`
+* [x] Define end time
+* [x] Define output times
+* [x] Transient momentum term
+* [x] Pressure-velocity coupling per step
+* [x] Actual final partial step
+* [x] Time-dependent BC policy
+* [x] Time-dependent load policy
+* [x] Per-step residual
+* [x] Per-step mass balance
+* [x] Reject invalid `dt`
+* [x] Reject time ordering errors
+* [x] Reject NaN / Inf
+* [x] Deterministic timestepping
+* [x] Time-step refinement
+* [x] Steady-limit comparison
+* [x] Regression PASS
+* [x] Evidence recorded
 
 ---
 # P19-TURB-ARCH-001

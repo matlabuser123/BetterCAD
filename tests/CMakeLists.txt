@@ -376,6 +376,9 @@ if(TARGET bettercad_reference_models)
         # through every gate, not a hand fixture.
         cfd/CfdSteadyTests.cpp
         cfd/CfdTopologyTests.cpp
+        # P19-TRANSIENT-001: the transient march, on the same real meshed body,
+        # with the steady solve itself as one of its independent references.
+        cfd/CfdTransientTests.cpp
         qualification/P15MaterialsQualificationTests.cpp
         qualification/P16MeshingQualificationTests.cpp
         qualification/P17StructuralQualificationTests.cpp

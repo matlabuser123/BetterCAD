@@ -1,0 +1,32 @@
+qualification started Tue 11/10/2026  6:15:46.67 
+qualification candidate: 
+10c871a19265f045c6e2fed9d7d479d393f781ac
+qualified source trees before the first build: 
+  apps fc398a3d2e524178cf38e8b667236379d8381086 
+  include 4759b76839047d95cf096ae80bf071c52c7e3edb 
+  src c33a7b6fdbe7cb1b4deb66727152525e85dd4a48 
+  tests 47658ea579a4cf9e46d2f77410b5b1c12b71ccef 
+  examples 4da234ebf4779f7c16d5df0075f106f7e3d4c958 
+  cmake 5a382115d7ed7775189d40b55e40f318eaae6cc7 
+  CMakeLists.txt 3ec3c10f2a4c522f36c60b1ce1a58e99c4db1ecd 
+  CMakePresets.json 3229f0f89b236744d7d5c082bed47c28b718288e 
+debug-ext configure started Tue 11/10/2026  6:15:47.54 
+debug-ext configure exit 0 Tue 11/10/2026  6:15:53.11 
+debug-ext clean attempt 1 exit 0 Tue 11/10/2026  6:15:54.22 
+debug-ext build exit 0 Tue 11/10/2026  6:34:46.63 
+debug-ext no-op rebuild exit 0 Tue 11/10/2026  6:34:46.99 
+debug-ext ctest exit 8 Tue 11/10/2026  7:18:49.82 
+release-ext configure started Tue 11/10/2026  7:18:49.82 
+release-ext configure exit -1073741502 Tue 11/10/2026  7:18:49.85 
+release-ext build skipped: the configure failed 
+release-ext ctest skipped: the configure failed 
+debug-shared-ext configure started Tue 11/10/2026  7:18:49.86 
+debug-shared-ext configure exit -1073741502 Tue 11/10/2026  7:18:49.88 
+debug-shared-ext build skipped: the configure failed 
+debug-shared-ext ctest skipped: the configure failed 
+repeat release-ext selects 0 test(s) 
+repeat release-ext FAILED: the filter 'architecture|unit\.Linalg|unit\.Structural|unit\.Cfd|unit\.Fluid|unit\.Provenance|unit\.CustomMaterial|unit\.MaterialFile|unit\.MaterialCli|unit\.Thermal|unit\.P18Qualification|unit\.P17Qualification|unit\.Quality|unit\.MeshDofMap|unit\.ConstraintSet|unit\.FreeEquationMap|unit\.Tet4Element|unit\.Mesh|unit\.Volume|unit\.Tet|unit\.Siz|unit\.Id|unit\.ReferenceModel|unit\.Analytic|unit\.View|unit\.RigidTransform|unit\.Transform|unit\.Point|unit\.Direction|unit\.Frame|unit\.Unit|unit\.Dimension|unit\.MassProperties|unit\.SurfaceMesh|refmod\.|gui\.|cli\.thermal\.|cli\.structural\.|cli\.mesh\.' matched no tests 
+repeat debug-ext selects 0 test(s) 
+repeat debug-ext FAILED: the filter 'architecture|unit\.Linalg|unit\.Structural|unit\.Cfd|unit\.Fluid|unit\.Provenance|unit\.CustomMaterial|unit\.MaterialFile|unit\.MaterialCli|unit\.Thermal|unit\.P18Qualification|unit\.P17Qualification|unit\.Quality|unit\.MeshDofMap|unit\.ConstraintSet|unit\.FreeEquationMap|unit\.Tet4Element|unit\.Mesh|unit\.Volume|unit\.Tet|unit\.Siz|unit\.Id|unit\.ReferenceModel|unit\.Analytic|unit\.View|unit\.RigidTransform|unit\.Transform|unit\.Point|unit\.Direction|unit\.Frame|unit\.Unit|unit\.Dimension|unit\.MassProperties|unit\.SurfaceMesh|refmod\.|gui\.|cli\.thermal\.|cli\.structural\.|cli\.mesh\.' matched no tests 
+qualified source trees after the last test run: 
+qualification finished Tue 11/10/2026  7:18:50.05, 5 stage(s) failed 

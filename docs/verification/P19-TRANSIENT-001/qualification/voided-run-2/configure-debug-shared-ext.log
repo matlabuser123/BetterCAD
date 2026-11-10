@@ -1,0 +1,9 @@
+-- Using the multi-header code from C:/bettercad/bc-build/debug-shared-ext/_deps/nlohmann_json-src/include/
+CMake Error at cmake/BetterCADDependencies.cmake:85 (message):
+  Open CASCADE Technology 7.9.3 found in
+  C:/msys64/ucrt64/lib/cmake/opencascade; BetterCAD requires 8.0.x.
+Call Stack (most recent call first):
+  CMakeLists.txt:74 (include)
+
+
+-- Configuring incomplete, errors occurred!

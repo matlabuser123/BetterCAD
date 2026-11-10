@@ -2357,3 +2357,98 @@ foreach(_case
         "read-only|assignment of read-only|discards qualifiers|binding reference of type|cannot bind|invalid initialization"
         BetterCAD::cfd)
 endforeach()
+
+# P19-TRANSIENT-001 -- misuse of the transient march, the time grid and the
+# history. ADR-078.
+#
+# TWO OF THIS MILESTONE'S NINETEEN ITEMS ARE DISCHARGED HERE AND NOWHERE ELSE.
+# "Time-dependent BC policy" and "Time-dependent load policy" are NEGATIVE
+# claims -- nothing a definition can hold varies with time -- and a negative
+# claim with no test is prose. Thirteen of the cases below are "no member
+# named" gates over the records a time profile would have to live in, so a
+# later milestone that adds one stops this build instead of silently freezing a
+# profile at t = 0.
+#
+# THE REGEXES LIST EVERY DIAGNOSTIC GCC CAN EMIT FOR THE CASE, not the one a
+# reader expects (the P19-GRAD-001 lesson, which cost six of twenty-eight gates
+# on P19-LINSOLVE-001's first run and one of twenty-eight on P19-STEADY-001's).
+set(_cfdtransient "${CMAKE_CURRENT_SOURCE_DIR}/CfdTransientMisuse.cpp")
+bettercad_compile_fail_group(cfdtransient "${_cfdtransient}" BetterCAD::cfd)
+foreach(_case
+        A_TIME_GRID_CAN_BE_DEFAULT_CONSTRUCTED
+        A_TRANSIENT_REPORT_CAN_BE_DEFAULT_CONSTRUCTED)
+    bettercad_compile_fail_case(cfdtransient "${_cfdtransient}" ${_case}
+        "is private|within this context|use of deleted|deleted function|no matching function|no default constructor|incomplete type|does not name a type"
+        BetterCAD::cfd)
+endforeach()
+# A PRIVATE DATA MEMBER, WHICH HAS NO ARITY TO RESOLVE. P19-STEADY-001's
+# qualification gate failed because an inherited ACCESS gate became an ARITY
+# gate when a private constructor gained a parameter: GCC resolves arity before
+# access, so the case still exited 1 and the claim had stopped being tested.
+#
+# AND THE REGEX IS NARROW ON PURPOSE. An adversarial review pointed out that
+# admitting "has no member|no member named" here re-opens exactly the hole the
+# comment above closes: rename or delete `steps_` and the gate would pass on a
+# "no member" diagnostic while the ACCESS claim stopped being tested. Only the
+# access diagnostics are accepted.
+foreach(_case
+        A_TIME_GRIDS_STEP_COUNT_IS_WRITABLE)
+    bettercad_compile_fail_case(cfdtransient "${_cfdtransient}" ${_case}
+        "is private|within this context"
+        BetterCAD::cfd)
+endforeach()
+# NOTHING IS TIME-DEPENDENT, and the scope line: no adaptive step, no retry, no
+# theta, no scheme selector, no interpolation, no restart.
+foreach(_case
+        A_VELOCITY_INLET_HAS_A_TIME_PROFILE
+        A_PRESSURE_OUTLET_HAS_A_SCHEDULE
+        A_BOUNDARY_CONDITION_HAS_A_TIME_TABLE
+        GRAVITY_HAS_A_TIME_PROFILE
+        AN_INITIAL_CONDITION_HAS_A_TIME
+        THE_TRANSIENT_SETTINGS_HAVE_A_TIME_PROFILE
+        THE_TRANSIENT_SETTINGS_HAVE_A_MINIMUM_STEP
+        THE_TRANSIENT_SETTINGS_HAVE_A_RETRY_COUNT
+        THE_TRANSIENT_SETTINGS_HAVE_A_THETA
+        THE_TRANSIENT_SETTINGS_HAVE_A_SCHEME_SELECTOR
+        A_TIME_GRID_CAN_BE_RE_POINTED
+        THE_HISTORY_INTERPOLATES
+        THE_HISTORY_RESTARTS)
+    bettercad_compile_fail_case(cfdtransient "${_cfdtransient}" ${_case}
+        "no member named|has no member|is not a member of|has not been declared|no matching function"
+        BetterCAD::cfd)
+endforeach()
+# THE TIMES ARE DIMENSIONED: Quantity has no implicit conversion from double,
+# so the call that reads 0.1 as a second when a millisecond was meant does not
+# compile, and neither does a load that is a function of time.
+foreach(_case
+        A_TIME_GRID_IS_BUILT_FROM_BARE_DOUBLES
+        A_BARE_DOUBLE_IS_NOT_A_TIME_STEP
+        A_LENGTH_IS_NOT_A_TIME
+        A_VELOCITY_INLET_TAKES_A_TIME_FUNCTION
+        GRAVITY_TAKES_A_TIME_FUNCTION)
+    bettercad_compile_fail_case(cfdtransient "${_cfdtransient}" ${_case}
+        "no matching function|cannot convert|invalid conversion|no known conversion|could not convert|no match for|to non-scalar type|conversion from"
+        BetterCAD::cfd)
+endforeach()
+foreach(_case
+        THE_SOLVE_TAKES_A_TIME
+        THE_TRANSIENT_SOLVE_TAKES_SETTINGS
+        THE_TRANSIENT_SOLVE_PUBLISHES_WITHOUT_A_SLOT)
+    bettercad_compile_fail_case(cfdtransient "${_cfdtransient}" ${_case}
+        "no matching function|too many arguments|too few arguments|cannot convert|no known conversion|candidate expects|could not convert"
+        BetterCAD::cfd)
+endforeach()
+foreach(_case
+        A_SAMPLED_FIELD_IS_WRITABLE
+        A_SAMPLES_SOURCE_IS_WRITABLE)
+    bettercad_compile_fail_case(cfdtransient "${_cfdtransient}" ${_case}
+        "read-only|assignment of read-only|discards qualifiers|binding reference of type|cannot bind|invalid initialization"
+        BetterCAD::cfd)
+endforeach()
+foreach(_case
+        A_TRANSIENT_REPORT_IS_A_STEADY_ONE
+        A_STEP_RECORD_IS_RESULT_METADATA)
+    bettercad_compile_fail_case(cfdtransient "${_cfdtransient}" ${_case}
+        "cannot convert|invalid conversion|no known conversion|could not convert|to non-scalar type|conversion from|no match for"
+        BetterCAD::cfd)
+endforeach()

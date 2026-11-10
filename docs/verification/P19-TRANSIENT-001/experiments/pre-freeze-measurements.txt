@@ -1,0 +1,38 @@
+P19-TRANSIENT-001 -- the pre-freeze measurements, taken on the FROZEN tree (debug-ext)
+
+Read off the frozen tree before the harness was launched. Every one of these is
+re-established after the gate from the harness's own logs and from a readout of
+the three qualified binaries; these are the figures FREEZE.md was written from.
+
+=== ctest counts, by ctest -N (never predicted) ===
+total                        6965   = 6903 + 10 + 24 + 28
+unit.CfdTimeGrid_              10
+unit.CfdTransient_             24
+compile_fail.cfdtransient      28
+repeat filter selects        3527   = 3493 + 34
+repeat executions           17635   = 3527 x 5
+
+=== per-tag assertion identity, from the test binary ===
+[cfd]              755043 assertions in 697 test cases   = 753230 + 1813, 663 + 34
+[cfd][transient]     1813 assertions in  34 test cases   the new suite
+[cfd][steady]        1263 assertions in  19 test cases   IDENTICAL to baseline
+[linalg]             2560 assertions in  29 test cases   IDENTICAL
+[structural]   271414 assertions in 415 test cases   IDENTICAL
+[thermal]      595622 assertions in 1168 test cases   IDENTICAL
+
+=== gates run on the frozen tree before the freeze ===
+[cfd][transient]             34 of 34 PASS, 13.8 s
+compile_fail.cfdtransient    28 of 28 PASS, 75 s, plus the control target compiling
+architecture                205 of 205 PASS, IDENTICAL to baseline
+release-ext                  bettercad_tests + control build, 0 error / 0 warning
+debug-shared-ext             bettercad_tests + control build, 0 error / 0 warning
+
+=== the eight frozen identities ===
+apps               fc398a3d2e524178cf38e8b667236379d8381086
+include            4759b76839047d95cf096ae80bf071c52c7e3edb
+src                c33a7b6fdbe7cb1b4deb66727152525e85dd4a48
+tests              47658ea579a4cf9e46d2f77410b5b1c12b71ccef
+examples           4da234ebf4779f7c16d5df0075f106f7e3d4c958
+cmake              5a382115d7ed7775189d40b55e40f318eaae6cc7
+CMakeLists.txt     3ec3c10f2a4c522f36c60b1ce1a58e99c4db1ecd
+CMakePresets.json  3229f0f89b236744d7d5c082bed47c28b718288e

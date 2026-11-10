@@ -1,0 +1,39 @@
+P19-TRANSIENT-001 -- the per-step mass balance defect, and the regression test verified to fail without the fix
+
+DEFECT: CfdTransientStepRecord::balance was never assigned in solveCfdTransient.
+        The local 'balance' was updated from iteration->balance and published into
+        the SAMPLE's metadata, but never copied into the step record, so every
+        record carried a default-constructed CfdMassBalance -- two zeros where the
+        qualified evaluator's two measures belong. 'Per-step mass balance' is one
+        of this milestone's nineteen checklist items.
+
+WHY THE SUITE PASSED ON IT: the only assertion was isfinite(), and zero is finite.
+
+THE RUN BELOW is tests/cfd/CfdTransientTests.cpp with the one-line fix REVERTED.
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+bettercad_tests.exe is a Catch2 v3.16.0 host application.
+Run with -? for options
+
+-------------------------------------------------------------------------------
+CfdTransient_SamplesEveryStepWhenThePolicyAsksAndKeepsTZeroOut
+  each step's record and its sample agree on what was measured
+-------------------------------------------------------------------------------
+C:/Users/Hasib/Desktop/CAD/tests/cfd/CfdTransientTests.cpp:766
+...............................................................................
+
+C:/Users/Hasib/Desktop/CAD/tests/cfd/CfdTransientTests.cpp:781: FAILED:
+  REQUIRE( metadata.massBalance == report->steps[i].balance )
+with expansion:
+  {?} == {?}
+with messages:
+
+  sample 0
+
+===============================================================================
+test cases:   1 |   0 passed | 1 failed
+assertions: 161 | 160 passed | 1 failed
+
+
+WITH THE FIX the same test passes; the whole suite's figures are in the README.

@@ -1,0 +1,31 @@
+Extract from the VOIDED second attempt's ctest-repeat-release-ext.log (3.79 MB).
+
+The full log is NOT committed, following the practice P19-STEADY-001 set
+for its own voided attempt. This stage ran with NO BUILD STAGE BEHIND IT
+-- all three configures had failed -- so it executed whatever binary was
+left in the build tree on disk, and its green result establishes nothing
+about the frozen tree. Everything this directory's README.md cites about
+this log is below, counted rather than summarised.
+
+=== what ctest said ===
+100% tests passed out of 3522
+Total Test time (real) = 1889.47 sec
+
+=== how many tests the stage SELECTED ===
+  progress lines (selected):   3522
+  the frozen tree selects:     3527
+  difference:                  5
+
+=== per-group case counts, which is what dates the binary ===
+  unit\.CfdTransient_        100 executions =  20 cases at 5 repeats
+  unit\.CfdTimeGrid_          45 executions =   9 cases at 5 repeats
+  unit\.CfdSteady_            95 executions =  19 cases at 5 repeats
+
+  the frozen tree carries 24 CfdTransient_ and 10 CfdTimeGrid_ cases.
+
+=== the first and last progress lines, to show the whole log was read ===
+   1/3522 Test #5531: refmod.material.build ..................................................................................   Passed    0.32 sec
+   2/3522 Test #5533: refmod.material.inspect ................................................................................   Passed    0.09 sec
+  ...
+3521/3522 Test  #993: unit.CfdTransient_SamplesEveryStepWhenThePolicyAsksAndKeepsTZeroOut ....................................   Passed    0.37 sec
+3522/3522 Test  #987: unit.CfdTransient_MarchesTheChannelAndPublishesTheFinalSample ..........................................   Passed    0.55 sec

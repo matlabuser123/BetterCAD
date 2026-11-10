@@ -1,0 +1,31 @@
+Extract from the VOIDED second attempt's ctest-repeat-debug-ext.log (3.79 MB).
+
+The full log is NOT committed, following the practice P19-STEADY-001 set
+for its own voided attempt. This stage ran with NO BUILD STAGE BEHIND IT
+-- all three configures had failed -- so it executed whatever binary was
+left in the build tree on disk, and its green result establishes nothing
+about the frozen tree. Everything this directory's README.md cites about
+this log is below, counted rather than summarised.
+
+=== what ctest said ===
+100% tests passed out of 3527
+Total Test time (real) = 1916.56 sec
+
+=== how many tests the stage SELECTED ===
+  progress lines (selected):   3527
+  the frozen tree selects:     3527
+  difference:                  0
+
+=== per-group case counts, which is what dates the binary ===
+  unit\.CfdTransient_        120 executions =  24 cases at 5 repeats
+  unit\.CfdTimeGrid_          50 executions =  10 cases at 5 repeats
+  unit\.CfdSteady_            95 executions =  19 cases at 5 repeats
+
+  the frozen tree carries 24 CfdTransient_ and 10 CfdTimeGrid_ cases.
+
+=== the first and last progress lines, to show the whole log was read ===
+   1/3527 Test #5536: refmod.material.build ..................................................................................   Passed    0.36 sec
+   2/3527 Test #5538: refmod.material.inspect ................................................................................   Passed    0.11 sec
+  ...
+3526/3527 Test #5747: architecture.thermalcmd-ownership.valid ................................................................   Passed    0.11 sec
+3527/3527 Test #2355: unit.MeshIssueKind_EveryKindHasAName ...................................................................   Passed    0.14 sec
