@@ -112,6 +112,13 @@ Previous milestone:
            verify-harness.cmd, in 72 of the 96 committed copies across the
            lineage, which no gate has ever evaluated. Both are below, under
            Next.
+           Commit d0916332fab513857592d9a8b6ae1612b99afc5b, and the eight
+           frozen subtree identities were read FIVE times -- the harness before
+           its first build, the harness after its last test run, a working-tree
+           recomputation through a scratch index, the staged tree, and OUT OF
+           the commit object -- all eight identical in all five, so the
+           qualified tree is the committed tree. The harness also read the same
+           eight before the first build of each of the three attempts.
            P19-STEADY-001 (PASS 2026-11-09, commit
            370b90da75de236e66d0ddfbda1fb9254e557133) came before it and held
            this section until now; its full record is ROADMAP.md's capability

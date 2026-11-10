@@ -1022,7 +1022,7 @@ zero both times.
 
 ### The qualified tree is the committed tree
 
-The eight frozen paths were read, and every reading agrees:
+The eight frozen paths were read FIVE times, and all five agree:
 
 ```text
 1  by the harness, before its first build          08:39:50, this run
@@ -1031,9 +1031,9 @@ The eight frozen paths were read, and every reading agrees:
    harness's own method -- scratch GIT_INDEX_FILE, read-tree HEAD, add -A,
    write-tree --prefix -- so the real index is never touched
 4  off the STAGED tree, from the real index, before the commit was made
-5  out of the commit object itself, which can only be read AFTER the commit
-   exists, and is therefore recorded by the follow-up commit, exactly as
-   P19-STEADY-001's fifth reading was
+5  out of the commit object d0916332fab513857592d9a8b6ae1612b99afc5b,
+   which can only be read AFTER the commit exists and is therefore recorded by
+   the follow-up commit, exactly as P19-STEADY-001's fifth reading was
 ```
 
 ```text
@@ -1205,4 +1205,11 @@ r2  the gate's result, on the THIRD attempt. REGRESSION and QUALIFICATION
     fourteen are now named. Documentation that undercounts the evidence is the
     same failure as a false checkbox, which is why it is corrected in place and
     the correction is stated rather than quietly made.
+r3  the commit. The eight frozen paths read OUT OF commit object
+    d0916332fab513857592d9a8b6ae1612b99afc5b and identical to FREEZE.md's
+    eight, which is the fifth and last of the five readings and the only one
+    git rev-parse HEAD:<path> can honestly make -- before the commit it reads
+    the PREVIOUS commit's tree and agrees with itself for the wrong reason.
+    The comparison is made by a script that asserts both sides hold eight
+    paths before reporting them equal.
 ```
