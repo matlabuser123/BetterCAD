@@ -575,7 +575,7 @@ L12  the checker will fire on the refusal decision 10 PRESCRIBES, and the fix is
 L13  the comment stripper is not a lexer; `//` inside a string literal erases the
      rest of that line, and src/io/SvgWriter.cpp has such a line
 L14  one identifier can still trip two rules; _count is per rule, not per file
-L15  THREE DEFECTS WERE FOUND IN THIS MILESTONE'S OWN RECONCILIATION SCRIPT, not
+L15  FIVE DEFECTS WERE FOUND IN THIS MILESTONE'S OWN VERIFICATION, not
      in the product: it measured a 1306-byte file as 1320 by rewriting LF to
      CRLF, it read five identical harness files as five mismatches because msys
      sha1sum escapes a backslashed filename, and it counted test reports without
@@ -588,6 +588,17 @@ L15  THREE DEFECTS WERE FOUND IN THIS MILESTONE'S OWN RECONCILIATION SCRIPT, not
      carrying the inherited 0x08 byte as 73 where three independent counts say
      75. Both are corrected in place with the correction stated, because a
      number quoted as measured is either measured or it is a defect.
+     A FIFTH IS THE MOST INSTRUCTIVE. The fifth identity reading was anchored
+     to HEAD and HEAD~1, which made it true for exactly ONE commit: the record
+     commit that follows moved HEAD on, HEAD~1 became the qualification commit
+     itself, and "exactly one frozen path moved" went from true to false. It is
+     now anchored to the commit README.md NAMES, read out of this file the way
+     every other figure is read out of FREEZE.md, so it stays true as the
+     branch moves; HEAD is checked separately and only for what HEAD can say,
+     which is that nothing since has touched the frozen surface. The
+     reconciliation FAILED LOUDLY rather than drifting green, which is the only
+     reason it was caught, and a fifteenth sabotage -- the evidence naming the
+     wrong commit -- now covers the path that reading created.
 ```
 
 ## RESULT
@@ -621,8 +632,12 @@ r3  the commit recorded, and with it the fifth identity reading, which only
     equal FREEZE.md's eight, and include and src equal the PREVIOUS commit's.
     reconcile.py was changed to make that reading -- its pre-commit check
     asserted that exactly one path differed from HEAD, which was true before
-    this commit and false after it -- and re-falsified: 183 checks, 14 of 14
-    sabotages caught, control passing.
+    this commit and false after it.
+r4  the fifth reading re-anchored to the commit this file NAMES rather than to
+    HEAD~1, after the record commit made the HEAD~1 version fail. 186 checks,
+    and a fifteenth sabotage added for the path that reading created: 15 of 15
+    caught, control passing. L15 records it as the fifth defect found in this
+    milestone's own verification.
 r2  REGRESSION, QUALIFICATION and RESULT filled from the harness's own logs
     after the gate returned 0 stage(s) failed. The per-tag readout was taken
     off the three qualified executables, the reconciliation was extended from

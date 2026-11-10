@@ -1,4 +1,4 @@
-"""Does reconcile.py actually bite? Fourteen sabotages, fourteen runs.
+"""Does reconcile.py actually bite? Fifteen sabotages, fifteen runs.
 
 A reconciliation that passes everything may be passing because it checks
 nothing. `P19-STEADY-001` recorded a check that reported PASS off one parsed
@@ -61,6 +61,8 @@ def build_scratch():
     os.makedirs(EVID + '/experiments')
     os.makedirs(SCRATCH + '/P19-TRANSIENT-001/qualification')
     shutil.copy2(REAL + '/FREEZE.md', EVID + '/FREEZE.md')
+    # reconcile.py reads the qualification commit out of README.md
+    shutil.copy2(REAL + '/README.md', EVID + '/README.md')
     for f in QFILES:
         shutil.copy2(REAL + '/qualification/' + f, QUAL + '/' + f)
     # the carried-forward launcher the identity check compares against
@@ -78,10 +80,13 @@ def build_scratch():
     wr(EVID + '/experiments/reconcile.py', src.replace(old, new))
 
 
+TOP = ('FREEZE.md', 'README.md')
+
+
 def restore(rel):
     """Put one file back, byte for byte, from the real evidence."""
-    if rel == 'FREEZE.md':
-        shutil.copy2(REAL + '/FREEZE.md', EVID + '/FREEZE.md')
+    if rel in TOP:
+        shutil.copy2(REAL + '/' + rel, EVID + '/' + rel)
     else:
         shutil.copy2(REAL + '/qualification/' + rel, QUAL + '/' + rel)
 
@@ -168,6 +173,13 @@ def sab_freeze_identity(s):
                      'bf65a34a2027d1c3ceff8a3e8b3216c538a9165e')
 
 
+def sab_wrong_commit(s):
+    """The evidence names a commit whose tree is not the frozen tree."""
+    return re.sub(r'(qualified and committed as\s+)[0-9a-f]{40}',
+                  r'\g<1>' + '9d89f4d5002e0724323cc7340ea30c3cb7dc8419', s,
+                  count=1)
+
+
 def sab_rebuild_not_noop(s):
     return s.rstrip('\n') + ('\n[2/8] Building CXX object '
                              'CMakeFiles/bettercad_cfd.dir/CfdSteady.cpp.obj\n')
@@ -202,6 +214,8 @@ SABOTAGES = [
      'FREEZE.md', sab_freeze_identity),
     ('the no-op rebuild actually compiled something',
      'rebuild-debug-ext.log', sab_rebuild_not_noop),
+    ('the evidence names the WRONG commit as the qualified one',
+     'README.md', sab_wrong_commit),
 ]
 
 # --------------------------------------------------------------------- control
@@ -220,9 +234,9 @@ else:
 
 # -------------------------------------------------------------------- sabotage
 results = []
-print('\n== fourteen sabotages, each one restored before the next ==')
+print('\n== fifteen sabotages, each one restored before the next ==')
 for i, (label, rel, fn) in enumerate(SABOTAGES, 1):
-    target = (EVID + '/FREEZE.md') if rel == 'FREEZE.md' else (QUAL + '/' + rel)
+    target = (EVID + '/' + rel) if rel in TOP else (QUAL + '/' + rel)
     before = rd(target)
     after = fn(before)
     assert after != before, '%s: sabotage %d changed nothing' % (rel, i)
@@ -256,5 +270,5 @@ shutil.rmtree(SCRATCH, ignore_errors=True)
 if not control_ok or missed:
     sys.exit(1)
 print('\nreconcile.py BITES. It passes the real evidence and fails every one '
-      'of the fourteen sabotages.')
+      'of the fifteen sabotages.')
 sys.exit(0)

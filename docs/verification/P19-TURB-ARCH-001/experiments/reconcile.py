@@ -402,28 +402,57 @@ eq('THE QUALIFIED TREE IS STILL THE TREE ON DISK', live, FROZEN)
 # itself for the wrong reason, which is why the other four readings go through
 # an index. It is meaningful only once the commit exists.
 print('\n== the commit object, the fifth reading ==')
-head = {}
-for p8 in EIGHT:
-    head[p8] = subprocess.check_output(
-        ['git', 'rev-parse', 'HEAD:%s' % p8], cwd=REPO).decode('ascii').strip()
-eq('the commit holds eight paths', len(head), 8)
-eq('THE QUALIFIED TREE IS THE COMMITTED TREE', head, FROZEN)
-eq('and the working tree still agrees with the commit', head, live)
 
-# the no-production-change claim is against the PREVIOUS commit, not this one
-prev = {}
-for p8 in EIGHT:
-    prev[p8] = subprocess.check_output(
-        ['git', 'rev-parse', 'HEAD~1:%s' % p8],
-        cwd=REPO).decode('ascii').strip()
-eq('the previous commit holds eight paths', len(prev), 8)
-moved = [k for k in EIGHT if prev[k] != head[k]]
-eq('exactly one frozen path moved in this commit', moved, ['tests'])
-check('include is BIT-IDENTICAL to the previous commit -- no type was added',
-      prev['include'] == head['include'],
-      '%s -> %s' % (prev['include'], head['include']))
-check('src is BIT-IDENTICAL to the previous commit -- no code was added',
-      prev['src'] == head['src'], '%s -> %s' % (prev['src'], head['src']))
+# The commit is named by the evidence, not by HEAD. Anchoring to HEAD~1 made
+# this section true for exactly one commit: the record commit that follows
+# moved HEAD on and turned it false. See L15.
+README = read(os.path.join(EVID, 'README.md'))
+m = re.search(r'qualified and committed as\s+([0-9a-f]{40})', README)
+check('README.md names the qualification commit', m is not None)
+if m is None:
+    print('\nwithout the commit hash the fifth reading cannot be made.')
+    sys.exit(1)
+QUALIFIED = m.group(1)
+print('        qualification commit %s' % QUALIFIED[:12])
+
+
+def tree_of(rev):
+    out = {}
+    for p8 in EIGHT:
+        out[p8] = subprocess.check_output(
+            ['git', 'rev-parse', '%s:%s' % (rev, p8)],
+            cwd=REPO).decode('ascii').strip()
+    return out
+
+
+check('the qualification commit exists in this repository',
+      subprocess.call(['git', 'cat-file', '-e', QUALIFIED + '^{commit}'],
+                      cwd=REPO, stdout=subprocess.DEVNULL,
+                      stderr=subprocess.DEVNULL) == 0)
+committed = tree_of(QUALIFIED)
+eq('the qualification commit holds eight paths', len(committed), 8)
+eq('THE QUALIFIED TREE IS THE COMMITTED TREE', committed, FROZEN)
+
+# the no-production-change claim is that commit against ITS OWN parent
+parent = tree_of(QUALIFIED + '~1')
+eq('its parent holds eight paths', len(parent), 8)
+moved = [k for k in EIGHT if parent[k] != committed[k]]
+eq('exactly one frozen path moved in the qualification commit',
+   moved, ['tests'])
+check('include is BIT-IDENTICAL across it -- no production type was added',
+      parent['include'] == committed['include'],
+      '%s -> %s' % (parent['include'], committed['include']))
+check('src is BIT-IDENTICAL across it -- no production code was added',
+      parent['src'] == committed['src'],
+      '%s -> %s' % (parent['src'], committed['src']))
+
+# and what HEAD can tell us, which is only that nothing has disturbed the
+# frozen paths since -- commits after the qualification are allowed, but they
+# must not touch the qualified surface
+head = tree_of('HEAD')
+eq('nothing since the qualification has touched the frozen surface',
+   head, committed)
+eq('and the working tree still agrees with HEAD', head, live)
 
 # ----------------------------------------------- the checker, on this tree
 print('\n== the ownership checker, re-run against the live tree ==')
